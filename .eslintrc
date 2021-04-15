@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:bpmn-io/es6",
+    "plugin:bpmn-io/mocha"
+  ],
+  "rules": {
+    "react/prop-types": 0
+  },
+  "env": {
+    "browser": true,
+    "es6": true
+  }
+}

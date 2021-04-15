@@ -1,0 +1,125 @@
+@import '../dist/assets/styles/codemirror.css';
+@import '../dist/assets/styles/material.css';
+@import '../dist/assets/styles/show-hint.css';
+@import '../dist/assets/styles/lint.css';
+@import '../dist/assets/styles/dialog.css';
+
+.editorModal {
+    width: 95%;
+    height: 80%;
+}
+
+#editorModalButtons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#editorModalButtons button {
+    font-size: 16px;
+    margin-left: 6px;
+}
+
+.editorForm {
+    height: 100%;
+}
+
+.contextTitle {
+    margin-top: 0;
+}
+.contextEditor .CodeMirror {
+    height: 150px !important;
+}
+
+.modal-content, .modal-body {
+    height: 100%;
+}
+
+/*input[id$="-documentation"], input[id$="-extendedDocumentation"] {*/
+/*    width: 90% !important;*/
+/*    height: 25px !important;*/
+/*}*/
+
+/*.openRichTextEditor {*/
+/*    width: 10% !important;*/
+/*    height: 25px !important;*/
+/*}*/
+
+/*.openRichTextEditor span {*/
+/*    display: block !important;*/
+/*    font-weight: bolder;*/
+/*}*/
+
+
+.CodeMirror-hints, .CodeMirror-lint-tooltip, .CodeMirror-lint-message {
+    z-index: 10000;
+}
+
+.CodeEditor-container {
+    display: flex;
+}
+
+.CodeEditor {
+    flex-grow: 2;
+}
+.RunningResult {
+    flex-grow: 1;
+}
+.RunningResult .Result-box {
+    box-sizing: border-box;
+    height: 100%;
+    border: 2px solid #ccc;
+}
+
+div#runPanel {
+    background-color: #263238;
+    color: white;
+
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+div#runPanel > a.run-button, div#runPanel > a.run-button:link, div#runPanel > a.run-button:visited {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+
+    padding: 10px 20px 10px 20px;
+}
+
+div#runPanel > a.run-button:hover, div#runPanel > a.run-button:active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.CodeEditor .CodeMirror {
+    height: 400px !important;
+}
+
+.code-editor-script-format input {
+    padding-right: 56px !important;
+}
+
+.code-editor-script-format .clear {
+    right: 24px !important;
+}
+
+.code-editor-script {
+    right: 0;
+    background: transparent !important;
+    border: none !important;
+    top: 0 !important;
+}
+
+.code-editor-script span{
+    display: block !important;
+    font-weight: bold;
+}
+
+.cm-matchhighlight {
+    font-weight: bold;
+    background-color: #80cbc433;
+}
