@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const ZipPlugin = require('zip-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -39,6 +40,10 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
+          from: 'style/style.css',
+          to: 'assets/styles'
+        },
+        {
           from: 'node_modules/codemirror/lib/codemirror.css',
           to: 'assets/styles'
         },
@@ -57,8 +62,22 @@ module.exports = {
         {
           from: 'node_modules/codemirror/addon/dialog/dialog.css',
           to: 'assets/styles'
+        },
+        {
+          from: path.resolve(__dirname, './index.prod.js'),
+          to: path.resolve(__dirname, './dist/index.js')
         }
       ],
+    }),
+    new ZipPlugin({
+      filename: 'camunda-code-editor-plugin-' + process.env.npm_package_version + '.zip',
+      pathPrefix: 'camunda-code-editor/',
+      pathMapper: function(assetPath) {
+        if (assetPath.startsWith('client') || assetPath.startsWith('style')) {
+          return path.join(path.dirname(assetPath), 'client', path.basename(assetPath));
+        }
+        return assetPath;
+      }
     })
   ],
   devtool: 'cheap-module-source-map'

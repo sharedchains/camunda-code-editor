@@ -3,5 +3,5 @@
 module.exports = {
   name: 'Code Script Editor',
   script: './dist/client.js',
-  style: './style/style.css'
+  style: './dist/assets/styles/style.css'
 };

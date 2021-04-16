@@ -1,8 +1,8 @@
-@import '../dist/assets/styles/codemirror.css';
-@import '../dist/assets/styles/material.css';
-@import '../dist/assets/styles/show-hint.css';
-@import '../dist/assets/styles/lint.css';
-@import '../dist/assets/styles/dialog.css';
+@import './codemirror.css';
+@import './material.css';
+@import './show-hint.css';
+@import './lint.css';
+@import './dialog.css';
 
 .editorModal {
     width: 95%;
