@@ -12,6 +12,10 @@ This plug-in integrates a script editor to Camunda Modeler, allowing a user to w
 
 ![Screencast](./docs/screencast.gif)
 
+## Install
+
+Extract the [release zip file](https://github.com/sharedchains/camunda-code-editor/releases/tag/v0.1.0) to your camunda-modeler/resources/plugins folder. Super easy!
+
 
 ## Development Setup
 
