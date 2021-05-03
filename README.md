@@ -58,3 +58,5 @@ npm run all
 ## Licence
 
 MIT
+
+This software includes [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter) based on Apache 2.0 license

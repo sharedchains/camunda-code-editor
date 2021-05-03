@@ -33,7 +33,8 @@ module.exports = {
     },
     fallback: {
       'util': false,
-      'assert': false
+      'assert': false,
+      'vm': false
     }
   },
   plugins: [

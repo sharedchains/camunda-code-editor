@@ -63,11 +63,13 @@
 }
 .RunningResult {
     flex-grow: 1;
+    height: 464px;
 }
 .RunningResult .Result-box {
     box-sizing: border-box;
     height: 100%;
     border: 2px solid #ccc;
+    overflow-y: auto;
 }
 
 div#runPanel {
@@ -75,23 +77,39 @@ div#runPanel {
     color: white;
 
     display: flex;
-    flex-direction: row-reverse;
+    flex-flow: column wrap;
+    justify-content: flex-end;
 }
 
-div#runPanel > a.run-button, div#runPanel > a.run-button:link, div#runPanel > a.run-button:visited {
+div#runPanel > a, div#runPanel > a:link, div#runPanel > a:visited {
     background-color: white;
     color: black;
-    border: 2px solid #4CAF50;
 
     text-align: center;
     text-decoration: none;
     display: inline-block;
 
-    padding: 10px 20px 10px 20px;
+    padding: 5px 10px 5px 10px;
+
+    align-self: flex-end;
+    width: 75px;
+}
+
+div#runPanel > a.run-button, div#runPanel > a.run-button:link, div#runPanel > a.run-button:visited {
+    border: 2px solid #4CAF50;
 }
 
 div#runPanel > a.run-button:hover, div#runPanel > a.run-button:active {
     background-color: #4CAF50;
+    color: white;
+}
+
+div#runPanel > a.stop-button, div#runPanel > a.stop-button:link, div#runPanel > a.stop-button:visited {
+    border: 2px solid #d24747;
+}
+
+div#runPanel > a.stop-button:hover, div#runPanel > a.stop-button:active {
+    background-color: #d24747;
     color: white;
 }
 

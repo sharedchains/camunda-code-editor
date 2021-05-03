@@ -27,6 +27,7 @@ import jsonlint from 'jsonlint-mod';
 
 import executeCode from '../../utils/executor';
 import logger from '../../utils/console';
+import { STOP_CODE_EDITOR } from '../../utils/EventHelper';
 
 window.JSHINT = JSHINT;
 window.jsonlint = jsonlint;
@@ -37,14 +38,12 @@ const CodeEditor = props => {
   const consoleResultRef = useRef(null);
 
   let clearConsoleRef = null;
-
-  // let addToConsoleRef = null;
+  let addToConsoleRef = null;
 
   useEffect(() => {
-    const { clearConsole } = logger(consoleResultRef.current);
+    const { clearConsole, addToConsole } = logger(consoleResultRef.current);
     clearConsoleRef = clearConsole;
-
-    // addToConsoleRef = addToConsole;
+    addToConsoleRef = addToConsole;
   }, []);
 
   let mode = {
@@ -60,15 +59,10 @@ const CodeEditor = props => {
       // TODO: Variabili globali da definire
       'JSON': 'SpinJsonNode',
       'XML': 'SpinXmlElement'
-    },
-    lint: true,
+    }
   };
   if (props.mode === 'javascript') {
-    mode.typescript = true;
     mode.json = false;
-    mode.lint = {
-      esversion: 6
-    };
   }
 
   let scriptOptions = {
@@ -89,6 +83,7 @@ const CodeEditor = props => {
     autoScroll: false,
     highlightSelectionMatches: { minChars: 2, showToken: true },
     lineWrapping: true,
+    lint: true,
     gutters: ['CodeMirror-lint-markers']
   };
   try {
@@ -172,14 +167,24 @@ const CodeEditor = props => {
           run.setAttribute('title', 'Run!');
           run.setAttribute('class', 'run-button');
           run.textContent = 'Run';
+
           run.onclick = function(event) {
             event.preventDefault();
 
             clearConsoleRef('');
+            if (props.mode === 'javascript') {
+              executeCode(ed.getValue(), { log: addToConsoleRef, clear: clearConsoleRef }, props.eventBus);
+            }
+          };
 
-            // addToConsoleRef(`<iframe srcdoc='<script src="data:text/javascript,${props.value}"></script>'></iframe>`);
+          let stop = runPanel.appendChild(document.createElement('a'));
+          stop.setAttribute('id', 'stop');
+          stop.setAttribute('title', 'Stop!');
+          stop.setAttribute('class', 'stop-button');
+          stop.textContent = 'Stop';
 
-            executeCode(props.value);
+          stop.onclick = function(event) {
+            props.eventBus.fire(STOP_CODE_EDITOR);
           };
 
           ed.addPanel(runPanel, { position: 'top', stable: true });
