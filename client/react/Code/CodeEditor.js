@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'camunda-modeler-plugin-helpers/react';
+import React, { useEffect, useRef, useState } from 'camunda-modeler-plugin-helpers/react';
 
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/mode/groovy/groovy';
@@ -25,7 +25,7 @@ import 'codemirror/keymap/sublime';
 import { JSHINT } from 'jshint';
 import jsonlint from 'jsonlint-mod';
 
-import executeCode from '../../utils/executor';
+import JSExecutor from '../../utils/executors/JSExecutor';
 import logger from '../../utils/console';
 import { STOP_CODE_EDITOR } from '../../utils/EventHelper';
 
@@ -173,7 +173,13 @@ const CodeEditor = props => {
 
             clearConsoleRef('');
             if (props.mode === 'javascript') {
-              executeCode(ed.getValue(), { log: addToConsoleRef, clear: clearConsoleRef }, props.eventBus);
+              let jsExecutor = JSExecutor(ed.getValue(), { log: addToConsoleRef, clear: clearConsoleRef }, props.eventBus);
+              jsExecutor.execute();
+            } else {
+
+              // props.triggerAction('codeEditor.groovy:saveTempFile', ed.getValue());
+              // groovy
+              // Needs to call the backend to execute java
             }
           };
 

@@ -1,12 +1,12 @@
-import Interpreter from '../assets/js-interpreter';
-import { STOP_CODE_EDITOR } from './EventHelper';
+import Interpreter from '../../assets/js-interpreter';
+import { STOP_CODE_EDITOR } from '../EventHelper';
 
-export default function executeCode(code, logger, eventBus) {
+export default function JSExecutor(code, logger, eventBus) {
 
   let initFunction = function(interpreter, globalObject) {
 
     // Create 'console' global object
-    var console = interpreter.nativeToPseudo({});
+    let console = interpreter.nativeToPseudo({});
     interpreter.setProperty(globalObject, 'console', console);
 
     let error = function(error) {
@@ -31,15 +31,21 @@ export default function executeCode(code, logger, eventBus) {
     interpreter.setProperty(console, 'clear', interpreter.createNativeFunction(clear));
   };
 
+  this.jsInterpreter = new Interpreter(code, initFunction);
+  this._logger = logger;
+  this._eventBus = eventBus;
+}
+
+JSExecutor.prototype.execute = function() {
   try {
-    const jsInterpreter = new Interpreter(code, initFunction);
+
     let stopExecution = false;
-    eventBus.on(STOP_CODE_EDITOR, () => {
+    this._eventBus.on(STOP_CODE_EDITOR, () => {
       stopExecution = true;
     });
 
     let nextStep = () => {
-      if (jsInterpreter.step() && !stopExecution) {
+      if (this.jsInterpreter.step() && !stopExecution) {
         setTimeout(nextStep, 0);
       } else {
         stopExecution = true;
@@ -51,9 +57,10 @@ export default function executeCode(code, logger, eventBus) {
 
     nextStep();
   } catch (error) {
-    logger.log(error);
+    this._logger.log(error);
     console.error(error);
   }
+};
 
-}
+
 
