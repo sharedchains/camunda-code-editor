@@ -32,7 +32,7 @@ var Interpreter = function(code, opt_initFunc) {
   // Get a handle on Acorn's node_t object.
   this.nodeConstructor = code.constructor;
   // Clone the root 'Program' node so that the AST may be modified.
-  var ast = new this.nodeConstructor({ options: {} });
+  var ast = new this.nodeConstructor({options:{}});
   for (var prop in code) {
     ast[prop] = (prop === 'body') ? code[prop].slice() : code[prop];
   }
@@ -146,25 +146,25 @@ Interpreter.VARIABLE_DESCRIPTOR = {
  * added it to the stack, and will be thrown within the user's program.
  * When STEP_ERROR is thrown in the JS-Interpreter, the error can be ignored.
  */
-Interpreter.STEP_ERROR = { 'STEP_ERROR': true };
+Interpreter.STEP_ERROR = {'STEP_ERROR': true};
 
 /**
  * Unique symbol for indicating that a reference is a variable on the scope,
  * not an object property.
  */
-Interpreter.SCOPE_REFERENCE = { 'SCOPE_REFERENCE': true };
+Interpreter.SCOPE_REFERENCE = {'SCOPE_REFERENCE': true};
 
 /**
  * Unique symbol for indicating, when used as the value of the value
  * parameter in calls to setProperty and friends, that the value
  * should be taken from the property descriptor instead.
  */
-Interpreter.VALUE_IN_DESCRIPTOR = { 'VALUE_IN_DESCRIPTOR': true };
+Interpreter.VALUE_IN_DESCRIPTOR = {'VALUE_IN_DESCRIPTOR': true};
 
 /**
  * Unique symbol for indicating that a RegExp timeout has occurred in a VM.
  */
-Interpreter.REGEXP_TIMEOUT = { 'REGEXP_TIMEOUT': true };
+Interpreter.REGEXP_TIMEOUT = {'REGEXP_TIMEOUT': true};
 
 /**
  * For cycle detection in array to string and error conversion;
@@ -188,37 +188,37 @@ Interpreter.nativeGlobal = this;
  * Code for executing regular expressions in a thread.
  */
 Interpreter.WORKER_CODE = [
-  'onmessage = function(e) {',
-  'var result;',
-  'var data = e.data;',
-  'switch (data[0]) {',
-  'case \'split\':',
+  "onmessage = function(e) {",
+  "var result;",
+  "var data = e.data;",
+  "switch (data[0]) {",
+  "case 'split':",
   // ['split', string, separator, limit]
-  'result = data[1].split(data[2], data[3]);',
-  'break;',
-  'case \'match\':',
+  "result = data[1].split(data[2], data[3]);",
+  "break;",
+  "case 'match':",
   // ['match', string, regexp]
-  'result = data[1].match(data[2]);',
-  'break;',
-  'case \'search\':',
+  "result = data[1].match(data[2]);",
+  "break;",
+  "case 'search':",
   // ['search', string, regexp]
-  'result = data[1].search(data[2]);',
-  'break;',
-  'case \'replace\':',
+  "result = data[1].search(data[2]);",
+  "break;",
+  "case 'replace':",
   // ['replace', string, regexp, newSubstr]
-  'result = data[1].replace(data[2], data[3]);',
-  'break;',
-  'case \'exec\':',
+  "result = data[1].replace(data[2], data[3]);",
+  "break;",
+  "case 'exec':",
   // ['exec', regexp, lastIndex, string]
-  'var regexp = data[1];',
-  'regexp.lastIndex = data[2];',
-  'result = [regexp.exec(data[3]), data[1].lastIndex];',
-  'break;',
-  'default:',
-  'throw Error(\'Unknown RegExp operation: \' + data[0]);',
-  '}',
-  'postMessage(result);',
-  '};'];
+  "var regexp = data[1];",
+  "regexp.lastIndex = data[2];",
+  "result = [regexp.exec(data[3]), data[1].lastIndex];",
+  "break;",
+  "default:",
+  "throw Error('Unknown RegExp operation: ' + data[0]);",
+  "}",
+  "postMessage(result);",
+  "};"];
 
 /**
  * Is a value a legal integer for an array length?
@@ -429,7 +429,7 @@ Interpreter.prototype.initGlobal = function(globalObject) {
   // Initialize global functions.
   var thisInterpreter = this;
   var func = this.createNativeFunction(
-    function(x) {throw EvalError('Can\'t happen');}, false);
+    function(x) {throw EvalError("Can't happen");}, false);
   func.eval = true;
   this.setProperty(globalObject, 'eval', func,
     Interpreter.NONENUMERABLE_DESCRIPTOR);
@@ -471,16 +471,11 @@ Interpreter.prototype.initGlobal = function(globalObject) {
   }
   // Preserve publicly properties from being pruned/renamed by JS compilers.
   // Add others as needed.
-  this['OBJECT'] = this.OBJECT;
-  this['OBJECT_PROTO'] = this.OBJECT_PROTO;
-  this['FUNCTION'] = this.FUNCTION;
-  this['FUNCTION_PROTO'] = this.FUNCTION_PROTO;
-  this['ARRAY'] = this.ARRAY;
-  this['ARRAY_PROTO'] = this.ARRAY_PROTO;
-  this['REGEXP'] = this.REGEXP;
-  this['REGEXP_PROTO'] = this.REGEXP_PROTO;
-  this['DATE'] = this.DATE;
-  this['DATE_PROTO'] = this.DATE_PROTO;
+  this['OBJECT'] = this.OBJECT;     this['OBJECT_PROTO'] = this.OBJECT_PROTO;
+  this['FUNCTION'] = this.FUNCTION; this['FUNCTION_PROTO'] = this.FUNCTION_PROTO;
+  this['ARRAY'] = this.ARRAY;       this['ARRAY_PROTO'] = this.ARRAY_PROTO;
+  this['REGEXP'] = this.REGEXP;     this['REGEXP_PROTO'] = this.REGEXP_PROTO;
+  this['DATE'] = this.DATE;         this['DATE_PROTO'] = this.DATE_PROTO;
 
   // Run any user-provided initialization.
   if (this.initFunc_) {
@@ -595,29 +590,29 @@ Interpreter.prototype.initFunction = function(globalObject) {
   this.polyfills_.push(
 // Polyfill copied from:
 // developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind
-    'Object.defineProperty(Function.prototype, \'bind\',',
-    '{configurable: true, writable: true, value:',
-    'function bind(oThis) {',
-    'if (typeof this !== \'function\') {',
-    'throw TypeError(\'What is trying to be bound is not callable\');',
-    '}',
-    'var aArgs   = Array.prototype.slice.call(arguments, 1),',
-    'fToBind = this,',
-    'fNOP    = function() {},',
-    'fBound  = function() {',
-    'return fToBind.apply(this instanceof fNOP',
-    '? this',
-    ': oThis,',
-    'aArgs.concat(Array.prototype.slice.call(arguments)));',
-    '};',
-    'if (this.prototype) {',
-    'fNOP.prototype = this.prototype;',
-    '}',
-    'fBound.prototype = new fNOP();',
-    'return fBound;',
-    '}',
-    '});',
-    '');
+    "Object.defineProperty(Function.prototype, 'bind',",
+    "{configurable: true, writable: true, value:",
+    "function bind(oThis) {",
+    "if (typeof this !== 'function') {",
+    "throw TypeError('What is trying to be bound is not callable');",
+    "}",
+    "var aArgs   = Array.prototype.slice.call(arguments, 1),",
+    "fToBind = this,",
+    "fNOP    = function() {},",
+    "fBound  = function() {",
+    "return fToBind.apply(this instanceof fNOP",
+    "? this",
+    ": oThis,",
+    "aArgs.concat(Array.prototype.slice.call(arguments)));",
+    "};",
+    "if (this.prototype) {",
+    "fNOP.prototype = this.prototype;",
+    "}",
+    "fBound.prototype = new fNOP();",
+    "return fBound;",
+    "}",
+    "});",
+    "");
 
   // Function has no parent to inherit from, so it needs its own mandatory
   // toString and valueOf functions.
@@ -683,7 +678,7 @@ Interpreter.prototype.initObject = function(globalObject) {
   var throwIfNullUndefined = function(value) {
     if (value === undefined || value === null) {
       thisInterpreter.throwException(thisInterpreter.TYPE_ERROR,
-        'Cannot convert \'' + value + '\' to object');
+        "Cannot convert '" + value + "' to object");
     }
   };
 
@@ -726,15 +721,15 @@ Interpreter.prototype.initObject = function(globalObject) {
 
   // Add a polyfill to handle create's second argument.
   this.polyfills_.push(
-    '(function() {',
-    'var create_ = Object.create;',
-    'Object.create = function create(proto, props) {',
-    'var obj = create_(proto);',
-    'props && Object.defineProperties(obj, props);',
-    'return obj;',
-    '};',
-    '})();',
-    '');
+    "(function() {",
+    "var create_ = Object.create;",
+    "Object.create = function create(proto, props) {",
+    "var obj = create_(proto);",
+    "props && Object.defineProperties(obj, props);",
+    "return obj;",
+    "};",
+    "})();",
+    "");
 
   wrapper = function defineProperty(obj, prop, descriptor) {
     prop = String(prop);
@@ -748,7 +743,7 @@ Interpreter.prototype.initObject = function(globalObject) {
     }
     if (!obj.properties[prop] && obj.preventExtensions) {
       thisInterpreter.throwException(thisInterpreter.TYPE_ERROR,
-        'Can\'t define property \'' + prop + '\', object is not extensible');
+        "Can't define property '" + prop + "', object is not extensible");
     }
     // The polyfill guarantees no inheritance and no getter functions.
     // Therefore the descriptor properties map is the native object needed.
@@ -762,31 +757,31 @@ Interpreter.prototype.initObject = function(globalObject) {
 
   this.polyfills_.push(
 // Flatten the descriptor to remove any inheritance or getter functions.
-    '(function() {',
-    'var defineProperty_ = Object.defineProperty;',
-    'Object.defineProperty = function defineProperty(obj, prop, d1) {',
-    'var d2 = {};',
-    'if (\'configurable\' in d1) d2.configurable = d1.configurable;',
-    'if (\'enumerable\' in d1) d2.enumerable = d1.enumerable;',
-    'if (\'writable\' in d1) d2.writable = d1.writable;',
-    'if (\'value\' in d1) d2.value = d1.value;',
-    'if (\'get\' in d1) d2.get = d1.get;',
-    'if (\'set\' in d1) d2.set = d1.set;',
-    'return defineProperty_(obj, prop, d2);',
-    '};',
-    '})();',
+    "(function() {",
+    "var defineProperty_ = Object.defineProperty;",
+    "Object.defineProperty = function defineProperty(obj, prop, d1) {",
+    "var d2 = {};",
+    "if ('configurable' in d1) d2.configurable = d1.configurable;",
+    "if ('enumerable' in d1) d2.enumerable = d1.enumerable;",
+    "if ('writable' in d1) d2.writable = d1.writable;",
+    "if ('value' in d1) d2.value = d1.value;",
+    "if ('get' in d1) d2.get = d1.get;",
+    "if ('set' in d1) d2.set = d1.set;",
+    "return defineProperty_(obj, prop, d2);",
+    "};",
+    "})();",
 
-    'Object.defineProperty(Object, \'defineProperties\',',
-    '{configurable: true, writable: true, value:',
-    'function defineProperties(obj, props) {',
-    'var keys = Object.keys(props);',
-    'for (var i = 0; i < keys.length; i++) {',
-    'Object.defineProperty(obj, keys[i], props[keys[i]]);',
-    '}',
-    'return obj;',
-    '}',
-    '});',
-    '');
+    "Object.defineProperty(Object, 'defineProperties',",
+    "{configurable: true, writable: true, value:",
+    "function defineProperties(obj, props) {",
+    "var keys = Object.keys(props);",
+    "for (var i = 0; i < keys.length; i++) {",
+    "Object.defineProperty(obj, keys[i], props[keys[i]]);",
+    "}",
+    "return obj;",
+    "}",
+    "});",
+    "");
 
   wrapper = function getOwnPropertyDescriptor(obj, prop) {
     if (!(obj instanceof Interpreter.Object)) {
@@ -888,7 +883,7 @@ Interpreter.prototype.initObject = function(globalObject) {
       }
     }
   };
-  this.setNativeFunctionPrototype(this.OBJECT, 'isPrototypeOf', wrapper);
+  this.setNativeFunctionPrototype(this.OBJECT, 'isPrototypeOf',  wrapper);
 };
 
 /**
@@ -937,439 +932,440 @@ Interpreter.prototype.initArray = function(globalObject) {
 
   // Instance methods on Array.
   this.setProperty(this.ARRAY_PROTO, 'length', 0,
-    { configurable: false, enumerable: false, writable: true });
+    {configurable: false, enumerable: false, writable: true});
   this.ARRAY_PROTO.class = 'Array';
 
   this.polyfills_.push(
-    'Object.defineProperty(Array.prototype, \'pop\',',
-    '{configurable: true, writable: true, value:',
-    'function pop() {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (!len || len < 0) {',
-    'o.length = 0;',
-    'return undefined;',
-    '}',
-    'len--;',
-    'var x = o[len];',
-    'delete o[len];',  // Needed for non-arrays.
-    'o.length = len;',
-    'return x;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'pop',",
+    "{configurable: true, writable: true, value:",
+    "function pop() {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (!len || len < 0) {",
+    "o.length = 0;",
+    "return undefined;",
+    "}",
+    "len--;",
+    "var x = o[len];",
+    "delete o[len];",  // Needed for non-arrays.
+    "o.length = len;",
+    "return x;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'push\',',
-    '{configurable: true, writable: true, value:',
-    'function push(var_args) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'for (var i = 0; i < arguments.length; i++) {',
-    'o[len] = arguments[i];',
-    'len++;',
-    '}',
-    'o.length = len;',
-    'return len;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'push',",
+    "{configurable: true, writable: true, value:",
+    "function push(var_args) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "for (var i = 0; i < arguments.length; i++) {",
+    "o[len] = arguments[i];",
+    "len++;",
+    "}",
+    "o.length = len;",
+    "return len;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'shift\',',
-    '{configurable: true, writable: true, value:',
-    'function shift() {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (!len || len < 0) {',
-    'o.length = 0;',
-    'return undefined;',
-    '}',
-    'var value = o[0];',
-    'for (var i = 0; i < len - 1; i++) {',
-    'o[i] = o[i + 1];',
-    '}',
-    'delete o[i];',  // Needed for non-arrays.
-    'o.length = len - 1;',
-    'return value;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'shift',",
+    "{configurable: true, writable: true, value:",
+    "function shift() {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (!len || len < 0) {",
+    "o.length = 0;",
+    "return undefined;",
+    "}",
+    "var value = o[0];",
+    "for (var i = 0; i < len - 1; i++) {",
+    "o[i] = o[i + 1];",
+    "}",
+    "delete o[i];",  // Needed for non-arrays.
+    "o.length = len - 1;",
+    "return value;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'unshift\',',
-    '{configurable: true, writable: true, value:',
-    'function unshift(var_args) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (!len || len < 0) {',
-    'len = 0;',
-    '}',
-    'for (var i = len - 1; i >= 0; i--) {',
-    'o[i + arguments.length] = o[i];',
-    '}',
-    'for (var i = 0; i < arguments.length; i++) {',
-    'o[i] = arguments[i];',
-    '}',
-    'return o.length = len + arguments.length;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'unshift',",
+    "{configurable: true, writable: true, value:",
+    "function unshift(var_args) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (!len || len < 0) {",
+    "len = 0;",
+    "}",
+    "for (var i = len - 1; i >= 0; i--) {",
+    "o[i + arguments.length] = o[i];",
+    "}",
+    "for (var i = 0; i < arguments.length; i++) {",
+    "o[i] = arguments[i];",
+    "}",
+    "return o.length = len + arguments.length;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'reverse\',',
-    '{configurable: true, writable: true, value:',
-    'function reverse() {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (!len || len < 2) {',
-    'return o;',  // Not an array, or too short to reverse.
-    '}',
-    'for (var i = 0; i < len / 2 - 0.5; i++) {',
-    'var x = o[i];',
-    'o[i] = o[len - i - 1];',
-    'o[len - i - 1] = x;',
-    '}',
-    'return o;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'reverse',",
+    "{configurable: true, writable: true, value:",
+    "function reverse() {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (!len || len < 2) {",
+    "return o;",  // Not an array, or too short to reverse.
+    "}",
+    "for (var i = 0; i < len / 2 - 0.5; i++) {",
+    "var x = o[i];",
+    "o[i] = o[len - i - 1];",
+    "o[len - i - 1] = x;",
+    "}",
+    "return o;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'indexOf\',',
-    '{configurable: true, writable: true, value:',
-    'function indexOf(searchElement, fromIndex) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'var n = fromIndex | 0;',
-    'if (!len || n >= len) {',
-    'return -1;',
-    '}',
-    'var i = Math.max(n >= 0 ? n : len - Math.abs(n), 0);',
-    'while (i < len) {',
-    'if (i in o && o[i] === searchElement) {',
-    'return i;',
-    '}',
-    'i++;',
-    '}',
-    'return -1;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'indexOf',",
+    "{configurable: true, writable: true, value:",
+    "function indexOf(searchElement, fromIndex) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "var n = fromIndex | 0;",
+    "if (!len || n >= len) {",
+    "return -1;",
+    "}",
+    "var i = Math.max(n >= 0 ? n : len - Math.abs(n), 0);",
+    "while (i < len) {",
+    "if (i in o && o[i] === searchElement) {",
+    "return i;",
+    "}",
+    "i++;",
+    "}",
+    "return -1;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'lastIndexOf\',',
-    '{configurable: true, writable: true, value:',
-    'function lastIndexOf(searchElement, fromIndex) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (!len) {',
-    'return -1;',
-    '}',
-    'var n = len - 1;',
-    'if (arguments.length > 1) {',
-    'n = fromIndex | 0;',
-    'if (n) {',
-    'n = (n > 0 || -1) * Math.floor(Math.abs(n));',
-    '}',
-    '}',
-    'var i = n >= 0 ? Math.min(n, len - 1) : len - Math.abs(n);',
-    'while (i >= 0) {',
-    'if (i in o && o[i] === searchElement) {',
-    'return i;',
-    '}',
-    'i--;',
-    '}',
-    'return -1;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'lastIndexOf',",
+    "{configurable: true, writable: true, value:",
+    "function lastIndexOf(searchElement, fromIndex) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (!len) {",
+    "return -1;",
+    "}",
+    "var n = len - 1;",
+    "if (arguments.length > 1) {",
+    "n = fromIndex | 0;",
+    "if (n) {",
+    "n = (n > 0 || -1) * Math.floor(Math.abs(n));",
+    "}",
+    "}",
+    "var i = n >= 0 ? Math.min(n, len - 1) : len - Math.abs(n);",
+    "while (i >= 0) {",
+    "if (i in o && o[i] === searchElement) {",
+    "return i;",
+    "}",
+    "i--;",
+    "}",
+    "return -1;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'slice\',',
-    '{configurable: true, writable: true, value:',
-    'function slice(start, end) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
+    "Object.defineProperty(Array.prototype, 'slice',",
+    "{configurable: true, writable: true, value:",
+    "function slice(start, end) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
     // Handle negative value for "start"
-    'start |= 0;',
-    'start = (start >= 0) ? start : Math.max(0, len + start);',
+    "start |= 0;",
+    "start = (start >= 0) ? start : Math.max(0, len + start);",
     // Handle negative value for "end"
-    'if (typeof end !== \'undefined\') {',
-    'if (end !== Infinity) {',
-    'end |= 0;',
-    '}',
-    'if (end < 0) {',
-    'end = len + end;',
-    '} else {',
-    'end = Math.min(end, len);',
-    '}',
-    '} else {',
-    'end = len;',
-    '}',
-    'var size = end - start;',
-    'var cloned = [];',
-    'for (var i = 0; i < size; i++) {',
-    'cloned[i] = o[start + i];',
-    '}',
-    'return cloned;',
-    '}',
-    '});',
+    "if (typeof end !== 'undefined') {",
+    "if (end !== Infinity) {",
+    "end |= 0;",
+    "}",
+    "if (end < 0) {",
+    "end = len + end;",
+    "} else {",
+    "end = Math.min(end, len);",
+    "}",
+    "} else {",
+    "end = len;",
+    "}",
+    "var size = end - start;",
+    "var cloned = [];",
+    "for (var i = 0; i < size; i++) {",
+    "cloned[i] = o[start + i];",
+    "}",
+    "return cloned;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'splice\',',
-    '{configurable: true, writable: true, value:',
-    'function splice(start, deleteCount, var_args) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'start |= 0;',
-    'if (start < 0) {',
-    'start = Math.max(len + start, 0);',
-    '} else {',
-    'start = Math.min(start, len);',
-    '}',
-    'if (arguments.length < 1) {',
-    'deleteCount = len - start;',
-    '} else {',
-    'deleteCount |= 0;',
-    'deleteCount = Math.max(0, Math.min(deleteCount, len - start));',
-    '}',
-    'var removed = [];',
+    "Object.defineProperty(Array.prototype, 'splice',",
+    "{configurable: true, writable: true, value:",
+    "function splice(start, deleteCount, var_args) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "start |= 0;",
+    "if (start < 0) {",
+    "start = Math.max(len + start, 0);",
+    "} else {",
+    "start = Math.min(start, len);",
+    "}",
+    "if (arguments.length < 1) {",
+    "deleteCount = len - start;",
+    "} else {",
+    "deleteCount |= 0;",
+    "deleteCount = Math.max(0, Math.min(deleteCount, len - start));",
+    "}",
+    "var removed = [];",
     // Remove specified elements.
-    'for (var i = start; i < start + deleteCount; i++) {',
-    'removed[removed.length++] = o[i];',
-    'o[i] = o[i + deleteCount];',
-    '}',
+    "for (var i = start; i < start + deleteCount; i++) {",
+    "removed[removed.length++] = o[i];",
+    "o[i] = o[i + deleteCount];",
+    "}",
     // Move other element to fill the gap.
-    'for (var i = start + deleteCount; i < len - deleteCount; i++) {',
-    'o[i] = o[i + deleteCount];',
-    '}',
+    "for (var i = start + deleteCount; i < len - deleteCount; i++) {",
+    "o[i] = o[i + deleteCount];",
+    "}",
     // Delete superfluous properties.
-    'for (var i = len - deleteCount; i < len; i++) {',
-    'delete o[i];',
-    '}',
-    'len -= deleteCount;',
+    "for (var i = len - deleteCount; i < len; i++) {",
+    "delete o[i];",
+    "}",
+    "len -= deleteCount;",
     // Insert specified items.
-    'for (var i = len - 1; i >= start; i--) {',
-    'o[i + arguments.length - 2] = o[i];',
-    '}',
-    'len += arguments.length - 2;',
-    'for (var i = 2; i < arguments.length; i++) {',
-    'o[start + i - 2] = arguments[i];',
-    '}',
-    'o.length = len;',
-    'return removed;',
-    '}',
-    '});',
+    "for (var i = len - 1; i >= start; i--) {",
+    "o[i + arguments.length - 2] = o[i];",
+    "}",
+    "len += arguments.length - 2;",
+    "for (var i = 2; i < arguments.length; i++) {",
+    "o[start + i - 2] = arguments[i];",
+    "}",
+    "o.length = len;",
+    "return removed;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'concat\',',
-    '{configurable: true, writable: true, value:',
-    'function concat(var_args) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var cloned = [];',
-    'for (var i = -1; i < arguments.length; i++) {',
-    'var value = (i === -1) ? o : arguments[i];',
-    'if (Array.isArray(value)) {',
-    'cloned.push.apply(cloned, value);',
-    '} else {',
-    'cloned.push(value);',
-    '}',
-    '}',
-    'return cloned;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'concat',",
+    "{configurable: true, writable: true, value:",
+    "function concat(var_args) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var cloned = [];",
+    "for (var i = -1; i < arguments.length; i++) {",
+    "var value = (i === -1) ? o : arguments[i];",
+    "if (Array.isArray(value)) {",
+    "cloned.push.apply(cloned, value);",
+    "} else {",
+    "cloned.push(value);",
+    "}",
+    "}",
+    "return cloned;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'join\',',
-    '{configurable: true, writable: true, value:',
-    'function join(opt_separator) {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var sep = typeof opt_separator === \'undefined\' ?',
-    '\',\' : (\'\' + opt_separator);',
-    'var str = \'\';',
-    'for (var i = 0; i < o.length; i++) {',
-    'if (i && sep) {',
-    'str += sep;',
-    '}',
-    'str += o[i];',
-    '}',
-    'return str;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'join',",
+    "{configurable: true, writable: true, value:",
+    "function join(opt_separator) {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var sep = typeof opt_separator === 'undefined' ?",
+    "',' : ('' + opt_separator);",
+    "var str = '';",
+    "for (var i = 0; i < o.length; i++) {",
+    "if (i && sep) {",
+    "str += sep;",
+    "}",
+    "str += o[i];",
+    "}",
+    "return str;",
+    "}",
+    "});",
 
 // Polyfill copied from:
 // developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/every
-    'Object.defineProperty(Array.prototype, \'every\',',
-    '{configurable: true, writable: true, value:',
-    'function every(callbackfn, thisArg) {',
-    'if (!this || typeof callbackfn !== \'function\') throw TypeError();',
-    'var t, k;',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (arguments.length > 1) t = thisArg;',
-    'k = 0;',
-    'while (k < len) {',
-    'if (k in o && !callbackfn.call(t, o[k], k, o)) return false;',
-    'k++;',
-    '}',
-    'return true;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'every',",
+    "{configurable: true, writable: true, value:",
+    "function every(callbackfn, thisArg) {",
+    "if (!this || typeof callbackfn !== 'function') throw TypeError();",
+    "var t, k;",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (arguments.length > 1) t = thisArg;",
+    "k = 0;",
+    "while (k < len) {",
+    "if (k in o && !callbackfn.call(t, o[k], k, o)) return false;",
+    "k++;",
+    "}",
+    "return true;",
+    "}",
+    "});",
 
 // Polyfill copied from:
 // developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
-    'Object.defineProperty(Array.prototype, \'filter\',',
-    '{configurable: true, writable: true, value:',
-    'function filter(fun, var_args) {',
-    'if (this === void 0 || this === null || typeof fun !== \'function\') throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'var res = [];',
-    'var thisArg = arguments.length >= 2 ? arguments[1] : void 0;',
-    'for (var i = 0; i < len; i++) {',
-    'if (i in o) {',
-    'var val = o[i];',
-    'if (fun.call(thisArg, val, i, o)) res.push(val);',
-    '}',
-    '}',
-    'return res;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'filter',",
+    "{configurable: true, writable: true, value:",
+    "function filter(fun, var_args) {",
+    "if (this === void 0 || this === null || typeof fun !== 'function') throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "var res = [];",
+    "var thisArg = arguments.length >= 2 ? arguments[1] : void 0;",
+    "for (var i = 0; i < len; i++) {",
+    "if (i in o) {",
+    "var val = o[i];",
+    "if (fun.call(thisArg, val, i, o)) res.push(val);",
+    "}",
+    "}",
+    "return res;",
+    "}",
+    "});",
 
 // Polyfill copied from:
 // developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-    'Object.defineProperty(Array.prototype, \'forEach\',',
-    '{configurable: true, writable: true, value:',
-    'function forEach(callback, thisArg) {',
-    'if (!this || typeof callback !== \'function\') throw TypeError();',
-    'var t, k;',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (arguments.length > 1) t = thisArg;',
-    'k = 0;',
-    'while (k < len) {',
-    'if (k in o) callback.call(t, o[k], k, o);',
-    'k++;',
-    '}',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'forEach',",
+    "{configurable: true, writable: true, value:",
+    "function forEach(callback, thisArg) {",
+    "if (!this || typeof callback !== 'function') throw TypeError();",
+    "var t, k;",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (arguments.length > 1) t = thisArg;",
+    "k = 0;",
+    "while (k < len) {",
+    "if (k in o) callback.call(t, o[k], k, o);",
+    "k++;",
+    "}",
+    "}",
+    "});",
 
 // Polyfill copied from:
 // developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/map
-    'Object.defineProperty(Array.prototype, \'map\',',
-    '{configurable: true, writable: true, value:',
-    'function map(callback, thisArg) {',
-    'if (!this || typeof callback !== \'function\') throw TypeError();',
-    'var t, a, k;',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'if (arguments.length > 1) t = thisArg;',
-    'a = new Array(len);',
-    'k = 0;',
-    'while (k < len) {',
-    'if (k in o) a[k] = callback.call(t, o[k], k, o);',
-    'k++;',
-    '}',
-    'return a;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'map',",
+    "{configurable: true, writable: true, value:",
+    "function map(callback, thisArg) {",
+    "if (!this || typeof callback !== 'function') throw TypeError();",
+    "var t, a, k;",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "if (arguments.length > 1) t = thisArg;",
+    "a = new Array(len);",
+    "k = 0;",
+    "while (k < len) {",
+    "if (k in o) a[k] = callback.call(t, o[k], k, o);",
+    "k++;",
+    "}",
+    "return a;",
+    "}",
+    "});",
 
 // Polyfill copied from:
 // developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-    'Object.defineProperty(Array.prototype, \'reduce\',',
-    '{configurable: true, writable: true, value:',
-    'function reduce(callback /*, initialValue*/) {',
-    'if (!this || typeof callback !== \'function\') throw TypeError();',
-    'var o = Object(this), len = o.length >>> 0, k = 0, value;',
-    'if (arguments.length === 2) {',
-    'value = arguments[1];',
-    '} else {',
-    'while (k < len && !(k in o)) k++;',
-    'if (k >= len) {',
-    'throw TypeError(\'Reduce of empty array with no initial value\');',
-    '}',
-    'value = o[k++];',
-    '}',
-    'for (; k < len; k++) {',
-    'if (k in o) value = callback(value, o[k], k, o);',
-    '}',
-    'return value;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'reduce',",
+    "{configurable: true, writable: true, value:",
+    "function reduce(callback /*, initialValue*/) {",
+    "if (!this || typeof callback !== 'function') throw TypeError();",
+    "var o = Object(this), len = o.length >>> 0, k = 0, value;",
+    "if (arguments.length === 2) {",
+    "value = arguments[1];",
+    "} else {",
+    "while (k < len && !(k in o)) k++;",
+    "if (k >= len) {",
+    "throw TypeError('Reduce of empty array with no initial value');",
+    "}",
+    "value = o[k++];",
+    "}",
+    "for (; k < len; k++) {",
+    "if (k in o) value = callback(value, o[k], k, o);",
+    "}",
+    "return value;",
+    "}",
+    "});",
 
 // Polyfill copied from:
 // developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/ReduceRight
-    'Object.defineProperty(Array.prototype, \'reduceRight\',',
-    '{configurable: true, writable: true, value:',
-    'function reduceRight(callback /*, initialValue*/) {',
-    'if (null === this || \'undefined\' === typeof this || \'function\' !== typeof callback) throw TypeError();',
-    'var o = Object(this), len = o.length >>> 0, k = len - 1, value;',
-    'if (arguments.length >= 2) {',
-    'value = arguments[1];',
-    '} else {',
-    'while (k >= 0 && !(k in o)) k--;',
-    'if (k < 0) {',
-    'throw TypeError(\'Reduce of empty array with no initial value\');',
-    '}',
-    'value = o[k--];',
-    '}',
-    'for (; k >= 0; k--) {',
-    'if (k in o) value = callback(value, o[k], k, o);',
-    '}',
-    'return value;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'reduceRight',",
+    "{configurable: true, writable: true, value:",
+    "function reduceRight(callback /*, initialValue*/) {",
+    "if (null === this || 'undefined' === typeof this || 'function' !== typeof callback) throw TypeError();",
+    "var o = Object(this), len = o.length >>> 0, k = len - 1, value;",
+    "if (arguments.length >= 2) {",
+    "value = arguments[1];",
+    "} else {",
+    "while (k >= 0 && !(k in o)) k--;",
+    "if (k < 0) {",
+    "throw TypeError('Reduce of empty array with no initial value');",
+    "}",
+    "value = o[k--];",
+    "}",
+    "for (; k >= 0; k--) {",
+    "if (k in o) value = callback(value, o[k], k, o);",
+    "}",
+    "return value;",
+    "}",
+    "});",
 
 // Polyfill copied from:
 // developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/some
-    'Object.defineProperty(Array.prototype, \'some\',',
-    '{configurable: true, writable: true, value:',
-    'function some(fun/*, thisArg*/) {',
-    'if (!this || typeof fun !== \'function\') throw TypeError();',
-    'var o = Object(this);',
-    'var len = o.length >>> 0;',
-    'var thisArg = arguments.length >= 2 ? arguments[1] : void 0;',
-    'for (var i = 0; i < len; i++) {',
-    'if (i in o && fun.call(thisArg, o[i], i, o)) {',
-    'return true;',
-    '}',
-    '}',
-    'return false;',
-    '}',
-    '});',
+    "Object.defineProperty(Array.prototype, 'some',",
+    "{configurable: true, writable: true, value:",
+    "function some(fun/*, thisArg*/) {",
+    "if (!this || typeof fun !== 'function') throw TypeError();",
+    "var o = Object(this);",
+    "var len = o.length >>> 0;",
+    "var thisArg = arguments.length >= 2 ? arguments[1] : void 0;",
+    "for (var i = 0; i < len; i++) {",
+    "if (i in o && fun.call(thisArg, o[i], i, o)) {",
+    "return true;",
+    "}",
+    "}",
+    "return false;",
+    "}",
+    "});",
 
-    'Object.defineProperty(Array.prototype, \'sort\',',
-    '{configurable: true, writable: true, value:',
-    'function sort(opt_comp) {',  // Bubble sort!
-    'if (!this) throw TypeError();',
-    'if (typeof opt_comp !== \'function\') {',
-    'opt_comp = undefined;',
-    '}',
-    'for (var i = 0; i < this.length; i++) {',
-    'var changes = 0;',
-    'for (var j = 0; j < this.length - i - 1; j++) {',
-    'if (opt_comp ? (opt_comp(this[j], this[j + 1]) > 0) :',
-    '(String(this[j]) > String(this[j + 1]))) {',
-    'var swap = this[j];',
-    'this[j] = this[j + 1];',
-    'this[j + 1] = swap;',
-    'changes++;',
-    '}',
-    '}',
-    'if (!changes) break;',
-    '}',
-    'return this;',
-    '}',
-    '});',
 
-    'Object.defineProperty(Array.prototype, \'toLocaleString\',',
-    '{configurable: true, writable: true, value:',
-    'function toLocaleString() {',
-    'if (!this) throw TypeError();',
-    'var o = Object(this);',
-    'var out = [];',
-    'for (var i = 0; i < o.length; i++) {',
-    'out[i] = (o[i] === null || o[i] === undefined) ? \'\' : o[i].toLocaleString();',
-    '}',
-    'return out.join(\',\');',
-    '}',
-    '});',
-    '');
+    "Object.defineProperty(Array.prototype, 'sort',",
+    "{configurable: true, writable: true, value:",
+    "function sort(opt_comp) {",  // Bubble sort!
+    "if (!this) throw TypeError();",
+    "if (typeof opt_comp !== 'function') {",
+    "opt_comp = undefined;",
+    "}",
+    "for (var i = 0; i < this.length; i++) {",
+    "var changes = 0;",
+    "for (var j = 0; j < this.length - i - 1; j++) {",
+    "if (opt_comp ? (opt_comp(this[j], this[j + 1]) > 0) :",
+    "(String(this[j]) > String(this[j + 1]))) {",
+    "var swap = this[j];",
+    "this[j] = this[j + 1];",
+    "this[j + 1] = swap;",
+    "changes++;",
+    "}",
+    "}",
+    "if (!changes) break;",
+    "}",
+    "return this;",
+    "}",
+    "});",
+
+    "Object.defineProperty(Array.prototype, 'toLocaleString',",
+    "{configurable: true, writable: true, value:",
+    "function toLocaleString() {",
+    "if (!this) throw TypeError();",
+    "var o = Object(this);",
+    "var out = [];",
+    "for (var i = 0; i < o.length; i++) {",
+    "out[i] = (o[i] === null || o[i] === undefined) ? '' : o[i].toLocaleString();",
+    "}",
+    "return out.join(',');",
+    "}",
+    "});",
+    "");
 };
 
 /**
@@ -1585,39 +1581,39 @@ Interpreter.prototype.initString = function(globalObject) {
   this.setAsyncFunctionPrototype(this.STRING, 'replace', wrapper);
   // Add a polyfill to handle replace's second argument being a function.
   this.polyfills_.push(
-    '(function() {',
-    'var replace_ = String.prototype.replace;',
-    'String.prototype.replace = function replace(substr, newSubstr) {',
-    'if (typeof newSubstr !== \'function\') {',
+    "(function() {",
+    "var replace_ = String.prototype.replace;",
+    "String.prototype.replace = function replace(substr, newSubstr) {",
+    "if (typeof newSubstr !== 'function') {",
     // string.replace(string|regexp, string)
-    'return replace_.call(this, substr, newSubstr);',
-    '}',
-    'var str = this;',
-    'if (substr instanceof RegExp) {',  // string.replace(regexp, function)
-    'var subs = [];',
-    'var m = substr.exec(str);',
-    'while (m) {',
-    'm.push(m.index, str);',
-    'var inject = newSubstr.apply(null, m);',
-    'subs.push([m.index, m[0].length, inject]);',
-    'm = substr.global ? substr.exec(str) : null;',
-    '}',
-    'for (var i = subs.length - 1; i >= 0; i--) {',
-    'str = str.substring(0, subs[i][0]) + subs[i][2] + ' +
-    'str.substring(subs[i][0] + subs[i][1]);',
-    '}',
-    '} else {',                         // string.replace(string, function)
-    'var i = str.indexOf(substr);',
-    'if (i !== -1) {',
-    'var inject = newSubstr(str.substr(i, substr.length), i, str);',
-    'str = str.substring(0, i) + inject + ' +
-    'str.substring(i + substr.length);',
-    '}',
-    '}',
-    'return str;',
-    '};',
-    '})();',
-    '');
+    "return replace_.call(this, substr, newSubstr);",
+    "}",
+    "var str = this;",
+    "if (substr instanceof RegExp) {",  // string.replace(regexp, function)
+    "var subs = [];",
+    "var m = substr.exec(str);",
+    "while (m) {",
+    "m.push(m.index, str);",
+    "var inject = newSubstr.apply(null, m);",
+    "subs.push([m.index, m[0].length, inject]);",
+    "m = substr.global ? substr.exec(str) : null;",
+    "}",
+    "for (var i = subs.length - 1; i >= 0; i--) {",
+    "str = str.substring(0, subs[i][0]) + subs[i][2] + " +
+    "str.substring(subs[i][0] + subs[i][1]);",
+    "}",
+    "} else {",                         // string.replace(string, function)
+    "var i = str.indexOf(substr);",
+    "if (i !== -1) {",
+    "var inject = newSubstr(str.substr(i, substr.length), i, str);",
+    "str = str.substring(0, i) + inject + " +
+    "str.substring(i + substr.length);",
+    "}",
+    "}",
+    "return str;",
+    "};",
+    "})();",
+    "");
 };
 
 /**
@@ -1829,12 +1825,12 @@ Interpreter.prototype.initRegExp = function(globalObject) {
 
   // Use polyfill to avoid complexity of regexp threads.
   this.polyfills_.push(
-    'Object.defineProperty(RegExp.prototype, \'test\',',
-    '{configurable: true, writable: true, value:',
-    'function test(str) {',
-    'return String(str).search(this) !== -1',
-    '}',
-    '});');
+    "Object.defineProperty(RegExp.prototype, 'test',",
+    "{configurable: true, writable: true, value:",
+    "function test(str) {",
+    "return String(str).search(this) !== -1",
+    "}",
+    "});");
 
   wrapper = function exec(string, callback) {
     var regexp = this.data;
@@ -2089,7 +2085,7 @@ Interpreter.prototype.createWorker = function() {
   var blob = this.createWorker.blob_;
   if (!blob) {
     blob = new Blob([Interpreter.WORKER_CODE.join('\n')],
-      { type: 'application/javascript' });
+      {type: 'application/javascript'});
     // Cache the blob, so it doesn't need to be created next time.
     this.createWorker.blob_ = blob;
   }
@@ -2104,7 +2100,7 @@ Interpreter.prototype.createWorker = function() {
  * @param {!Function} callback Asynchronous callback function.
  */
 Interpreter.prototype.vmCall = function(code, sandbox, nativeRegExp, callback) {
-  var options = { 'timeout': this['REGEXP_THREAD_TIMEOUT'] };
+  var options = {'timeout': this['REGEXP_THREAD_TIMEOUT']};
   try {
     return Interpreter.vm['runInNewContext'](code, sandbox, options);
   } catch (e) {
@@ -2214,7 +2210,7 @@ Interpreter.prototype.createArray = function() {
   var array = this.createObjectProto(this.ARRAY_PROTO);
   // Arrays have length.
   this.setProperty(array, 'length', 0,
-    { configurable: false, enumerable: false, writable: true });
+    {configurable: false, enumerable: false, writable: true});
   array.class = 'Array';
   return array;
 };
@@ -2414,7 +2410,7 @@ Interpreter.prototype.pseudoToNative = function(pseudoObj, opt_cycles) {
       val = this.pseudoToNative(pseudoObj.properties[key], cycles);
       // Use defineProperty to avoid side effects if setting '__proto__'.
       Object.defineProperty(nativeObj, key,
-        { value: val, writable: true, enumerable: true, configurable: true });
+        {value: val, writable: true, enumerable: true, configurable: true});
     }
   }
   cycles.pseudo.pop();
@@ -2466,12 +2462,12 @@ Interpreter.prototype.arrayPseudoToNative = function(pseudoArray) {
  */
 Interpreter.prototype.getPrototype = function(value) {
   switch (typeof value) {
-    case 'number':
-      return this.NUMBER.properties['prototype'];
-    case 'boolean':
-      return this.BOOLEAN.properties['prototype'];
-    case 'string':
-      return this.STRING.properties['prototype'];
+  case 'number':
+    return this.NUMBER.properties['prototype'];
+  case 'boolean':
+    return this.BOOLEAN.properties['prototype'];
+  case 'string':
+    return this.STRING.properties['prototype'];
   }
   if (value) {
     return value.proto;
@@ -2492,7 +2488,7 @@ Interpreter.prototype.getProperty = function(obj, name) {
   name = String(name);
   if (obj === undefined || obj === null) {
     this.throwException(this.TYPE_ERROR,
-      'Cannot read property \'' + name + '\' of ' + obj);
+      "Cannot read property '" + name + "' of " + obj);
   }
   if (typeof obj === 'object' && !(obj instanceof Interpreter.Object)) {
     throw TypeError('Expecting native value or pseudo object');
@@ -2574,7 +2570,7 @@ Interpreter.prototype.setProperty = function(obj, name, value, opt_descriptor) {
   name = String(name);
   if (obj === undefined || obj === null) {
     this.throwException(this.TYPE_ERROR,
-      'Cannot set property \'' + name + '\' of ' + obj);
+      "Cannot set property '" + name + "' of " + obj);
   }
   if (typeof obj === 'object' && !(obj instanceof Interpreter.Object)) {
     throw TypeError('Expecting native value or pseudo object');
@@ -2587,8 +2583,8 @@ Interpreter.prototype.setProperty = function(obj, name, value, opt_descriptor) {
   var strict = !this.stateStack || this.getScope().strict;
   if (!(obj instanceof Interpreter.Object)) {
     if (strict) {
-      this.throwException(this.TYPE_ERROR, 'Can\'t create property \'' + name +
-        '\' on \'' + obj + '\'');
+      this.throwException(this.TYPE_ERROR, "Can't create property '" + name +
+        "' on '" + obj + "'");
     }
     return;
   }
@@ -2597,8 +2593,8 @@ Interpreter.prototype.setProperty = function(obj, name, value, opt_descriptor) {
     if (name === 'length' || (!isNaN(n) && n < String(obj).length)) {
       // Can't set length or letters on String objects.
       if (strict) {
-        this.throwException(this.TYPE_ERROR, 'Cannot assign to read only ' +
-          'property \'' + name + '\' of String \'' + obj.data + '\'');
+        this.throwException(this.TYPE_ERROR, "Cannot assign to read only " +
+          "property '" + name + "' of String '" + obj.data + "'");
       }
       return;
     }
@@ -2634,8 +2630,8 @@ Interpreter.prototype.setProperty = function(obj, name, value, opt_descriptor) {
   }
   if (obj.preventExtensions && !(name in obj.properties)) {
     if (strict) {
-      this.throwException(this.TYPE_ERROR, 'Can\'t add property \'' + name +
-        '\', object is not extensible');
+      this.throwException(this.TYPE_ERROR, "Can't add property '" + name +
+        "', object is not extensible");
     }
     return;
   }
@@ -2703,8 +2699,8 @@ Interpreter.prototype.setProperty = function(obj, name, value, opt_descriptor) {
     }
     if (defObj.getter && defObj.getter[name]) {
       if (strict) {
-        this.throwException(this.TYPE_ERROR, 'Cannot set property \'' + name +
-          '\' of object \'' + obj + '\' which only has a getter');
+        this.throwException(this.TYPE_ERROR, "Cannot set property '" + name +
+          "' of object '" + obj + "' which only has a getter");
       }
     } else {
       // No setter, simple assignment.
@@ -2712,16 +2708,16 @@ Interpreter.prototype.setProperty = function(obj, name, value, opt_descriptor) {
         obj.properties[name] = value;
       } catch (e) {
         if (strict) {
-          this.throwException(this.TYPE_ERROR, 'Cannot assign to read only ' +
-            'property \'' + name + '\' of object \'' + obj + '\'');
+          this.throwException(this.TYPE_ERROR, "Cannot assign to read only " +
+            "property '" + name + "' of object '" + obj + "'");
         }
       }
     }
   }
 };
 
-Interpreter.prototype.setProperty.placeholderGet_ = function() {throw Error('Placeholder getter');};
-Interpreter.prototype.setProperty.placeholderSet_ = function() {throw Error('Placeholder setter');};
+Interpreter.prototype.setProperty.placeholderGet_ = function() {throw Error('Placeholder getter')};
+Interpreter.prototype.setProperty.placeholderSet_ = function() {throw Error('Placeholder setter')};
 
 /**
  * Convenience method for adding a native function as a non-enumerable property
@@ -2985,23 +2981,23 @@ Interpreter.prototype.unwind = function(type, value, label) {
   loop: for (var stack = this.stateStack; stack.length > 0; stack.pop()) {
     var state = stack[stack.length - 1];
     switch (state.node['type']) {
-      case 'TryStatement':
-        state.cv = { type: type, value: value, label: label };
+    case 'TryStatement':
+      state.cv = {type: type, value: value, label: label};
+      return;
+    case 'CallExpression':
+    case 'NewExpression':
+      if (type === Interpreter.Completion.RETURN) {
+        state.value = value;
         return;
-      case 'CallExpression':
-      case 'NewExpression':
-        if (type === Interpreter.Completion.RETURN) {
-          state.value = value;
-          return;
-        } else if (type !== Interpreter.Completion.THROW) {
-          throw Error('Unsynatctic break/continue not rejected by Acorn');
-        }
-        break;
-      case 'Program':
-        // Don't pop the stateStack.
-        // Leave the root scope on the tree in case the program is appended to.
-        state.done = true;
-        break loop;
+      } else if (type !== Interpreter.Completion.THROW) {
+        throw Error('Unsynatctic break/continue not rejected by Acorn');
+      }
+      break;
+    case 'Program':
+      // Don't pop the stateStack.
+      // Leave the root scope on the tree in case the program is appended to.
+      state.done = true;
+      break loop;
     }
     if (type === Interpreter.Completion.BREAK) {
       if (label ? (state.labels && state.labels.indexOf(label) !== -1) :
@@ -3054,7 +3050,7 @@ Interpreter.prototype.createGetter_ = function(func, left) {
   // Normally `this` will be specified as the object component (o.x).
   // Sometimes `this` is explicitly provided (o).
   var funcThis = Array.isArray(left) ? left[0] : left;
-  var node = new this.nodeConstructor({ options: {} });
+  var node = new this.nodeConstructor({options:{}});
   node['type'] = 'CallExpression';
   var state = new Interpreter.State(node,
     this.stateStack[this.stateStack.length - 1].scope);
@@ -3083,7 +3079,7 @@ Interpreter.prototype.createSetter_ = function(func, left, value) {
   // Normally `this` will be specified as the object component (o.x).
   // Sometimes `this` is implicitly the global object (x).
   var funcThis = Array.isArray(left) ? left[0] : this.globalObject;
-  var node = new this.nodeConstructor({ options: {} });
+  var node = new this.nodeConstructor({options:{}});
   node['type'] = 'CallExpression';
   var state = new Interpreter.State(node,
     this.stateStack[this.stateStack.length - 1].scope);
@@ -3335,44 +3331,20 @@ Interpreter.prototype['stepAssignmentExpression'] =
     var value = state.leftValue_;
     var rightValue = state.value;
     switch (node['operator']) {
-      case '=':
-        value = rightValue;
-        break;
-      case '+=':
-        value += rightValue;
-        break;
-      case '-=':
-        value -= rightValue;
-        break;
-      case '*=':
-        value *= rightValue;
-        break;
-      case '/=':
-        value /= rightValue;
-        break;
-      case '%=':
-        value %= rightValue;
-        break;
-      case '<<=':
-        value <<= rightValue;
-        break;
-      case '>>=':
-        value >>= rightValue;
-        break;
-      case '>>>=':
-        value >>>= rightValue;
-        break;
-      case '&=':
-        value &= rightValue;
-        break;
-      case '^=':
-        value ^= rightValue;
-        break;
-      case '|=':
-        value |= rightValue;
-        break;
-      default:
-        throw SyntaxError('Unknown assignment expression: ' + node['operator']);
+    case '=':    value =    rightValue; break;
+    case '+=':   value +=   rightValue; break;
+    case '-=':   value -=   rightValue; break;
+    case '*=':   value *=   rightValue; break;
+    case '/=':   value /=   rightValue; break;
+    case '%=':   value %=   rightValue; break;
+    case '<<=':  value <<=  rightValue; break;
+    case '>>=':  value >>=  rightValue; break;
+    case '>>>=': value >>>= rightValue; break;
+    case '&=':   value &=   rightValue; break;
+    case '^=':   value ^=   rightValue; break;
+    case '|=':   value |=   rightValue; break;
+    default:
+      throw SyntaxError('Unknown assignment expression: ' + node['operator']);
     }
     var setter = this.setValue(state.leftReference_, value);
     if (setter) {
@@ -3400,80 +3372,42 @@ Interpreter.prototype['stepBinaryExpression'] = function(stack, state, node) {
   var rightValue = state.value;
   var value;
   switch (node['operator']) {
-    case '==':
-      value = leftValue == rightValue;
-      break;
-    case '!=':
-      value = leftValue != rightValue;
-      break;
-    case '===':
-      value = leftValue === rightValue;
-      break;
-    case '!==':
-      value = leftValue !== rightValue;
-      break;
-    case '>':
-      value = leftValue > rightValue;
-      break;
-    case '>=':
-      value = leftValue >= rightValue;
-      break;
-    case '<':
-      value = leftValue < rightValue;
-      break;
-    case '<=':
-      value = leftValue <= rightValue;
-      break;
-    case '+':
-      value = leftValue + rightValue;
-      break;
-    case '-':
-      value = leftValue - rightValue;
-      break;
-    case '*':
-      value = leftValue * rightValue;
-      break;
-    case '/':
-      value = leftValue / rightValue;
-      break;
-    case '%':
-      value = leftValue % rightValue;
-      break;
-    case '&':
-      value = leftValue & rightValue;
-      break;
-    case '|':
-      value = leftValue | rightValue;
-      break;
-    case '^':
-      value = leftValue ^ rightValue;
-      break;
-    case '<<':
-      value = leftValue << rightValue;
-      break;
-    case '>>':
-      value = leftValue >> rightValue;
-      break;
-    case '>>>':
-      value = leftValue >>> rightValue;
-      break;
-    case 'in':
-      if (!(rightValue instanceof Interpreter.Object)) {
-        this.throwException(this.TYPE_ERROR,
-          '\'in\' expects an object, not \'' + rightValue + '\'');
-      }
-      value = this.hasProperty(rightValue, leftValue);
-      break;
-    case 'instanceof':
-      if (!this.isa(rightValue, this.FUNCTION)) {
-        this.throwException(this.TYPE_ERROR,
-          'Right-hand side of instanceof is not an object');
-      }
-      value = (leftValue instanceof Interpreter.Object) ?
-        this.isa(leftValue, rightValue) : false;
-      break;
-    default:
-      throw SyntaxError('Unknown binary operator: ' + node['operator']);
+  case '==':  value = leftValue ==  rightValue; break;
+  case '!=':  value = leftValue !=  rightValue; break;
+  case '===': value = leftValue === rightValue; break;
+  case '!==': value = leftValue !== rightValue; break;
+  case '>':   value = leftValue >   rightValue; break;
+  case '>=':  value = leftValue >=  rightValue; break;
+  case '<':   value = leftValue <   rightValue; break;
+  case '<=':  value = leftValue <=  rightValue; break;
+  case '+':   value = leftValue +   rightValue; break;
+  case '-':   value = leftValue -   rightValue; break;
+  case '*':   value = leftValue *   rightValue; break;
+  case '/':   value = leftValue /   rightValue; break;
+  case '%':   value = leftValue %   rightValue; break;
+  case '&':   value = leftValue &   rightValue; break;
+  case '|':   value = leftValue |   rightValue; break;
+  case '^':   value = leftValue ^   rightValue; break;
+  case '<<':  value = leftValue <<  rightValue; break;
+  case '>>':  value = leftValue >>  rightValue; break;
+  case '>>>': value = leftValue >>> rightValue; break;
+  case 'in':
+    if (!(rightValue instanceof Interpreter.Object)) {
+      this.throwException(this.TYPE_ERROR,
+        "'in' expects an object, not '" + rightValue + "'");
+    }
+    value = this.hasProperty(rightValue, leftValue);
+    break;
+  case 'instanceof':
+    if (!this.isa(rightValue, this.FUNCTION)) {
+      this.throwException(this.TYPE_ERROR,
+        'Right-hand side of instanceof is not an object');
+    }
+    value = (leftValue instanceof Interpreter.Object) ?
+      this.isa(leftValue, rightValue) : false;
+    break;
+  default:
+    throw SyntaxError('Unknown binary operator: ' + node['operator']);
   }
   stack[stack.length - 1].value = value;
 };
@@ -3603,7 +3537,7 @@ Interpreter.prototype['stepCallExpression'] = function(stack, state, node) {
           // Acorn threw a SyntaxError.  Rethrow as a trappable error.
           this.throwException(this.SYNTAX_ERROR, 'Invalid code: ' + e.message);
         }
-        var evalNode = new this.nodeConstructor({ options: {} });
+        var evalNode = new this.nodeConstructor({options:{}});
         evalNode['type'] = 'EvalProgram_';
         evalNode['body'] = ast['body'];
         Interpreter.stripLocations_(evalNode, node['start'], node['end']);
@@ -4233,8 +4167,8 @@ Interpreter.prototype['stepUnaryExpression'] = function(stack, state, node) {
         delete obj.properties[name];
       } catch (e) {
         if (state.scope.strict) {
-          this.throwException(this.TYPE_ERROR, 'Cannot delete property \'' +
-            name + '\' of \'' + obj + '\'');
+          this.throwException(this.TYPE_ERROR, "Cannot delete property '" +
+            name + "' of '" + obj + "'");
         } else {
           result = false;
         }

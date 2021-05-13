@@ -173,7 +173,7 @@ const CodeEditor = props => {
 
             clearConsoleRef('');
             if (props.mode === 'javascript') {
-              let jsExecutor = JSExecutor(ed.getValue(), { log: addToConsoleRef, clear: clearConsoleRef }, props.eventBus);
+              let jsExecutor = new JSExecutor(ed.getValue(), { log: addToConsoleRef, clear: clearConsoleRef }, props.eventBus);
               jsExecutor.execute();
             } else {
 
