@@ -26,6 +26,7 @@
 .contextTitle {
     margin-top: 0;
 }
+
 .contextEditor .CodeMirror {
     height: 150px !important;
 }
@@ -61,10 +62,12 @@
 .CodeEditor {
     flex-grow: 2;
 }
+
 .RunningResult {
     flex-grow: 1;
     height: 464px;
 }
+
 .RunningResult .Result-box {
     box-sizing: border-box;
     height: 100%;
@@ -132,7 +135,7 @@ div#runPanel > a.stop-button:hover, div#runPanel > a.stop-button:active {
     top: 0 !important;
 }
 
-.code-editor-script span{
+.code-editor-script span {
     display: block !important;
     font-weight: bold;
 }
@@ -140,4 +143,27 @@ div#runPanel > a.stop-button:hover, div#runPanel > a.stop-button:active {
 .cm-matchhighlight {
     font-weight: bold;
     background-color: #80cbc433;
+}
+
+table.context-table {
+    width: 30%;
+}
+
+table.context-table th.contextFieldTitle:first-letter {
+    text-transform: capitalize;
+}
+
+table.context-table textarea {
+    margin-top: 2px;
+    padding: 1px 0;
+}
+
+table.context-table textarea.invalid, table.context-table input.invalid {
+    border-color: #ff3d3d;
+}
+
+table.context-table p.validationError {
+    margin-top: 5px;
+    color: #ff3d3d;
+    font-size: xx-small;
 }
