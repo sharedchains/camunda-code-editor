@@ -1,3 +1,14 @@
+/**
+ * Imported libraries and disabled modeling on opening Code Editor
+ * @author luca.bonora@sharedchains.com (Luca Bonora)
+ */
+
+/**
+ * @license
+ * Copyright 2017 bpmn.io
+ * SPDX-License-Identifier: MIT
+ */
+
 import { query, classes } from 'min-dom';
 import {
   OPEN_CODE_EDITOR,
