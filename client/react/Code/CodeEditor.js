@@ -126,11 +126,13 @@ const CodeEditor = props => {
     setContext(newContext);
   };
 
-  const removeRow = (index, rowObject) => {
-
+  const removeRow = (index) => {
+    let copy = [...context];
+    copy.splice(index, 1);
+    setContext(copy);
   };
 
-  const updateRow = (column, value, index, oldObject) => {
+  const updateRow = (column, value, index) => {
     let copy = [...context];
     copy[index][column] = value;
     setContext(copy);

@@ -16,9 +16,23 @@ const ContextTable = (props) => {
       }
     },
     type: {
-      elementType: 'input',
+      elementType: 'select',
       elementConfig: {
-        type: 'text'
+        options: [
+          { value: '', displayValue: '' },
+          { value: 'BOOLEAN', displayValue: 'Boolean' },
+          { value: 'BYTES', displayValue: 'Byte Array' },
+          { value: 'STRING', displayValue: 'String' },
+          { value: 'SHORT', displayValue: 'Short' },
+          { value: 'DOUBLE', displayValue: 'Double' },
+          { value: 'INTEGER', displayValue: 'Integer' },
+          { value: 'LONG', displayValue: 'Long' },
+          { value: 'DATE', displayValue: 'Date' },
+          { value: 'DATETIME', displayValue: 'Date & time' },
+          { value: 'JSON', displayValue: 'JSON' },
+          { value: 'XML', displayValue: 'XML' },
+          { value: 'OBJECT', displayValue: 'Object' }
+        ]
       },
       validation: {
         required: true
@@ -35,13 +49,13 @@ const ContextTable = (props) => {
     }
   };
 
-  const [validRows, setValidRows] = useState({});
+  const [validRows, setValidRows] = useState([]);
 
   const [, setTableIsValid] = useState(false);
 
   const inputChangeHandler = (event, inputIdentifier, index, rowObject) => {
-    const key = '' + index;
-    const oldRow = validRows[key];
+    const updatedRows = [...validRows];
+    const oldRow = validRows[index];
     const oldObject = oldRow[inputIdentifier];
 
     const updatedObject = updateObject(oldObject, {
@@ -51,9 +65,8 @@ const ContextTable = (props) => {
     const updatedRow = updateObject(oldRow, {
       [inputIdentifier]: updatedObject
     });
-    const updatedRows = updateObject(validRows, {
-      [key]: updatedRow
-    });
+
+    updatedRows.splice(index, 1, updatedRow);
     setValidRows(updatedRows);
 
     let tableValid = true;
@@ -64,13 +77,12 @@ const ContextTable = (props) => {
     });
 
     setTableIsValid(tableValid);
-    props.updateRowContext(inputIdentifier, event.target.value, index, rowObject);
+    props.updateRowContext(inputIdentifier, event.target.value, index);
   };
 
   const addRow = () => {
-    let index = Object.keys(validRows).length;
-    let newRow = { ...validRows };
-    let newObj = newRow[index] = {};
+    let newRow = [...validRows];
+    let newObj = {};
 
     Object.keys(contextColumns).map(key => {
       newObj[key] = {
@@ -78,12 +90,17 @@ const ContextTable = (props) => {
         ...checkValidity('', contextColumns[key].validation)
       };
     });
-
+    newRow.push(newObj);
     setValidRows(newRow);
 
     props.addRowContext();
   };
-  const removeRow = () => {};
+  const removeRow = (index) => {
+    let oldRows = [...validRows];
+    oldRows.splice(index, 1);
+    setValidRows(oldRows);
+    props.removeRowContext(index);
+  };
 
   const rows = props.context.map((rowObject, index) => {
 
@@ -94,8 +111,8 @@ const ContextTable = (props) => {
         elementType={contextColumns[key].elementType}
         elementConfig={contextColumns[key].elementConfig}
         value={rowObject[key]}
-        invalid={!validRows['' + index][key].valid}
-        errorMessage={validRows['' + index][key].errorMessage}
+        invalid={!validRows[index][key].valid}
+        errorMessage={validRows[index][key].errorMessage}
         changed={event => inputChangeHandler(event, key, index, rowObject)}
       />
     </td>);
