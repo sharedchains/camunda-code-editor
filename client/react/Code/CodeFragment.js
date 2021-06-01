@@ -9,11 +9,6 @@ const defaultState = {
   element: null,
   node: null,
   type: 'javascript',
-  codeContext: '{ \n' +
-    '  "context": {\n' +
-    '  }\n' +
-    '}',
-  contextCursor: null,
   data: null,
   cursor: null
 };
@@ -26,7 +21,6 @@ export default class CodeFragment extends Component {
 
     this.closeModal = this.closeModal.bind(this);
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
-    this.onContextStateChange = this.onContextStateChange.bind(this);
   }
 
   componentDidMount() {
@@ -68,9 +62,6 @@ export default class CodeFragment extends Component {
     subscribe('close-all-tabs', saveTab);
   }
 
-  onContextStateChange(editor, data, value) {
-    this.setState({ codeContext: value, contextCursor: editor.getDoc().getCursor() });
-  }
 
   onEditorStateChange(editor, data, value) {
     this.setState({
@@ -91,13 +82,13 @@ export default class CodeFragment extends Component {
   }
 
   render() {
-    const { modalOpen, mode, data, cursor, codeContext, contextCursor } = this.state;
+    const { modalOpen, mode, data, cursor } = this.state;
 
     return <Fragment>
       {modalOpen && (
         <EditorModal onContextChange={this.onContextStateChange} onEditorChange={this.onEditorStateChange}
           close={this.closeModal} mode={mode} value={data} cursor={cursor}
-          context={codeContext} contextCursor={contextCursor} eventBus={this._eventBus}
+          eventBus={this._eventBus}
           title='Script Editor'/>
       )}
     </Fragment>;

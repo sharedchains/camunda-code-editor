@@ -28,15 +28,16 @@ import jsonlint from 'jsonlint-mod';
 import JSExecutor from '../../utils/executors/JSExecutor';
 import logger from '../../utils/console';
 import { STOP_CODE_EDITOR } from '../../utils/EventHelper';
+import ContextTable from './ContextTable';
 
 window.JSHINT = JSHINT;
 window.jsonlint = jsonlint;
 
 const CodeEditor = props => {
 
-  const [editor, setEditor] = useState(null);
-  const consoleResultRef = useRef(null);
+  const [context, setContext] = useState([]);
 
+  const consoleResultRef = useRef(null);
   let clearConsoleRef = null;
   let addToConsoleRef = null;
 
@@ -87,15 +88,20 @@ const CodeEditor = props => {
     gutters: ['CodeMirror-lint-markers']
   };
   try {
-    let contextObject = JSON.parse(props.context);
-    let contextOption;
-    if (contextObject.context) {
-      contextOption = contextObject.context;
-    } else if (contextObject instanceof Array) {
-      throw new Error('Context must be a JSON object which contains variable names');
-    } else {
-      contextOption = contextObject;
-    }
+
+    // let contextObject = JSON.parse(props.context);
+    // let contextOption;
+    // if (contextObject.context) {
+    //   contextOption = contextObject.context;
+    // } else if (contextObject instanceof Array) {
+    //   throw new Error('Context must be a JSON object which contains variable names');
+    // } else {
+    //   contextOption = contextObject;
+    // }
+
+    // TODO: Build the context variables table
+    let contextOption = {};
+
     scriptOptions.hintOptions = {
       additionalContext: {
         ...contextOption
@@ -108,48 +114,40 @@ const CodeEditor = props => {
       }
     };
   } catch (error) {
-    if (editor) {
-      editor.openNotification(error.message, { duration: 2000 });
-    }
+
+    // if (editor) {
+    //   editor.openNotification(error.message, { duration: 2000 });
+    // }
+    // TODO: Notify the user that something is not working on context
   }
 
-  return (<div className='ScriptEditor-container'>
-    <h4 className='contextTitle'>Context variables</h4>
-    <CodeMirror
-      className='contextEditor'
-      editorDidMount={ed => {
-        setEditor(ed);
-      }}
-      onBeforeChange={props.onContextChange}
-      cursor={props.contextCursor}
-      value={props.context}
-      options={{
-        mode: {
-          name: 'javascript',
-          json: true,
-          context: {}
-        },
-        theme: 'material',
-        lineNumbers: true,
-        keyMap: 'sublime',
-        autoCloseTags: true,
-        matchBrackets: true,
-        autoCloseBrackets: true,
-        autoCursor: false,
-        autoScroll: false,
-        highlightSelectionMatches: { minChars: 2, showToken: true },
-        lineWrapping: true,
-        lint: true,
-        gutters: ['CodeMirror-lint-markers'],
-        extraKeys: {
-          'Space': function(cm) {
-            cm.replaceSelection(' ');
-          }
-        },
-      }}
+  const addRow = () => {
+    let newContext = context.concat({ name: '', type: '', value: '' });
+    setContext(newContext);
+  };
+
+  const removeRow = (index) => {
+    let copy = [...context];
+    copy.splice(index, 1);
+    setContext(copy);
+  };
+
+  const updateRow = (column, value, index) => {
+    let copy = [...context];
+    copy[index][column] = value;
+    setContext(copy);
+  };
+
+  return (<div className="ScriptEditor-container">
+    <h4 className="contextTitle">Context variables</h4>
+    <ContextTable context={context}
+      addRowContext={addRow}
+      updateRowContext={updateRow}
+      removeRowContext={removeRow}
     />
-    <h4 className='codeTitle'>Script</h4>
-    <div className='CodeEditor-container'>
+
+    <h4 className="codeTitle">Script</h4>
+    <div className="CodeEditor-container">
       <CodeMirror
         className='CodeEditor'
         value={props.value}
@@ -173,7 +171,10 @@ const CodeEditor = props => {
 
             clearConsoleRef('');
             if (props.mode === 'javascript') {
-              let jsExecutor = new JSExecutor(ed.getValue(), { log: addToConsoleRef, clear: clearConsoleRef }, props.eventBus);
+              let jsExecutor = new JSExecutor(ed.getValue(), {
+                log: addToConsoleRef,
+                clear: clearConsoleRef
+              }, props.eventBus);
               jsExecutor.execute();
             } else {
 
