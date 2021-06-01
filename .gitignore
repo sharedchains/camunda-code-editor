@@ -1,5 +1,7 @@
-/node_modules/
 .history
+**/.idea/
+/node/
 
-.idea
-/dist/
+**/node_modules/
+**/dist/
+**/target

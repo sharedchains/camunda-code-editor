@@ -1,0 +1,16 @@
+# Default LF unix as eof
+* text eol=lf
+
+# Use LF Unix compliant as eof
+*.js text eol=lf
+
+# Use CRLF for windows file
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+
