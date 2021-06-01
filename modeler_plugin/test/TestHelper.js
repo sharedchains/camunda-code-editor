@@ -1,3 +1,9 @@
+/**
+ * @license
+ * Copyright 2014-present Camunda Services GmbH
+ * SPDX-License-Identifier: MIT
+ */
+
 export * from 'bpmn-js/test/helper';
 
 import {

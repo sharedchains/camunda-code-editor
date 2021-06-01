@@ -1,3 +1,8 @@
+/**
+ * @license
+ * Copyright 2014-present Camunda Services GmbH
+ * SPDX-License-Identifier: MIT
+ */
 'use strict';
 var path = require('path');
 var absoluteBasePath = path.resolve(__dirname);

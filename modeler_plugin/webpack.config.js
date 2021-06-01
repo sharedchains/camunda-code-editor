@@ -1,7 +1,8 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const { DefinePlugin } = require('webpack');
 
-module.exports = {
+module.exports = [{
   mode: 'development',
   entry: './client/index.js',
   output: {
@@ -21,7 +22,7 @@ module.exports = {
         }
       }, {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader']
       },
       { test: /\.(png|svg|jpe?g|gif|woff2?|ttf|eot)$/, use: ['file-loader'] }
     ]
@@ -67,8 +68,26 @@ module.exports = {
           from: path.resolve(__dirname, './index.prod.js'),
           to: path.resolve(__dirname, './dist/index.js')
         }
-      ],
+      ]
     })
   ],
   devtool: 'cheap-module-source-map'
-};
+},
+{
+  mode: 'development',
+  entry: './backend/main.js',
+  target: 'node',
+  node: {
+    __dirname: false
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist/backend'),
+    filename: 'main.js',
+    libraryTarget: 'commonjs2'
+  },
+  plugins: [
+    new DefinePlugin({
+      'process.env.GROOVY_EXECUTOR': 'path.resolve(__dirname, \'../assets/groovy-executor.jar\')'
+    })
+  ]
+}];

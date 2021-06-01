@@ -22,13 +22,14 @@
                 <include>org.adoptopenjdk:openjdk:*:linux-x64</include>
             </includes>
             <useTransitiveDependencies>false</useTransitiveDependencies>
-            <outputDirectory>/jvm/</outputDirectory>
+            <outputDirectory>camunda-code-editor-plugin/jvm/</outputDirectory>
         </dependencySet>
         <dependencySet>
             <useProjectArtifact>false</useProjectArtifact>
             <includes>
                 <include>org.shared:groovy-executor:*</include>
             </includes>
+            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
             <outputDirectory>camunda-code-editor-plugin/assets/</outputDirectory>
         </dependencySet>
     </dependencySets>

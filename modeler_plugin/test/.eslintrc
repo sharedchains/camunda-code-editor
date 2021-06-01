@@ -1,3 +1,8 @@
+/**
+ * @license
+ * Copyright 2014-present Camunda Services GmbH
+ * SPDX-License-Identifier: MIT
+ */
 {
   "extends": "plugin:bpmn-io/mocha"
 }
