@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'camunda-modeler-plugin-helpers/react';
 
+import { encode } from 'js-base64';
+
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/mode/groovy/groovy';
 import 'codemirror/mode/javascript/javascript';
@@ -29,6 +31,8 @@ import JSExecutor from '../../utils/executors/JSExecutor';
 import logger from '../../utils/console';
 import { STOP_CODE_EDITOR } from '../../utils/EventHelper';
 import ContextTable from './ContextTable';
+import RunPanel from './RunPanel';
+import GroovyAPI from '../../utils/executors/GroovyAPI';
 
 window.JSHINT = JSHINT;
 window.jsonlint = jsonlint;
@@ -36,15 +40,14 @@ window.jsonlint = jsonlint;
 const CodeEditor = props => {
 
   const [context, setContext] = useState([]);
+  const [editor, setEditor] = useState(null);
+  const [csl, setCsl] = useState(null);
 
   const consoleResultRef = useRef(null);
-  let clearConsoleRef = null;
-  let addToConsoleRef = null;
 
   useEffect(() => {
-    const { clearConsole, addToConsole } = logger(consoleResultRef.current);
-    clearConsoleRef = clearConsole;
-    addToConsoleRef = addToConsole;
+    const consoleRef = logger(consoleResultRef.current);
+    setCsl(consoleRef);
   }, []);
 
   let mode = {
@@ -138,6 +141,41 @@ const CodeEditor = props => {
     setContext(copy);
   };
 
+  const runClicked = async (event) => {
+
+    event.preventDefault();
+    csl.clearConsole('');
+    if (props.mode === 'javascript') {
+      let jsExecutor = new JSExecutor(editor.getValue(), context, {
+        log: csl.addToConsole,
+        clear: csl.clearConsole
+      }, props.eventBus);
+      jsExecutor.execute();
+    } else {
+
+      // groovy
+      const groovyExecutor = new GroovyAPI('http://localhost:12421');
+
+      const base64 = encode(editor.getValue());
+      const results = await groovyExecutor.executeGroovy({ code: base64, context: context });
+      if (results.logs) {
+        csl.addToConsole('LOGS:');
+        csl.addToConsole(results.output);
+      }
+      if (results.output) {
+        csl.addToConsole('OUTPUT:');
+        csl.addToConsole(results.output);
+      } else {
+        csl.addToConsole('ERROR:');
+        csl.addToConsole(results.error);
+      }
+    }
+  };
+
+  const stopClicked = () => {
+    props.eventBus.fire(STOP_CODE_EDITOR);
+  };
+
   return (<div className="ScriptEditor-container">
     <h4 className="contextTitle">Context variables</h4>
     <ContextTable context={context}
@@ -149,56 +187,18 @@ const CodeEditor = props => {
     <h4 className="codeTitle">Script</h4>
     <div className="CodeEditor-container">
       <CodeMirror
-        className='CodeEditor'
+        className="CodeEditor"
         value={props.value}
         options={scriptOptions}
         onBeforeChange={props.onEditorChange}
         cursor={props.cursor}
         editorDidMount={ed => {
-
-          let runPanel = document.createElement('div');
-          runPanel.id = 'runPanel';
-          runPanel.className = 'panel top';
-
-          let run = runPanel.appendChild(document.createElement('a'));
-          run.setAttribute('id', 'run');
-          run.setAttribute('title', 'Run!');
-          run.setAttribute('class', 'run-button');
-          run.textContent = 'Run';
-
-          run.onclick = function(event) {
-            event.preventDefault();
-
-            clearConsoleRef('');
-            if (props.mode === 'javascript') {
-              let jsExecutor = new JSExecutor(ed.getValue(), {
-                log: addToConsoleRef,
-                clear: clearConsoleRef
-              }, props.eventBus);
-              jsExecutor.execute();
-            } else {
-
-              // props.triggerAction('codeEditor.groovy:saveTempFile', ed.getValue());
-              // groovy
-              // Needs to call the backend to execute java
-            }
-          };
-
-          let stop = runPanel.appendChild(document.createElement('a'));
-          stop.setAttribute('id', 'stop');
-          stop.setAttribute('title', 'Stop!');
-          stop.setAttribute('class', 'stop-button');
-          stop.textContent = 'Stop';
-
-          stop.onclick = function(event) {
-            props.eventBus.fire(STOP_CODE_EDITOR);
-          };
-
-          ed.addPanel(runPanel, { position: 'top', stable: true });
+          setEditor(ed);
         }}
       />
-      <div className='RunningResult'>
-        <div id='ResultBox' className='Result-box' ref={consoleResultRef}/>
+      <RunPanel runClicked={runClicked} stopClicked={stopClicked} />
+      <div className="RunningResult">
+        <div id="ResultBox" className="Result-box" ref={consoleResultRef}/>
       </div>
     </div>
   </div>);

@@ -9,20 +9,21 @@
  */
 module.exports = executeOnce(main, []);
 
-import {
-  startGroovyExecutor,
-  stopGroovyExecutor
-} from './groovy';
-
 async function main(app) {
 
-  try {
-    await startGroovyExecutor();
-    console.log('[groovy-executor] started Groovy executor');
-  } catch (error) {
-    console.error('[groovy-executor] unable to start Groovy executor', error);
-    return;
-  }
+  const {
+    startGroovyExecutor,
+    stopGroovyExecutor
+  } = require('./groovy');
+  app.on('app:client-ready', async () => {
+    try {
+      await startGroovyExecutor();
+      console.log('[groovy-executor] started Groovy executor');
+    } catch (error) {
+      console.error('[groovy-executor] unable to start Groovy executor', error);
+      return;
+    }
+  });
 
   app.on('quit', () => {
     console.log('[groovy-executor] stopping Groovy executor');

@@ -86,7 +86,7 @@ export default class CodeFragment extends Component {
 
     return <Fragment>
       {modalOpen && (
-        <EditorModal onContextChange={this.onContextStateChange} onEditorChange={this.onEditorStateChange}
+        <EditorModal onEditorChange={this.onEditorStateChange}
           close={this.closeModal} mode={mode} value={data} cursor={cursor}
           eventBus={this._eventBus}
           title='Script Editor'/>

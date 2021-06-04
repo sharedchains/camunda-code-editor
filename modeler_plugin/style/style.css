@@ -81,10 +81,10 @@ div#runPanel {
 
     display: flex;
     flex-flow: column wrap;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
-div#runPanel > a, div#runPanel > a:link, div#runPanel > a:visited {
+div#runPanel > button {
     background-color: white;
     color: black;
 
@@ -94,30 +94,30 @@ div#runPanel > a, div#runPanel > a:link, div#runPanel > a:visited {
 
     padding: 5px 10px 5px 10px;
 
-    align-self: flex-end;
+    align-self: flex-start;
     width: 75px;
 }
 
-div#runPanel > a.run-button, div#runPanel > a.run-button:link, div#runPanel > a.run-button:visited {
+div#runPanel > button.run-button {
     border: 2px solid #4CAF50;
 }
 
-div#runPanel > a.run-button:hover, div#runPanel > a.run-button:active {
+div#runPanel > button.run-button:hover, div#runPanel > button.run-button:active {
     background-color: #4CAF50;
     color: white;
 }
 
-div#runPanel > a.stop-button, div#runPanel > a.stop-button:link, div#runPanel > a.stop-button:visited {
+div#runPanel > button.stop-button {
     border: 2px solid #d24747;
 }
 
-div#runPanel > a.stop-button:hover, div#runPanel > a.stop-button:active {
+div#runPanel > button.stop-button:hover, div#runPanel > button.stop-button:active {
     background-color: #d24747;
     color: white;
 }
 
 .CodeEditor .CodeMirror {
-    height: 400px !important;
+    height: 464px !important;
 }
 
 .code-editor-script-format input {

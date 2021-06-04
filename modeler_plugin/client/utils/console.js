@@ -12,7 +12,6 @@ export default function logger(container) {
       parsed = text;
     }
 
-    // node.innerHTML = '<p>' + htmlEncode(parsed).replace(/\\n/, '<br />') + '</p>';
     node.innerHTML = '<p>' + parsed + '</p>';
     if (empty) {
       container.innerHTML = '';
