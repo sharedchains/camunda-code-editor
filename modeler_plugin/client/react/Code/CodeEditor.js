@@ -160,7 +160,7 @@ const CodeEditor = props => {
       const results = await groovyExecutor.executeGroovy({ code: base64, context: context });
       if (results.logs) {
         csl.addToConsole('LOGS:');
-        csl.addToConsole(results.output);
+        csl.addToConsole(results.logs);
       }
       if (results.output) {
         csl.addToConsole('OUTPUT:');

@@ -30,8 +30,7 @@ const ContextTable = (props) => {
           { value: 'DATE', displayValue: 'Date' },
           { value: 'DATETIME', displayValue: 'Date & time' },
           { value: 'JSON', displayValue: 'JSON' },
-          { value: 'XML', displayValue: 'XML' },
-          { value: 'OBJECT', displayValue: 'Object' }
+          { value: 'XML', displayValue: 'XML' }
         ]
       },
       validation: {
