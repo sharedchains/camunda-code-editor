@@ -54,13 +54,11 @@ const CodeEditor = props => {
     name: props.mode,
     localVars: {
 
-      // TODO: Variabili locali da definire - necessario per avere un contesto iniziale
       'JSON': 'SpinJsonNode',
       'XML': 'SpinXmlElement'
     },
     globalVars: {
 
-      // TODO: Variabili globali da definire
       'JSON': 'SpinJsonNode',
       'XML': 'SpinXmlElement'
     }
@@ -90,39 +88,15 @@ const CodeEditor = props => {
     lint: true,
     gutters: ['CodeMirror-lint-markers']
   };
-  try {
 
-    // let contextObject = JSON.parse(props.context);
-    // let contextOption;
-    // if (contextObject.context) {
-    //   contextOption = contextObject.context;
-    // } else if (contextObject instanceof Array) {
-    //   throw new Error('Context must be a JSON object which contains variable names');
-    // } else {
-    //   contextOption = contextObject;
-    // }
-
-    // TODO: Build the context variables table
-    let contextOption = {};
-
-    scriptOptions.hintOptions = {
-      additionalContext: {
-        ...contextOption
-      },
-      globalVars: {
-
-        // TODO: Variabili globali da definire
-        'JSON': 'SpinJsonNode',
-        'XML': 'SpinXmlElement'
-      }
-    };
-  } catch (error) {
-
-    // if (editor) {
-    //   editor.openNotification(error.message, { duration: 2000 });
-    // }
-    // TODO: Notify the user that something is not working on context
-  }
+  // TODO: Build the context variables table ?
+  let contextOption = {};
+  scriptOptions.hintOptions = {
+    additionalContext: {
+      ...contextOption
+    },
+    globalVars: mode.globalVars
+  };
 
   const addRow = () => {
     let newContext = context.concat({ name: '', type: '', value: '' });
@@ -178,7 +152,8 @@ const CodeEditor = props => {
 
   return (<div className="ScriptEditor-container">
     <h4 className="contextTitle">Context variables</h4>
-    <ContextTable context={context}
+    <ContextTable
+      context={context}
       addRowContext={addRow}
       updateRowContext={updateRow}
       removeRowContext={removeRow}
@@ -196,7 +171,7 @@ const CodeEditor = props => {
           setEditor(ed);
         }}
       />
-      <RunPanel runClicked={runClicked} stopClicked={stopClicked} />
+      <RunPanel runClicked={runClicked} stopClicked={stopClicked}/>
       <div className="RunningResult">
         <div id="ResultBox" className="Result-box" ref={consoleResultRef}/>
       </div>
