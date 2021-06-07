@@ -118,7 +118,7 @@ const ContextTable = (props) => {
     return (<tr key={index}>
       {columns}
       <td>
-        <button type="button" onClick={() => removeRow(index, rowObject)} className="context-removeRow">-</button>
+        <button type="button" onClick={() => removeRow(index, rowObject)} className="context-buttons context-removeRow">-</button>
       </td>
     </tr>);
   });
@@ -130,7 +130,7 @@ const ContextTable = (props) => {
           Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
         }
         <th>
-          <button type="button" onClick={() => addRow()} className="context-addRow">+</button>
+          <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
         </th>
       </tr>
     </thead>

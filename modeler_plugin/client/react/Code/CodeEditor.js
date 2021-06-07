@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from 'camunda-modeler-plugin-helpers/react';
+import React, { useCallback, useState } from 'camunda-modeler-plugin-helpers/react';
+
+import {
+  ReflexContainer,
+  ReflexSplitter,
+  ReflexElement
+} from 'react-reflex';
 
 import { encode } from 'js-base64';
 
@@ -43,11 +49,11 @@ const CodeEditor = props => {
   const [editor, setEditor] = useState(null);
   const [csl, setCsl] = useState(null);
 
-  const consoleResultRef = useRef(null);
-
-  useEffect(() => {
-    const consoleRef = logger(consoleResultRef.current);
-    setCsl(consoleRef);
+  const consoleResultRef = useCallback((consoleRef) => {
+    if (consoleRef) {
+      const logFunctions = logger(consoleRef);
+      setCsl(logFunctions);
+    }
   }, []);
 
   let mode = {
@@ -161,20 +167,27 @@ const CodeEditor = props => {
 
     <h4 className="codeTitle">Script</h4>
     <div className="CodeEditor-container">
-      <CodeMirror
-        className="CodeEditor"
-        value={props.value}
-        options={scriptOptions}
-        onBeforeChange={props.onEditorChange}
-        cursor={props.cursor}
-        editorDidMount={ed => {
-          setEditor(ed);
-        }}
-      />
-      <RunPanel runClicked={runClicked} stopClicked={stopClicked}/>
-      <div className="RunningResult">
-        <div id="ResultBox" className="Result-box" ref={consoleResultRef}/>
-      </div>
+      <ReflexContainer orientation="vertical">
+        <ReflexElement className="left-pane" propagateDimensions="true" resizeHeight="false" resizeWidth="true" flex={0.8}>
+          <CodeMirror
+            className="CodeEditor Box"
+            value={props.value}
+            options={scriptOptions}
+            onBeforeChange={props.onEditorChange}
+            cursor={props.cursor}
+            editorDidMount={ed => {
+              setEditor(ed);
+            }}
+          />
+        </ReflexElement>
+        <ReflexSplitter/>
+        <ReflexElement className="right-pane" minSize="100" propagateDimensions="true" resizeHeight="false" resizeWidth="true" flex={0.2}>
+          <div className="RunningResult Box">
+            <RunPanel runClicked={runClicked} stopClicked={stopClicked}/>
+            <div className="Result-box" ref={consoleResultRef}/>
+          </div>
+        </ReflexElement>
+      </ReflexContainer>
     </div>
   </div>);
 

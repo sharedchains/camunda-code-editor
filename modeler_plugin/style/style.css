@@ -3,6 +3,7 @@
 @import './show-hint.css';
 @import './lint.css';
 @import './dialog.css';
+@import './react-reflex.css';
 
 .editorModal {
     width: 95%;
@@ -35,22 +36,6 @@
     height: 100%;
 }
 
-/*input[id$="-documentation"], input[id$="-extendedDocumentation"] {*/
-/*    width: 90% !important;*/
-/*    height: 25px !important;*/
-/*}*/
-
-/*.openRichTextEditor {*/
-/*    width: 10% !important;*/
-/*    height: 25px !important;*/
-/*}*/
-
-/*.openRichTextEditor span {*/
-/*    display: block !important;*/
-/*    font-weight: bolder;*/
-/*}*/
-
-
 .CodeMirror-hints, .CodeMirror-lint-tooltip, .CodeMirror-lint-message {
     z-index: 10000;
 }
@@ -60,19 +45,24 @@
 }
 
 .CodeEditor {
-    flex-grow: 2;
+    /*width: 80%;*/
+}
+
+.reflex-container.vertical > .reflex-splitter {
+    height: unset !important;
 }
 
 .RunningResult {
-    flex-grow: 1;
-    height: 464px;
+    /*width: 20%;*/
+    height: 500px;
 }
 
 .RunningResult .Result-box {
     box-sizing: border-box;
-    height: 100%;
+    height: 95%;
     border: 2px solid #ccc;
     overflow-y: auto;
+    padding: 5px;
 }
 
 div#runPanel {
@@ -80,8 +70,10 @@ div#runPanel {
     color: white;
 
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: row-reverse;
     justify-content: flex-start;
+
+    height: auto;
 }
 
 div#runPanel > button {
@@ -117,7 +109,7 @@ div#runPanel > button.stop-button:hover, div#runPanel > button.stop-button:activ
 }
 
 .CodeEditor .CodeMirror {
-    height: 464px !important;
+    height: 500px !important;
 }
 
 .code-editor-script-format input {
@@ -151,6 +143,11 @@ table.context-table {
 
 table.context-table th.contextFieldTitle:first-letter {
     text-transform: capitalize;
+}
+
+table.context-table td {
+    vertical-align: top;
+    text-align: center;
 }
 
 table.context-table textarea {
