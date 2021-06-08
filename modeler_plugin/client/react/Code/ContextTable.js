@@ -3,6 +3,9 @@ import Input from '../UI/Input';
 
 import { updateObject, checkValidity } from '../../utils/fieldUtil';
 
+const SPACE_KEY = 32;
+const BACKSPACE_KEY = 8;
+
 const ContextTable = (props) => {
 
   const contextColumns = {
@@ -52,14 +55,16 @@ const ContextTable = (props) => {
 
   const [, setTableIsValid] = useState(false);
 
-  const inputChangeHandler = (event, inputIdentifier, index, rowObject) => {
+  const inputChangeHandler = (event, inputIdentifier, index) => {
+    let input = event.target;
+
     const updatedRows = [...validRows];
     const oldRow = validRows[index];
     const oldObject = oldRow[inputIdentifier];
 
     const updatedObject = updateObject(oldObject, {
-      value: event.target.value,
-      ...checkValidity(event.target.value, contextColumns[inputIdentifier].validation)
+      value: input.value,
+      ...checkValidity(input.value, contextColumns[inputIdentifier].validation)
     });
     const updatedRow = updateObject(oldRow, {
       [inputIdentifier]: updatedObject
@@ -76,7 +81,7 @@ const ContextTable = (props) => {
     });
 
     setTableIsValid(tableValid);
-    props.updateRowContext(inputIdentifier, event.target.value, index);
+    props.updateRowContext(inputIdentifier, input.value, index);
   };
 
   const addRow = () => {
@@ -101,6 +106,34 @@ const ContextTable = (props) => {
     props.removeRowContext(index);
   };
 
+  const handleKeyDown = (event, elementType) => {
+
+    // Small workaround for space and backspace not working
+    if (event.keyCode === SPACE_KEY || event.keyCode === BACKSPACE_KEY) {
+      event.preventDefault();
+
+      let input = event.target;
+      let newValue;
+      if (event.keyCode === SPACE_KEY) {
+        newValue = input.value + ' ';
+      } else {
+        let position = input.selectionStart;
+        const splittedValue = Array.from(input.value);
+        splittedValue.splice(position - 1, 1);
+        newValue = splittedValue.join('');
+
+        setTimeout(() => input.selectionStart = input.selectionEnd = (position - 1), 50);
+      }
+
+      let type = elementType === 'input' ? window.HTMLInputElement.prototype : window.HTMLTextAreaElement.prototype;
+      let nativeInputValueSetter = Object.getOwnPropertyDescriptor(type, 'value').set;
+      nativeInputValueSetter.call(input, newValue);
+
+      let ev2 = new Event('input', { bubbles: true });
+      input.dispatchEvent(ev2);
+    }
+  };
+
   const rows = props.context.map((rowObject, index) => {
 
     const keys = Object.keys(contextColumns);
@@ -113,12 +146,17 @@ const ContextTable = (props) => {
         invalid={!validRows[index][key].valid}
         errorMessage={validRows[index][key].errorMessage}
         changed={event => inputChangeHandler(event, key, index, rowObject)}
+        keyDown={event => handleKeyDown(event, contextColumns[key].elementType)}
       />
     </td>);
     return (<tr key={index}>
       {columns}
       <td>
-        <button type="button" onClick={() => removeRow(index, rowObject)} className="context-buttons context-removeRow">-</button>
+        <button
+          type="button"
+          onClick={() => removeRow(index, rowObject)}
+          className="context-buttons context-removeRow">-
+        </button>
       </td>
     </tr>);
   });

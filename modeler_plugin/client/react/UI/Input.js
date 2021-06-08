@@ -16,7 +16,9 @@ const input = (props) => {
       className={inputClasses.join(' ')}
       {...props.elementConfig}
       value={props.value}
-      onChange={props.changed}/>;
+      onChange={props.changed}
+      onKeyDown={props.keyDown}
+    />;
     break;
   case 'select':
     inputElement = <select className={inputClasses.join(' ')}
@@ -33,7 +35,9 @@ const input = (props) => {
       className={inputClasses.join(' ')}
       {...props.elementConfig}
       value={props.value}
-      onChange={props.changed}/>;
+      onChange={props.changed}
+      onKeyDown={props.keyDown}
+    />;
   }
   return (
     <div>

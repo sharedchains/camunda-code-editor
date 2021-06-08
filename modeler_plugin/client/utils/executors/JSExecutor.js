@@ -46,7 +46,7 @@ export default class JSExecutor {
     try {
 
       let stopExecution = false;
-      this._eventBus.on(STOP_CODE_EDITOR, () => {
+      this._eventBus.once(STOP_CODE_EDITOR, () => {
         stopExecution = true;
       });
 

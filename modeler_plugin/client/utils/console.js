@@ -1,3 +1,5 @@
+import { escape } from 'lodash';
+
 export default function logger(container) {
 
   let empty = true;
@@ -12,7 +14,7 @@ export default function logger(container) {
       parsed = text;
     }
 
-    node.innerHTML = '<p>' + parsed + '</p>';
+    node.innerHTML = '<p>' + escape(parsed) + '</p>';
     if (empty) {
       container.innerHTML = '';
       empty = false;

@@ -144,7 +144,7 @@ const CodeEditor = props => {
       }
       if (results.output) {
         csl.addToConsole('OUTPUT:');
-        csl.addToConsole(results.output);
+        csl.addToConsole(JSON.stringify(results.output, null, 2));
       } else {
         csl.addToConsole('ERROR:');
         csl.addToConsole(results.error);
