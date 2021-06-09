@@ -16,117 +16,111 @@
     </organization>
 
     <properties>
-        <frontend.node.maven.plugin.version>1.9.1</frontend.node.maven.plugin.version>
+        <main.basedir>${project.basedir}</main.basedir>
 
+        <java.version>11</java.version>
+        <frontend.node.maven.plugin.version>1.12.0</frontend.node.maven.plugin.version>
+
+        <spring.boot.version>2.4.5</spring.boot.version>
         <jdk.version>11.0.1_13</jdk.version>
 
-        <groovy.executor.version>0.0.1-SNAPSHOT</groovy.executor.version>
+        <groovy.version>2.4.21</groovy.version>
+        <camunda.version>7.14.0</camunda.version>
+        <camunda.spin.version>1.10.1</camunda.spin.version>
+        <camunda.external.task.client.version>1.4.1</camunda.external.task.client.version>
+
+
+        <!-- MAVEN PLUGINS -->
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
+        <maven.failsafe.plugin.version>3.0.0-M5</maven.failsafe.plugin.version>
+        <maven.source.plugin.version>3.1.0</maven.source.plugin.version>
+        <maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
+        <maven.deploy.plugin.version>3.0.0-M1</maven.deploy.plugin.version>
+        <maven.dependency.plugin.version>3.1.2</maven.dependency.plugin.version>
+        <maven.assembly.plugin.version>3.3.0</maven.assembly.plugin.version>
+        <maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
     </properties>
 
-    <dependencies>
-        <!-- JDK -->
-        <dependency>
-            <groupId>org.adoptopenjdk</groupId>
-            <artifactId>openjdk</artifactId>
-            <version>${jdk.version}</version>
-            <classifier>linux-x64</classifier>
-            <type>tar.gz</type>
-        </dependency>
-        <dependency>
-            <groupId>org.adoptopenjdk</groupId>
-            <artifactId>openjdk</artifactId>
-            <version>${jdk.version}</version>
-            <classifier>win-x64</classifier>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.shared</groupId>
-            <artifactId>groovy-executor</artifactId>
-            <version>${groovy.executor.version}</version>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Import BOM from Spring Boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.camunda.spin</groupId>
+                <artifactId>camunda-spin-bom</artifactId>
+                <version>${camunda.spin.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!-- JDK -->
+            <dependency>
+                <groupId>org.adoptopenjdk</groupId>
+                <artifactId>openjdk</artifactId>
+                <version>${jdk.version}</version>
+                <classifier>linux-x64</classifier>
+                <type>tar.gz</type>
+            </dependency>
+            <dependency>
+                <groupId>org.adoptopenjdk</groupId>
+                <artifactId>openjdk</artifactId>
+                <version>${jdk.version}</version>
+                <classifier>win-x64</classifier>
+                <type>zip</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>language-executor</module>
+        <module>plugin-module</module>
+        <module>build-module</module>
+    </modules>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend.node.maven.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>${maven.deploy.plugin.version}</version>
             </plugin>
 
             <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>${frontend.node.maven.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>install node and npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
-                    <execution>
-                        <id>npm install</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm pack client</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <arguments>run all</arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <nodeVersion>v14.16.1</nodeVersion>
-
-                    <workingDirectory>modeler_plugin</workingDirectory>
-                    <installDirectory>${project.basedir}</installDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>win</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptor>assembly-win.xml</descriptor>
-                            <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>linux</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptor>assembly-linux.xml</descriptor>
-                            <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven.clean.plugin.version}</version>
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>modeler_plugin/dist</directory>
+                            <directory>plugin-module/modeler-plugin-code/dist</directory>
                         </fileset>
                     </filesets>
                 </configuration>

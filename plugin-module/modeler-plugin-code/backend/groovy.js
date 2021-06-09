@@ -1,7 +1,7 @@
 const execa = require('execa');
 const path = require('path');
 
-const GROOVY_EXECUTOR_PATH = process.env.GROOVY_EXECUTOR || path.resolve(__dirname, '../assets/groovy-executor.jar');
+const LANGUAGE_EXECUTOR_PATH = process.env.LANGUAGE_EXECUTOR || path.resolve(__dirname, '../assets/language-executor.jar');
 let groovyProcess;
 
 module.exports = {
@@ -15,7 +15,7 @@ async function startGroovyExecutor() {
     const javaPath = path.resolve(__dirname, '../jvm/jdk-11.0.1+13/bin/java');
     const args = [
       '-jar',
-      GROOVY_EXECUTOR_PATH,
+      LANGUAGE_EXECUTOR_PATH,
       '--server.port=12421'
     ];
 

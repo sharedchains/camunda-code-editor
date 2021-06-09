@@ -21,7 +21,7 @@ async function main(app) {
       console.log('[groovy-executor] started Groovy executor');
     } catch (error) {
       console.error('[groovy-executor] unable to start Groovy executor', error);
-      return;
+
     }
   });
 

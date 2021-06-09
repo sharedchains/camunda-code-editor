@@ -2,7 +2,8 @@
 * text eol=lf
 
 # Use LF Unix compliant as eof
-*.js text eol=lf
+*.sh text eol=lf
+*.java text eol=lf
 
 # Use CRLF for windows file
 *.bat text eol=crlf
@@ -13,4 +14,11 @@
 *.jpg binary
 *.jpeg binary
 *.ico binary
-
+*.so binary
+*.dll binary
+*.eot binary
+*.ttf binary
+*.otf binary
+*.svg binary
+*.woff binary
+*.woff2 binary

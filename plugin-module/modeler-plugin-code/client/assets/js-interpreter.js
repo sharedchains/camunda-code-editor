@@ -3574,7 +3574,7 @@ Interpreter.prototype['stepCallExpression'] = function(stack, state, node) {
         state.funcThis_ = this.boxThis_(state.funcThis_);
       }
       func.asyncFunc.apply(state.funcThis_, argsWithCallback);
-      return;
+
     } else {
       /* A child of a function is a function but is not callable.  For example:
       var F = function() {};
