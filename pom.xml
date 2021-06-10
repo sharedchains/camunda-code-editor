@@ -16,8 +16,6 @@
     </organization>
 
     <properties>
-        <main.basedir>${project.basedir}</main.basedir>
-
         <java.version>11</java.version>
         <frontend.node.maven.plugin.version>1.12.0</frontend.node.maven.plugin.version>
 
@@ -28,7 +26,6 @@
         <camunda.version>7.14.0</camunda.version>
         <camunda.spin.version>1.10.1</camunda.spin.version>
         <camunda.external.task.client.version>1.4.1</camunda.external.task.client.version>
-
 
         <!-- MAVEN PLUGINS -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
@@ -106,12 +103,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven.deploy.plugin.version}</version>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
