@@ -92,7 +92,7 @@ module.exports = [
     },
     plugins: [
       new DefinePlugin({
-        'process.env.LANGUAGE_EXECUTOR': 'path.resolve(__dirname, \'../assets/groovy-executor.jar\')'
+        'process.env.LANGUAGE_EXECUTOR': 'path.resolve(__dirname, \'../assets/language-executor.jar\')'
       })
     ]
   }

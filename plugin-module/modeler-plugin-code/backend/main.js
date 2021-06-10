@@ -15,13 +15,13 @@ async function main(app) {
     startGroovyExecutor,
     stopGroovyExecutor
   } = require('./groovy');
+
   app.on('app:client-ready', async () => {
     try {
       await startGroovyExecutor();
       console.log('[groovy-executor] started Groovy executor');
     } catch (error) {
       console.error('[groovy-executor] unable to start Groovy executor', error);
-
     }
   });
 
