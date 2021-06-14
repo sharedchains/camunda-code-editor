@@ -1,0 +1,10 @@
+{
+    "offeredBonds": 7000,
+    "startString": "2019-10-29 18:21:00",
+    "endString": "2019-10-29 18:21:10",
+    "auctionType": "competitive",
+    "bondsDuration": "360days",
+    "discountMAP": 0.0025,
+    "increaseExclusion": 0.0100,
+    "discountAcceptedPrice": 0.001
+}

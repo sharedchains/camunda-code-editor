@@ -10,7 +10,7 @@ This plug-in integrates a script editor to Camunda Modeler, allowing a user to w
 
 **Up to now, only if Script Format is 'groovy' or 'javascript'**
 
-![Screencast](./docs/screencast.gif)
+![Screencast](./plugin-module/modeler-plugin-code/docs/screencast.gif)
 
 ## Install
 
@@ -19,34 +19,22 @@ Extract the [release zip file](https://github.com/sharedchains/camunda-code-edit
 
 ## Development Setup
 
-Use [npm](https://www.npmjs.com/), the [Node.js](https://nodejs.org/en/) package manager to download and install required dependencies:
+Unlike other plugins, this project has been wrapped in a [Maven](https://maven.apache.org/) project to integrate other components inside it and generate a final bundle which contains:
+* The Camunda Modeler javascript plugin itself
+* Our simple application which will get executed on Camunda Modeler startup
+* A standalone JDK which executes the mentioned application
 
-```sh
-npm install
-```
+This solution was chosen to make it easier for a user to integrate the plugin to Camunda Modeler, avoiding to make him install JAVA on his own.
 
-To make the Camunda Modeler aware of your plug-in you must link the plug-in to the [Camunda Modeler plug-in directory](https://github.com/camunda/camunda-modeler/tree/develop/docs/plugins#plugging-into-the-camunda-modeler) via a symbolic link.
-Available utilities to do that are [`mklink /d`](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink) on Windows and [`ln -s`](https://linux.die.net/man/1/ln) on MacOS / Linux.
+To work on this plugin you will need to install:
 
-Re-start the app in order to recognize the newly linked plug-in.
-
+* [Node.js](https://nodejs.org/)
+* [Java JDK](https://openjdk.java.net/)
+* [Maven](https://maven.apache.org/)
 
 ## Building the Plug-in
 
-You may spawn the development setup to watch source files and re-build the client plug-in on changes:
-
-```sh
-npm run dev
-```
-
-Given you've setup and linked your plug-in [as explained above](#development-setup), you should be able to reload the modeler to pick up plug-in changes. To do so, open the app's built in development toos via `F12`. Then, within the development tools press the reload shortcuts `CTRL + R` or `CMD + R` to reload the app.
-
-
-To prepare the plug-in for release, executing all necessary steps, run:
-
-```sh
-npm run all
-```
+Just run ```mvn clean install```. you will find the zip bundle in the target directory of the [build module](./build-module). 
 
 ## Additional Resources
 

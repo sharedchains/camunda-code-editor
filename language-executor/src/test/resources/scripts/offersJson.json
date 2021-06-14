@@ -1,0 +1,16 @@
+{
+    "requestsArray": [
+        { "operator" : "A", "requestNum": 1, "bondsNum": 750, "price": 96.15 },
+        { "operator" : "B", "requestNum": 1, "bondsNum": 1500, "price": 95.90 },
+        { "operator" : "D", "requestNum": 1, "bondsNum": 1000, "price": 95.90 },
+        { "operator" : "B", "requestNum": 2, "bondsNum": 1100, "price": 95.88 },
+        { "operator" : "C", "requestNum": 1, "bondsNum": 1000, "price": 95.85 },
+        { "operator" : "D", "requestNum": 2, "bondsNum": 800, "price": 95.84 },
+        { "operator" : "A", "requestNum": 2, "bondsNum": 1000, "price": 95.82 },
+        { "operator" : "C", "requestNum": 2, "bondsNum": 700, "price": 95.82 },
+        { "operator" : "B", "requestNum": 3, "bondsNum": 950, "price": 95.70 },
+        { "operator" : "D", "requestNum": 3, "bondsNum": 800, "price": 95.65 },
+        { "operator" : "C", "requestNum": 3, "bondsNum": 1500, "price": 94.80 },
+        { "operator" : "A", "requestNum": 3, "bondsNum": 900, "price": 94.00 }
+    ]
+}

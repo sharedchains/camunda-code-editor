@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+    <id>linux-x64</id>
+    <formats>
+        <format>dir</format>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <moduleSets>
+        <moduleSet>
+            <!-- Enable access to all projects in the current multimodule build! -->
+            <useAllReactorProjects>true</useAllReactorProjects>
+            <!-- Now, select which projects to include in this module-set. -->
+            <includes>
+                <include>org.shared.code:plugin-module</include>
+            </includes>
+            <sources>
+                <includeModuleDirectory>false</includeModuleDirectory>
+                <fileSets>
+                    <fileSet>
+                        <outputDirectory>camunda-code-editor-plugin</outputDirectory>
+                        <directory>target/plugin/</directory>
+                    </fileSet>
+                </fileSets>
+            </sources>
+        </moduleSet>
+        <moduleSet>
+            <!-- Enable access to all projects in the current multimodule build! -->
+            <useAllReactorProjects>true</useAllReactorProjects>
+            <!-- Now, select which projects to include in this module-set. -->
+            <includes>
+                <include>org.shared.code:language-executor</include>
+            </includes>
+            <binaries>
+                <outputDirectory>camunda-code-editor-plugin/assets</outputDirectory>
+                <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+                <unpack>false</unpack>
+                <excludes>
+                    <exclude>org.adoptopenjdk:openjdk</exclude>
+                </excludes>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/man/**</exclude>
+                    <exclude>**/legal/**</exclude>
+                </excludes>
+                <lineEnding>keep</lineEnding>
+            </unpackOptions>
+            <includes>
+                <include>org.adoptopenjdk:openjdk:*:linux-x64</include>
+            </includes>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <outputDirectory>camunda-code-editor-plugin/jvm</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+</assembly>
