@@ -11,6 +11,7 @@ import org.shared.code.languageexecutor.parser.JsonParser;
 import org.shared.code.languageexecutor.parser.PrimitiveParser;
 import org.shared.code.languageexecutor.parser.VariableParser;
 import org.shared.code.languageexecutor.parser.XmlParser;
+import org.shared.code.languageexecutor.service.ClassNodeParserService;
 import org.shared.code.languageexecutor.service.ContextValueParserService;
 import org.shared.code.languageexecutor.service.GroovyExecutorService;
 import org.shared.code.languageexecutor.service.VariableParserService;
@@ -50,6 +51,11 @@ class CodeControllerTest {
         @Bean
         public ContextValueParserService contextValueParserService() {
             return new ContextValueParserService();
+        }
+
+        @Bean
+        public ClassNodeParserService classNodeParserService() {
+            return new ClassNodeParserService();
         }
 
         @Bean

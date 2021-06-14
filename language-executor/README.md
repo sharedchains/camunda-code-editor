@@ -14,6 +14,6 @@ and returns a JSON object containing the returned **output**, println **logs** a
 
 ### TODOs
 
-* Improve sandboxing of groovy scripts
+* ~~Improve sandboxing of groovy scripts~~
 * Add a "stopExecution" method to the controller to stop groovy script execution in case of error (infinite loops? strictly related to the first todo.)
 * Generalize controller pattern (replace "groovy" with a "language" pathVariable should do the trick) and handle different languages

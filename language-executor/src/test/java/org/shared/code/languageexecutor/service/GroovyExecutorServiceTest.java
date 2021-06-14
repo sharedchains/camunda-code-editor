@@ -56,8 +56,28 @@ class GroovyExecutorServiceTest {
     }
 
     @Test
-    void whenLoadingAScriptWithImports_thenCorrectReturn() throws Exception {
+    void whenLoadingAWrongTypeCheckScriptWithImports_thenErrorReturn() throws Exception {
         String content = Files.readString(Path.of("src", "test", "resources", "scripts", "MaxAcceptablePrice.groovy"));
+        String offersJson = Files.readString(Path.of("src", "test", "resources", "scripts", "offersJson.json"));
+        String auctionData = Files.readString(Path.of("src", "test", "resources", "scripts", "auctionData.json"));
+
+        Context ctx1 = new Context();
+        ctx1.setName("auctionData");
+        ctx1.setValue(auctionData);
+        ctx1.setType(ContextType.JSON);
+
+        Context ctx2 = new Context();
+        ctx2.setName("offersJson");
+        ctx2.setValue(offersJson);
+        ctx2.setType(ContextType.JSON);
+
+        ResultOutput output = groovyExecutorService.executeGroovyScript(content, List.of(ctx1, ctx2));
+        assertNotNull(output.getError());
+    }
+
+    @Test
+    void whenLoadingRightTypeCheckScriptWithImports_thenCorrectReturn() throws Exception {
+        String content = Files.readString(Path.of("src", "test", "resources", "scripts", "MaxAcceptablePriceTypes.groovy"));
         String offersJson = Files.readString(Path.of("src", "test", "resources", "scripts", "offersJson.json"));
         String auctionData = Files.readString(Path.of("src", "test", "resources", "scripts", "auctionData.json"));
 
@@ -75,4 +95,27 @@ class GroovyExecutorServiceTest {
         assertNull(output.getError());
     }
 
+    @Test
+    void whenExecutingSystem_thenErrorReturn() {
+        ResultOutput output = groovyExecutorService.executeGroovyScript("System.exit(-1)", null);
+        assertNotNull(output.getError());
+    }
+
+    @Test
+    void whenExecutingSystemAsVariable_thenErrorReturn() {
+        ResultOutput output = groovyExecutorService.executeGroovyScript("def c = System; c.exit(-1)", null);
+        assertNotNull(output.getError());
+    }
+
+    @Test
+    void whenExecutingMath_thenErrorReturn() {
+        ResultOutput output = groovyExecutorService.executeGroovyScript("println(Math.PI);\r\nreturn Math.PI;", null);
+        assertNotNull(output.getOutput());
+    }
+
+    @Test
+    void whenExecutingInfiniteLoop_thenErrorReturn() {
+        ResultOutput output = groovyExecutorService.executeGroovyScript("int i = 0; while (true) { i++ }", null);
+        assertNotNull(output.getError());
+    }
 }

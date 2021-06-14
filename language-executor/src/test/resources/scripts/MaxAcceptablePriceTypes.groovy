@@ -12,16 +12,16 @@ static void main (String[] args) {
 
     // get variables from JSON
     def offers = offersJson.prop("requestsArray").elements()
-    def offeredBonds = auctionData.prop("offeredBonds").numberValue()
-    def discountMAP = auctionData.prop("discountMAP").numberValue() / 10000
+    Number offeredBonds = auctionData.prop("offeredBonds").numberValue()
+    double discountMAP = auctionData.prop("discountMAP").numberValue() / 10000
 
     SpinJsonNode copyArray = JSON("{\"root\": [{}]}")
-    def bondsCounter1 = 0
-    def bondsCounter2 = 0
-    def sum = 0
-    def firstElement = true
-    def j = 0
-    def i;
+    Number bondsCounter1 = 0
+    Number bondsCounter2 = 0
+    int sum = 0
+    boolean firstElement = true
+    int j = 0
+    int i;
 
     SpinJsonNode row = JSON("{}")
 
@@ -74,9 +74,9 @@ static void main (String[] args) {
         sum = sum + copyArray.prop("root").elements()[i].prop("bondsNum").numberValue() * copyArray.prop("root").elements()[i].prop("price").numberValue()
     }
 
-    def WAP = calcWAP(sum, offeredBonds/2)
-    def yield = priceToYield(WAP) - discountMAP
-    def MAP = yieldToPrice(yield)
+    double WAP = calcWAP(sum, offeredBonds/2)
+    double yield = priceToYield(WAP) - discountMAP
+    double MAP = yieldToPrice(yield)
 
     // $$$ PRINTO ENTRAMBI
     println("********copyArray (map11)--> "+copyArray)
@@ -89,16 +89,16 @@ static void main (String[] args) {
 // HELPER FUNCTIONS:
 
 // calculates the yield of a bond given a price
-static def priceToYield (price) {
+static double priceToYield (double price) {
     return (100 - price) / price
 }
 
 // calculates the price of a bond given a yield
-static def yieldToPrice (yield) {
+static double yieldToPrice (double yield) {
     return 100 / (1 + yield)
 }
 
 // calculates weighted average price of the second half by taking the product sum and the total number of bonds offered
-static def calcWAP (sum, totNumber) {
+static double calcWAP (int sum, BigDecimal totNumber) {
     return (sum / totNumber)
 }
