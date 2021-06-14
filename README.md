@@ -8,20 +8,22 @@ A [Camunda Modeler](https://github.com/camunda/camunda-modeler) plug-in based on
 
 This plug-in integrates a script editor to Camunda Modeler, allowing a user to write scripts with code highlights and language auto completion.
 
-**Up to now, only if Script Format is 'groovy' or 'javascript'**
-
 ![Screencast](./plugin-module/modeler-plugin-code/docs/screencast.gif)
 
 ## Install
 
-Extract the [release zip file](https://github.com/sharedchains/camunda-code-editor/releases/tag/v0.1.0) to your camunda-modeler/resources/plugins folder. Super easy!
+Extract the [release zip file](https://github.com/sharedchains/camunda-code-editor/releases/tag/v0.2.0) to your camunda-modeler/resources/plugins folder. Super easy!
 
+## Limitations
+**Up to now, only if Script Format is 'groovy' or 'javascript'** 
+* On javascript, only for 'simple' scripts which do not involve JSON/XML manipulation.
+* On groovy everything should work.
 
 ## Development Setup
 
 Unlike other plugins, this project has been wrapped in a [Maven](https://maven.apache.org/) project to integrate other components inside it and generate a final bundle which contains:
 * The Camunda Modeler javascript plugin itself
-* Our simple application which will get executed on Camunda Modeler startup
+* Our Spring Boot groovy executor application which will get executed on Camunda Modeler startup
 * A standalone JDK which executes the mentioned application
 
 This solution was chosen to make it easier for a user to integrate the plugin to Camunda Modeler, avoiding to make him install JAVA on his own.
