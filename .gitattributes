@@ -10,6 +10,7 @@
 *.cmd text eol=crlf
 
 # Binary files
+*.gif binary
 *.png binary
 *.jpg binary
 *.jpeg binary
