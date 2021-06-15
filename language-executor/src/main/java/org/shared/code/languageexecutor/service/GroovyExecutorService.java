@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -46,12 +47,11 @@ public class GroovyExecutorService {
     private ClassNodeParserService classNodeParserService;
 
     public ResultOutput executeGroovyScript(String code, List<Context> contexts) {
-        try {
+        var resultOutput = new ResultOutput();
+        try (var out = new StringWriter()) {
             Map<String, Object> compilationOptions = new HashMap<>();
             Map<String, ClassNode> compilationVariableTypes = new HashMap<>();
 
-            var resultOutput = new ResultOutput();
-            var out = new StringWriter();
             var sharedData = new Binding();
             sharedData.setVariable("out", out);
             if (contexts != null && !contexts.isEmpty()) {
@@ -76,7 +76,7 @@ public class GroovyExecutorService {
 
             compilationOptions.put(WHITELIST_METHODS, patterns);
 
-            String tmpFilename = "script" + System.currentTimeMillis() + Math.abs(code.hashCode());
+            String tmpFilename = "script" + System.currentTimeMillis() + code.hashCode();
             compilationOptions.put(SCRIPT_NAME, tmpFilename);
 
             COMPILE_OPTIONS.set(compilationOptions);
@@ -102,54 +102,65 @@ public class GroovyExecutorService {
             configuration.addCompilationCustomizers(astCustomizer);
             configuration.addCompilationCustomizers(importCustomizer);
 
-            Script script = null;
-            try (var classLoader = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), configuration)) {
-
-                var scriptClass = classLoader.parseClass(code, tmpFilename + ".groovy");
-                script = InvokerHelper.createScript(scriptClass, sharedData);
-
-            } catch (Exception ex) {
-                log.error("Exception executing script", ex);
-                resultOutput.setError(ex.getMessage());
-            }
+            var script = createGroovyScript(code, resultOutput, sharedData, tmpFilename, configuration);
             if (script != null) {
-                log.info("Evaluating script...");
-                final var latch = new CountDownLatch(1);
-                AtomicReference<Object> result = new AtomicReference<>();
-                var finalScript = script;
-                var t = new Thread(() -> {
-                    log.debug("Running script");
-                    result.set(finalScript.run());
-                    latch.countDown();
-                });
-                try {
-                    log.debug("Starting thread");
-                    t.start();
-                    if (latch.await(TIMEOUT_THREAD_IN_MILLIS, TimeUnit.MILLISECONDS)) {
-                        log.debug("Thread returned result...");
-                        Object res = result.get();
-                        resultOutput.setOutput(res != null ? String.valueOf(res) : null);
-                        resultOutput.setLogs(out.toString());
-                    } else {
-                        log.debug("Latch timed out...");
-                        resultOutput.setError("Script interrupted without returning a result");
-                        if (t.isAlive()) {
-                            log.debug("Thread interrupting...");
-                            t.interrupt();
-                        }
-                    }
-                } catch (InterruptedException ex) {
-                    log.error("Exception executing script", ex);
-                    resultOutput.setError("Script interrupted without returning a result");
-                    if (t.isAlive()) {
-                        log.debug("Thread interrupting...");
-                        t.interrupt();
-                    }
-                }
+                executeScript(resultOutput, out, script);
             }
-            return resultOutput;
+        } catch (IOException e) {
+            log.error("Unexpected exception before executing script", e);
+            resultOutput.setError(e.getMessage());
         } finally {
             COMPILE_OPTIONS.remove();
+        }
+        return resultOutput;
+    }
+
+    private Script createGroovyScript(String code, ResultOutput resultOutput, Binding sharedData, String tmpFilename, CompilerConfiguration configuration) {
+        Script script = null;
+        try (var classLoader = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), configuration)) {
+
+            var scriptClass = classLoader.parseClass(code, tmpFilename + ".groovy");
+            script = InvokerHelper.createScript(scriptClass, sharedData);
+        } catch (Exception ex) {
+            log.error("Exception parsing script", ex);
+            resultOutput.setError(ex.getMessage());
+        }
+        return script;
+    }
+
+    private void executeScript(ResultOutput resultOutput, StringWriter out, Script script) {
+
+        log.info("Evaluating script...");
+        final var latch = new CountDownLatch(1);
+        AtomicReference<Object> result = new AtomicReference<>();
+        var t = new Thread(() -> {
+            log.debug("Running script");
+            result.set(script.run());
+            latch.countDown();
+        });
+        try {
+            log.debug("Starting thread");
+            t.start();
+            if (latch.await(TIMEOUT_THREAD_IN_MILLIS, TimeUnit.MILLISECONDS)) {
+                log.debug("Thread returned result...");
+                Object res = result.get();
+                resultOutput.setOutput(res != null ? String.valueOf(res) : null);
+                resultOutput.setLogs(out.toString());
+            } else {
+                log.debug("Latch timed out...");
+                resultOutput.setError("Script interrupted without returning a result");
+                if (t.isAlive()) {
+                    log.debug("Thread interrupting...");
+                    t.interrupt();
+                }
+            }
+        } catch (InterruptedException ex) {
+            log.error("Exception executing script", ex);
+            resultOutput.setError("Script interrupted without returning a result");
+            if (t.isAlive()) {
+                log.debug("Thread interrupting...");
+                t.interrupt();
+            }
         }
     }
 

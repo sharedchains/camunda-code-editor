@@ -5,16 +5,12 @@ import org.camunda.spin.xml.SpinXmlElement;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.shared.code.languageexecutor.dto.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
 public class ClassNodeParserService {
-
-    private static final Logger log = LoggerFactory.getLogger(ClassNodeParserService.class);
 
     public ClassNode parse(Context context) {
         switch (context.getType()) {
