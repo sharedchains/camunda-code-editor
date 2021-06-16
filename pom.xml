@@ -27,6 +27,8 @@
         <camunda.spin.version>1.10.1</camunda.spin.version>
         <camunda.external.task.client.version>1.4.1</camunda.external.task.client.version>
 
+        <jacoco.plugin.version>0.8.7</jacoco.plugin.version>
+
         <!-- MAVEN PLUGINS -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
@@ -115,6 +117,19 @@
                         </fileset>
                     </filesets>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
