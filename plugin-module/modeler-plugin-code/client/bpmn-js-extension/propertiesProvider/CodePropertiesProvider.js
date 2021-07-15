@@ -4,8 +4,9 @@ import PropertiesActivator from 'bpmn-js-properties-panel/lib/PropertiesActivato
 
 import { find } from 'lodash';
 import scriptTaskProps from './parts/ScriptTaskProps';
-import { is } from 'bpmn-js/lib/util/ModelUtil';
-
+import listenerDetailProps from './parts/ListenerDetailProps';
+import conditionalProps from './parts/ConditionalProps';
+import inputOutputProps from './parts/InputOutputProps';
 
 export default function CodePropertiesProvider(eventBus, commandStack, bpmnFactory, translate, selection, propertiesProvider) {
   PropertiesActivator.call(this, eventBus);
@@ -15,10 +16,26 @@ export default function CodePropertiesProvider(eventBus, commandStack, bpmnFacto
 
     const array = camundaGetTabs(element);
     let generalTab = find(array, { id: 'general' });
-    let detailsTab = find(generalTab.groups, { id: 'details' });
-    if (is(element, 'bpmn:ScriptTask') && detailsTab) {
-      scriptTaskProps(detailsTab, element, translate, eventBus, commandStack);
+    let detailsGroup = find(generalTab.groups, { id: 'details' });
+    if (detailsGroup) {
+      scriptTaskProps(detailsGroup, element, translate, eventBus, commandStack);
+      conditionalProps(detailsGroup, element, translate, eventBus, commandStack);
     }
+
+    let listenersTab = find(array, { id: 'listeners' });
+    if (listenersTab) {
+      let listenerDetailsGroup = find(listenersTab.groups, { id: 'listener-details' });
+      if (listenerDetailsGroup) {
+        listenerDetailProps(listenerDetailsGroup, element, translate, eventBus, commandStack);
+      }
+    }
+    let inputOutputTab = find(array, { id: 'input-output' });
+    if (inputOutputTab) {
+      inputOutputTab.groups.forEach(group => {
+        inputOutputProps(group, element, translate, eventBus, commandStack);
+      });
+    }
+
     return array;
   };
 }
