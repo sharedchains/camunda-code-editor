@@ -12,7 +12,7 @@ This plug-in integrates a script editor to Camunda Modeler, allowing a user to w
 
 ## Install
 
-Extract the [release zip file](https://github.com/sharedchains/camunda-code-editor/releases/tag/v0.2.0) to your camunda-modeler/resources/plugins folder. Super easy!
+Extract the [release zip file](https://github.com/sharedchains/camunda-code-editor/releases/) to your camunda-modeler/resources/plugins folder. Super easy!
 
 ## Limitations
 **Up to now, only if Script Format is 'groovy' or 'javascript'** 

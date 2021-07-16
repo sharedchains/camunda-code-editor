@@ -2,7 +2,6 @@ import { OPEN_CODE_EDITOR, SAVE_CODE_EDITOR } from '../../../../utils/EventHelpe
 import { query as domQuery } from 'min-dom';
 
 import { escapeHTML, selectedType } from 'bpmn-js-properties-panel/lib/Utils';
-import cmdHelper from 'bpmn-js-properties-panel/lib/helper/CmdHelper';
 
 function getScriptType(node, idPrefix) {
 
@@ -55,7 +54,8 @@ function updateValues(scriptValuePropName, scriptLanguagePropName, isFormatRequi
 export default function(scriptLanguagePropName, scriptValuePropName, isFormatRequired, translate, eventBus, commandStack, options) {
   let idPrefix = options && options.idPrefix || '';
 
-  return {
+  let scriptObject = {
+    callback: () => {},
     template:
       '<div class="bpp-row bpp-textfield code-editor-script-format">' +
       '<label for="' + idPrefix + 'cam-script-format">' + escapeHTML(translate('Script Format')) + '</label>' +
@@ -194,7 +194,9 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
 
     openCodeEditor: function(element, inputNode, btnNode, scopeNode) {
       let scriptFormat = domQuery('input[name=scriptFormat]', scopeNode).value.toLowerCase(),
-          scriptValue = domQuery('textarea[name=scriptValue]', scopeNode).value;
+          scriptValue = domQuery('textarea[name=scriptValue]', scopeNode).value,
+          scriptType = getScriptType(scopeNode, idPrefix),
+          scriptResourceValue = domQuery('input[name=scriptResourceValue]', scopeNode).value;
 
       eventBus.fire(OPEN_CODE_EDITOR, {
         element: element,
@@ -203,13 +205,21 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
         mode: scriptFormat
       });
 
-      eventBus.once(SAVE_CODE_EDITOR, 10000, function(event) {
+      eventBus.once(SAVE_CODE_EDITOR, 10000, event => {
 
         const { data } = event;
-        let properties = updateValues(scriptValuePropName, scriptLanguagePropName, isFormatRequired, scriptFormat, 'script', '', data);
-        let updateElement = cmdHelper.updateProperties(element, properties);
+        scriptValue = data;
+        let properties = { scriptFormat, scriptType, scriptResourceValue, scriptValue };
 
-        commandStack.execute(updateElement.cmd, updateElement.context);
+        let updateElement = scriptObject.callback(element, properties, scopeNode);
+        if (Array.isArray(updateElement)) {
+          updateElement.forEach(update => {
+            commandStack.execute(update.cmd, update.context);
+          });
+        } else {
+          commandStack.execute(updateElement.cmd, updateElement.context);
+        }
+
         return false;
       });
 
@@ -221,5 +231,6 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
     }
 
   };
+  return scriptObject;
 
 }
