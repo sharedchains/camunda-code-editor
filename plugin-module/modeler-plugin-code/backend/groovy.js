@@ -22,6 +22,7 @@ async function startGroovyExecutor() {
     groovyProcess = execa(javaPath, args);
     console.log('Started java with PID: ' + groovyProcess.pid);
     groovyProcess.stdout.pipe(process.stdout);
+    groovyProcess.stderr.pipe(process.stderr);
 
   } catch (error) {
     console.log(error);
