@@ -6,7 +6,7 @@
 
     <groupId>org.shared.code</groupId>
     <artifactId>camunda-code-editor-plugin</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>${code-editor.version}</version>
     <packaging>pom</packaging>
 
     <name>Camunda Modeler Code Editor Plugin</name>
@@ -16,6 +16,8 @@
     </organization>
 
     <properties>
+        <code-editor.version>0.3.0</code-editor.version>
+
         <java.version>11</java.version>
         <frontend.node.maven.plugin.version>1.12.0</frontend.node.maven.plugin.version>
 

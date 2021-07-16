@@ -5,10 +5,10 @@
     <parent>
         <groupId>org.shared.code</groupId>
         <artifactId>camunda-code-editor-plugin</artifactId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>${code-editor.version}</version>
+        <relativePath>../</relativePath>
     </parent>
     <artifactId>language-executor</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
     <name>Language executor</name>
     <description>Spring Boot Language Executor</description>
     <packaging>jar</packaging>
