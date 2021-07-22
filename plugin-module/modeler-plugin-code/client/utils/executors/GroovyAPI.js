@@ -9,17 +9,24 @@ export default class GroovyAPI {
       accept: 'application/json'
     };
 
-    const res = await fetch(this.restEndpoint + '/groovy/execute', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload)
-    });
+    let res;
 
-    if (!res.ok) {
-      return { error: `${res.status} ${res.statusText}` };
+    try {
+      res = await fetch(this.restEndpoint + '/groovy/execute', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        return { error: `${res.status} ${res.statusText}` };
+      }
+
+      return res.json();
+    } catch (error) {
+      return {
+        error: `Unexpected error calling executor: ${error}`
+      };
     }
-
-    return res.json();
   }
 
 }
