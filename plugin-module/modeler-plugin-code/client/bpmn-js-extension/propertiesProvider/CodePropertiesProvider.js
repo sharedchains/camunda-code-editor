@@ -7,12 +7,12 @@ import scriptTaskProps from './parts/ScriptTaskProps';
 import listenerDetailProps from './parts/ListenerDetailProps';
 import conditionalProps from './parts/ConditionalProps';
 import inputOutputProps from './parts/InputOutputProps';
-import { LOADED_CODE_EDITOR } from '../../utils/EventHelper';
+import { DATA_TYPES, LOADED_CODE_EDITOR } from '../../utils/EventHelper';
 
 export default function CodePropertiesProvider(eventBus, commandStack, bpmnFactory, translate, selection, propertiesProvider) {
   PropertiesActivator.call(this, eventBus);
 
-  eventBus.fire(LOADED_CODE_EDITOR);
+  eventBus.fire(LOADED_CODE_EDITOR, { dataTypes: DATA_TYPES });
 
   let camundaGetTabs = propertiesProvider.getTabs;
   propertiesProvider.getTabs = function(element) {
