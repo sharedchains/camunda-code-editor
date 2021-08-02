@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'camunda-modeler-plugin-helpers/react
 import EditorModal from '../UI/EditorModal';
 
 import { OPEN_CODE_EDITOR, SAVE_CODE_EDITOR } from '../../utils/EventHelper';
+import { find } from 'lodash';
 
 const defaultState = {
   modalOpen: false,
@@ -10,7 +11,9 @@ const defaultState = {
   node: null,
   type: 'javascript',
   data: null,
-  cursor: null
+  cursor: null,
+  modeler: null,
+  tabModeler: []
 };
 
 export default class CodeFragment extends Component {
@@ -43,8 +46,16 @@ export default class CodeFragment extends Component {
       }
     };
 
-    subscribe('bpmn.modeler.created', ({ modeler }) => {
+    subscribe('bpmn.modeler.created', ({ modeler, tab }) => {
       this._eventBus = modeler.get('eventBus');
+
+      const { tabModeler }
+        = this.state;
+      this.setState({
+        modeler: modeler,
+        tabModeler: [...tabModeler, { tabId: tab.id, modeler: modeler }]
+      });
+
       this._eventBus.on(OPEN_CODE_EDITOR, (event) => {
 
         // Received command to open the editorModal for documentation
@@ -58,10 +69,23 @@ export default class CodeFragment extends Component {
       });
     });
 
-    subscribe('app.activeTabChanged', saveTab);
+    subscribe('app.activeTabChanged', tab => {
+      const {
+        tabModeler
+      } = this.state;
+      let activeTabId = tab.activeTab.id;
+
+      const activeModeler = find(tabModeler, { tabId: activeTabId });
+      if (activeModeler) {
+        this._eventBus = activeModeler.modeler.get('eventBus');
+        this.setState({ modeler: activeModeler.modeler });
+      }
+
+      saveTab(tab);
+    });
+
     subscribe('close-all-tabs', saveTab);
   }
-
 
   onEditorStateChange(editor, data, value) {
     this.setState({
@@ -72,12 +96,12 @@ export default class CodeFragment extends Component {
 
   closeModal() {
     let currentState = { ...this.state };
-    const { element, node, data } = currentState;
-    this.setState({
-      ...defaultState
-    });
+    const { element, node, data, modeler, tabModeler } = currentState;
     this._eventBus.fire(SAVE_CODE_EDITOR, {
       element, node, data
+    });
+    this.setState({
+      ...defaultState, modeler, tabModeler
     });
   }
 
