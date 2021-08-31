@@ -18,22 +18,6 @@
         <maven.compiler.target>15</maven.compiler.target>
     </properties>
 
-    <dependencies>
-        <!-- JDK -->
-        <dependency>
-            <groupId>org.adoptopenjdk</groupId>
-            <artifactId>openjdk</artifactId>
-            <classifier>linux-x64</classifier>
-            <type>tar.gz</type>
-        </dependency>
-        <dependency>
-            <groupId>org.adoptopenjdk</groupId>
-            <artifactId>openjdk</artifactId>
-            <classifier>win-x64</classifier>
-            <type>zip</type>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -43,31 +27,17 @@
                 <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <id>win</id>
+                        <id>x64</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>assembly-win.xml</descriptor>
+                                <descriptor>assembly.xml</descriptor>
                             </descriptors>
                             <finalName>camunda-code-editor-plugin</finalName>
-                            <appendAssemblyId>true</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>linux</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>assembly-linux.xml</descriptor>
-                            </descriptors>
-                            <finalName>camunda-code-editor-plugin</finalName>
-                            <appendAssemblyId>true</appendAssemblyId>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                 </executions>

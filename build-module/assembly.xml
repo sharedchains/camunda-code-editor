@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
-    <id>win-x64</id>
+    <id>x64</id>
     <formats>
         <format>dir</format>
         <format>zip</format>
+        <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <moduleSets>
@@ -36,24 +37,7 @@
                 <outputDirectory>camunda-code-editor-plugin/assets</outputDirectory>
                 <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
                 <unpack>false</unpack>
-                <excludes>
-                    <exclude>org.adoptopenjdk:openjdk</exclude>
-                </excludes>
             </binaries>
         </moduleSet>
     </moduleSets>
-    <dependencySets>
-        <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
-            <unpack>true</unpack>
-            <unpackOptions>
-                <lineEnding>keep</lineEnding>
-            </unpackOptions>
-            <includes>
-                <include>org.adoptopenjdk:openjdk:*:win-x64</include>
-            </includes>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
-            <outputDirectory>camunda-code-editor-plugin/jvm</outputDirectory>
-        </dependencySet>
-    </dependencySets>
 </assembly>

@@ -1,3 +1,4 @@
+const which = require('which');
 const execa = require('execa');
 const path = require('path');
 
@@ -12,7 +13,7 @@ module.exports = {
 async function startGroovyExecutor() {
 
   try {
-    const javaPath = path.resolve(__dirname, '../jvm/jdk-11.0.1+13/bin/java');
+    const javaPath = await which('java');
     const args = [
       '-jar',
       LANGUAGE_EXECUTOR_PATH,
