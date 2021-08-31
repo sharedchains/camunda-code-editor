@@ -1,0 +1,24 @@
+{
+  "name": "Data Token properties",
+  "prefix": "data",
+  "uri": "http://data.sh4.red",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "associations": [],
+  "types": [
+    {
+      "name": "DataScriptTask",
+      "extends": [
+        "bpmn:ScriptTask"
+      ],
+      "properties": [
+        {
+          "name": "scriptResultVariableType",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

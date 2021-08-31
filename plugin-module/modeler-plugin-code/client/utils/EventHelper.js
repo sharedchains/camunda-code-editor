@@ -7,8 +7,6 @@ const RUN_CODE_EDITOR = codePrefix + '.run';
 const STOP_CODE_EDITOR = codePrefix + '.stop';
 const GET_DATA_TYPES = codePrefix + '.getTypes';
 
-const SET_DATA_RESULT_VARIABLE_TYPE = 'tokenSimulation.resultVariableType.set'; // REPLICATED FROM DATA TOKEN SIMULATION PLUGIN
-const GET_DATA_RESULT_VARIABLE_TYPE = 'tokenSimulation.resultVariableType.get';
 
 export {
   OPEN_CODE_EDITOR,
@@ -16,9 +14,7 @@ export {
   RUN_CODE_EDITOR,
   STOP_CODE_EDITOR,
   LOADED_CODE_EDITOR,
-  GET_DATA_TYPES,
-  SET_DATA_RESULT_VARIABLE_TYPE,
-  GET_DATA_RESULT_VARIABLE_TYPE
+  GET_DATA_TYPES
 };
 
 export const DATA_TYPES = [
