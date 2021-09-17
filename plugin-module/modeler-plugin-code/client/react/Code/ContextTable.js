@@ -2,6 +2,7 @@ import React, { useState } from 'camunda-modeler-plugin-helpers/react';
 import Input from '../UI/Input';
 
 import { updateObject, checkValidity } from '../../utils/fieldUtil';
+import { DATA_TYPES } from '../../utils/EventHelper';
 
 const SPACE_KEY = 32;
 const BACKSPACE_KEY = 8;
@@ -21,20 +22,7 @@ const ContextTable = (props) => {
     type: {
       elementType: 'select',
       elementConfig: {
-        options: [
-          { value: '', displayValue: '' },
-          { value: 'BOOLEAN', displayValue: 'Boolean' },
-          { value: 'BYTES', displayValue: 'Byte Array' },
-          { value: 'STRING', displayValue: 'String' },
-          { value: 'SHORT', displayValue: 'Short' },
-          { value: 'DOUBLE', displayValue: 'Double' },
-          { value: 'INTEGER', displayValue: 'Integer' },
-          { value: 'LONG', displayValue: 'Long' },
-          { value: 'DATE', displayValue: 'Date' },
-          { value: 'DATETIME', displayValue: 'Date & time' },
-          { value: 'JSON', displayValue: 'JSON' },
-          { value: 'XML', displayValue: 'XML' }
-        ]
+        options: DATA_TYPES
       },
       validation: {
         required: true

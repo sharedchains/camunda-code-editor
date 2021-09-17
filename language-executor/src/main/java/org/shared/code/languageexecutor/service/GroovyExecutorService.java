@@ -146,6 +146,7 @@ public class GroovyExecutorService {
                 Object res = result.get();
                 resultOutput.setOutput(res != null ? String.valueOf(res) : null);
                 resultOutput.setLogs(out.toString());
+                log.debug("The script printed these logs: {}", out);
             } else {
                 log.debug("Latch timed out...");
                 resultOutput.setError("Script interrupted without returning a result");
