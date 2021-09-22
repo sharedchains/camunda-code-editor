@@ -25,6 +25,7 @@ async function startGroovyExecutor() {
     groovyProcess.stdout.pipe(process.stdout);
     groovyProcess.stderr.pipe(process.stderr);
 
+    return javaPath;
   } catch (error) {
     console.log(error);
     throw new Error('Cannot find java executable');
