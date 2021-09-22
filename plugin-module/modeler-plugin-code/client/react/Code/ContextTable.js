@@ -133,7 +133,7 @@ const ContextTable = (props) => {
         value={rowObject[key]}
         invalid={!validRows[index][key].valid}
         errorMessage={validRows[index][key].errorMessage}
-        changed={event => inputChangeHandler(event, key, index, rowObject)}
+        changed={event => inputChangeHandler(event, key, index)}
         keyDown={event => handleKeyDown(event, contextColumns[key].elementType)}
       />
     </td>);
@@ -142,7 +142,7 @@ const ContextTable = (props) => {
       <td>
         <button
           type="button"
-          onClick={() => removeRow(index, rowObject)}
+          onClick={() => removeRow(index)}
           className="context-buttons context-removeRow">-
         </button>
       </td>

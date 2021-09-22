@@ -27,7 +27,9 @@ public class CodeController {
     public ResultOutput executeGroovy(@Valid @RequestBody CodeInput input) {
 
         byte[] codeByteArray = Base64.getDecoder().decode(input.getCode());
-        log.info("Received input: {}", input);
+        // Replace pattern-breaking characters
+        String sanitizedInput = input.toString().replaceAll("[\n\r\t]", "_");
+        log.debug("Received input: {}", sanitizedInput);
         return groovyExecutorService.executeGroovyScript(new String(codeByteArray, StandardCharsets.UTF_8), input.getContext());
     }
 }

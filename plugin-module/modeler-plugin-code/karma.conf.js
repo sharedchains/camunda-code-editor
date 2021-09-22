@@ -7,9 +7,6 @@
 var path = require('path');
 var absoluteBasePath = path.resolve(__dirname);
 
-// var coverage = process.env.COVERAGE;
-// var suite = coverage ? 'test/all.js' : 'test/suite.js';
-
 // configures browsers to run test against
 // any of [ 'ChromeHeadless', 'Chrome', 'Firefox', 'IE', 'PhantomJS' ]
 var browsers =
