@@ -7,27 +7,44 @@
  * Implemented main function to execute groovy for script evaluation
  * @author luca.bonora@sharedchains.com (Luca Bonora)
  */
-module.exports = executeOnce(main, []);
+module.exports = executeOnce(main, [{
+  label: 'JAVA: ',
+  enabled: function() {
+    return false;
+  },
+  action: function() {}
+}]);
 
 async function main(app) {
 
-  const {
-    startGroovyExecutor,
-    stopGroovyExecutor
-  } = require('./groovy');
+  return new Promise(resolve => {
+    const {
+      startGroovyExecutor,
+      stopGroovyExecutor
+    } = require('./groovy');
 
-  app.on('app:client-ready', async () => {
-    try {
-      await startGroovyExecutor();
-      console.log('[groovy-executor] started Groovy executor');
-    } catch (error) {
-      console.error('[groovy-executor] unable to start Groovy executor', error);
-    }
-  });
+    app.on('app:client-ready', async () => {
+      let javaPath;
+      try {
+        javaPath = await startGroovyExecutor();
+        console.log('[groovy-executor] started Groovy executor at ' + javaPath);
+      } catch (error) {
+        javaPath = error.message;
+        console.error('[groovy-executor] unable to start Groovy executor', error);
+        app.emit('menu:action', 'show-dialog', {
+          message: 'Couldn\'t start Groovy executor: ' + error.message,
+          title: 'Camunda Code Editor Error',
+          type: 'error'
+        });
+      }
 
-  app.on('quit', () => {
-    console.log('[groovy-executor] stopping Groovy executor');
-    return stopGroovyExecutor();
+      resolve(javaPath);
+    });
+
+    app.on('quit', () => {
+      console.log('[groovy-executor] stopping Groovy executor');
+      return stopGroovyExecutor();
+    });
   });
 }
 
@@ -39,15 +56,23 @@ async function main(app) {
  */
 function executeOnce(fn, returnValue) {
   let executed = false;
+  let updatedReturnValue = returnValue;
 
   return function(...args) {
     if (executed) {
-      return returnValue;
+      return updatedReturnValue;
     }
 
     executed = true;
-    fn(...args);
+    fn(...args).then(javaPath => {
+      updatedReturnValue = updateReturnValueLabel(returnValue[0], javaPath);
+    });
 
-    return returnValue;
+    return updatedReturnValue;
   };
+}
+
+function updateReturnValueLabel(returnValue, arg) {
+  returnValue.label = returnValue.label + arg;
+  return [returnValue];
 }
