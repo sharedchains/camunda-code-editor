@@ -5,8 +5,13 @@ All notable changes to the [camunda-code-editor](https://github.com/sharedchains
 ## Unreleased
 
 ___Note:__ Yet to be released changes appear here._
-* `FIX`: solves [#3](https://github.com/sharedchains/camunda-code-editor/issues/3) - Remove JDK from the bundle
-* `FIX`: solves [#7](https://github.com/sharedchains/camunda-code-editor/issues/7) - Missing editor button on input/output parameters
+
+
+## 0.4.0
+
+* `FIX`: Solves [#3](https://github.com/sharedchains/camunda-code-editor/issues/3) - Remove JDK from the bundle
+* `FIX`: Solves [#7](https://github.com/sharedchains/camunda-code-editor/issues/7) - Missing editor button on input/output parameters
+* `FEAT`: Better error handling for missing JAVA executable
 * `FEAT`: Integrating this plugin with our fork of [bpmn-js-token-simulation-plugin](https://github.com/bpmn-io/bpmn-js-token-simulation-plugin)
 
 ## 0.3.1
