@@ -55,7 +55,10 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
   let idPrefix = options && options.idPrefix || '';
 
   let scriptObject = {
-    callback: () => {},
+    callback: () => {
+
+      // This is intentional
+    },
     template:
       '<div class="bpp-row bpp-textfield code-editor-script-format">' +
       '<label for="' + idPrefix + 'cam-script-format">' + escapeHTML(translate('Script Format')) + '</label>' +

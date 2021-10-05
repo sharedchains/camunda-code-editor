@@ -163,11 +163,11 @@ public class ContextValueParserService {
             LocalDateTime dt = (LocalDateTime) parsed;
             zonedDateTime = dt.atZone(ZoneId.of("UTC"));
         } else {
-            log.error("Unable to parse dateTime {}", dateString);
+            log.error("Unable to parse dateTime");
             throw new DateTimeException("Unable to parse datetime " + dateString);
         }
 
-        log.info("Converted dateString {} to ZonedDateTime", dateString);
+        log.info("Converted dateString to ZonedDateTime");
         var instant = zonedDateTime.toInstant();
         log.info("Got instant from zonedDateTime");
         var d = Date.from(instant);

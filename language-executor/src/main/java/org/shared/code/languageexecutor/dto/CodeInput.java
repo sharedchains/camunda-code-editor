@@ -31,7 +31,7 @@ public class CodeInput implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CodeInput codeInput = (CodeInput) o;
+        var codeInput = (CodeInput) o;
         return Objects.equals(code, codeInput.code) && Objects.equals(context, codeInput.context);
     }
 

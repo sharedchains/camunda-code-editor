@@ -36,9 +36,9 @@ public class ApplicationConfiguration {
 
     @Bean
     public RestTemplate restTemplate(MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter) {
-        RestTemplateBuilder builder = new RestTemplateBuilder(restTemplate -> {
+        var builder = new RestTemplateBuilder(restTemplate -> {
             // Using a centralized jackson message converter with a configured Object Mapper
-            restTemplate.getMessageConverters().removeIf(m -> m.getClass().getName().equals(MappingJackson2HttpMessageConverter.class.getName()));
+            restTemplate.getMessageConverters().removeIf(m -> m.getClass().isAssignableFrom(MappingJackson2HttpMessageConverter.class));
             mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
                     MediaType.APPLICATION_JSON, new MediaType("application", "*+json"), new MediaType("text", "plain", StandardCharsets.UTF_8)
             ));

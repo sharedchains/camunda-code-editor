@@ -12,7 +12,10 @@ module.exports = executeOnce(main, [{
   enabled: function() {
     return false;
   },
-  action: function() {}
+  action: function() {
+
+    // This is intentional
+  }
 }]);
 
 async function main(app) {
