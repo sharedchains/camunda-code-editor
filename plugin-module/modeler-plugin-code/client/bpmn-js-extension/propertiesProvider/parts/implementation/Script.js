@@ -56,6 +56,7 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
 
   let scriptObject = {
     callback: () => {
+
       // This is intentional
     },
     template:

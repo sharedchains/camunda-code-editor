@@ -13,6 +13,7 @@ module.exports = executeOnce(main, [{
     return false;
   },
   action: function() {
+
     // This is intentional
   }
 }]);
