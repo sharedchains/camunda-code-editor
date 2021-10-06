@@ -6,6 +6,9 @@ import org.camunda.spin.json.SpinJsonNode;
 import org.camunda.spin.plugin.variable.value.JsonValue;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type Json parser.
+ */
 @Component
 public class JsonParser implements VariableParser {
 

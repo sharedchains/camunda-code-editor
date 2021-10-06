@@ -9,9 +9,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+/**
+ * The type Class node parser service.
+ */
 @Service
 public class ClassNodeParserService {
 
+    /**
+     * Parses the Context type and returns the correspondent Groovy class node
+     *
+     * @param context the context
+     * @return the class node
+     */
     public ClassNode parse(Context context) {
         switch (context.getType()) {
             case BOOLEAN:
