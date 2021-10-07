@@ -9,6 +9,17 @@ import conditionalProps from './parts/ConditionalProps';
 import inputOutputProps from './parts/InputOutputProps';
 import { DATA_TYPES, LOADED_CODE_EDITOR } from '../../utils/EventHelper';
 
+/**
+ * Our custom PropertiesProvider, replacing default camunda fields like scriptTaskProps with our custom properties.
+ *
+ * @param eventBus
+ * @param commandStack
+ * @param bpmnFactory
+ * @param translate
+ * @param selection
+ * @param propertiesProvider
+ * @constructor
+ */
 export default function CodePropertiesProvider(eventBus, commandStack, bpmnFactory, translate, selection, propertiesProvider) {
   PropertiesActivator.call(this, eventBus);
 

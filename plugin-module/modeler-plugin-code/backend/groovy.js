@@ -13,6 +13,8 @@ module.exports = {
 async function startGroovyExecutor() {
 
   try {
+
+    // TODO: server port should be externalized in a variable like language_executor_path
     const javaPath = await which('java');
     const args = [
       '-jar',

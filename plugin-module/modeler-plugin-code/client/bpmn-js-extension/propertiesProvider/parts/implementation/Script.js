@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright 2015 camunda Services GmBH
+ * SPDX-License-Identifier: MIT
+ *
+ * @link https://github.com/bpmn-io/bpmn-js-properties-panel/blob/master/lib/provider/camunda/parts/implementation/Script.js
+ */
+
 import { OPEN_CODE_EDITOR, SAVE_CODE_EDITOR } from '../../../../utils/EventHelper';
 import { query as domQuery } from 'min-dom';
 

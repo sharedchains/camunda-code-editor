@@ -7,6 +7,12 @@ import { DATA_TYPES } from '../../utils/EventHelper';
 const SPACE_KEY = 32;
 const BACKSPACE_KEY = 8;
 
+/**
+ * Functional component to create the context variables table, implementing validation
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const ContextTable = (props) => {
 
   const contextColumns = {
@@ -87,6 +93,7 @@ const ContextTable = (props) => {
 
     props.addRowContext();
   };
+
   const removeRow = (index) => {
     let oldRows = [...validRows];
     oldRows.splice(index, 1);

@@ -1,3 +1,10 @@
+/**
+ * Utility function to update an object on react. In fact, react uses immutable objects, so this function creates instead
+ * a new object with the updated properties.
+ * @param oldObject
+ * @param updatedProperties
+ * @returns {*}
+ */
 export const updateObject = (oldObject, updatedProperties) => {
   return {
     ...oldObject,
@@ -5,6 +12,12 @@ export const updateObject = (oldObject, updatedProperties) => {
   };
 };
 
+/**
+ * Validation utility for react values
+ * @param value
+ * @param rules
+ * @returns {{valid: boolean, errorMessage: null}}
+ */
 export const checkValidity = (value, rules) => {
   let isValid = true;
   let errorMessage = null;

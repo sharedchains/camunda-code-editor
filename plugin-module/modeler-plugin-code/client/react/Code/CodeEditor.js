@@ -34,7 +34,7 @@ import { JSHINT } from 'jshint';
 import jsonlint from 'jsonlint-mod';
 
 import JSExecutor from '../../utils/executors/JSExecutor';
-import logger from '../../utils/console';
+import editorConsole from '../../utils/editorConsole';
 import { STOP_CODE_EDITOR } from '../../utils/EventHelper';
 import ContextTable from './ContextTable';
 import RunPanel from './RunPanel';
@@ -43,6 +43,13 @@ import GroovyAPI from '../../utils/executors/GroovyAPI';
 window.JSHINT = JSHINT;
 window.jsonlint = jsonlint;
 
+/**
+ * Functional component for the Scripting section: Instantiate CodeMirror library and implements the behaviour to save
+ * the code script inside Camunda Modeler
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const CodeEditor = props => {
 
   const [context, setContext] = useState([]);
@@ -51,7 +58,7 @@ const CodeEditor = props => {
 
   const consoleResultRef = useCallback((consoleRef) => {
     if (consoleRef) {
-      const logFunctions = logger(consoleRef);
+      const logFunctions = editorConsole(consoleRef);
       setCsl(logFunctions);
     }
   }, []);
@@ -95,7 +102,6 @@ const CodeEditor = props => {
     gutters: ['CodeMirror-lint-markers']
   };
 
-  // TODO: Build the context variables table ?
   let contextOption = {};
   scriptOptions.hintOptions = {
     additionalContext: {

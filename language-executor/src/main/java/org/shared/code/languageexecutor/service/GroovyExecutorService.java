@@ -47,6 +47,7 @@ public class GroovyExecutorService {
      */
     public static final String SCRIPT_NAME = "script.name";
 
+    // TODO: Should it be parameterized ?
     private static final long TIMEOUT_THREAD_IN_MILLIS = 15000;
 
     /**
@@ -87,6 +88,7 @@ public class GroovyExecutorService {
                 }
                 compilationOptions.put(VAR_TYPES, compilationVariableTypes);
             }
+            /* Restrict groovy execution in a whitelist of allowed methods */
             List<String> patterns = new ArrayList<>();
             patterns.add("java\\.lang\\.Math#");
             patterns.add("org\\.camunda\\.spin\\.*");
@@ -124,8 +126,10 @@ public class GroovyExecutorService {
             configuration.addCompilationCustomizers(astCustomizer);
             configuration.addCompilationCustomizers(importCustomizer);
 
+            // Create a script object using the configuration above
             var script = createGroovyScript(code, resultOutput, sharedData, tmpFilename, configuration);
             if (script != null) {
+                // Executing script in a separated thread in safe mode, killing it using CountDownLatch after 15 seconds
                 executeScript(resultOutput, out, script);
             }
         } catch (IOException e) {

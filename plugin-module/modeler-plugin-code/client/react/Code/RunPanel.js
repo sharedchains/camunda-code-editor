@@ -1,5 +1,11 @@
 import React from 'camunda-modeler-plugin-helpers/react';
 
+/**
+ * Functional component for the run/stop buttons section
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const RunPanel = props => {
 
   return (<div id="runPanel">
