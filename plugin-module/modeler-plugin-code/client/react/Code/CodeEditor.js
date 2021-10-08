@@ -151,7 +151,8 @@ const CodeEditor = props => {
       if (results.output) {
         csl.addToConsole('OUTPUT:');
         csl.addToConsole(JSON.stringify(results.output, null, 2));
-      } else {
+      }
+      if (results.error) {
         csl.addToConsole('ERROR:');
         csl.addToConsole(results.error);
       }
@@ -174,7 +175,8 @@ const CodeEditor = props => {
     <h4 className="codeTitle">Script</h4>
     <div className="CodeEditor-container">
       <ReflexContainer orientation="vertical">
-        <ReflexElement className="left-pane" propagateDimensions="true" resizeHeight="false" resizeWidth="true" flex={0.8}>
+        <ReflexElement className="left-pane" propagateDimensions="true" resizeHeight="false" resizeWidth="true"
+                       flex={0.8}>
           <CodeMirror
             className="CodeEditor Box"
             value={props.value}
@@ -187,7 +189,8 @@ const CodeEditor = props => {
           />
         </ReflexElement>
         <ReflexSplitter/>
-        <ReflexElement className="right-pane" minSize="100" propagateDimensions="true" resizeHeight="false" resizeWidth="true" flex={0.2}>
+        <ReflexElement className="right-pane" minSize="100" propagateDimensions="true" resizeHeight="false"
+                       resizeWidth="true" flex={0.2}>
           <div className="RunningResult Box">
             <RunPanel runClicked={runClicked} stopClicked={stopClicked}/>
             <div className="Result-box" ref={consoleResultRef}/>
