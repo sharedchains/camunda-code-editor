@@ -15,6 +15,9 @@ import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * This controller will receive groovy script code and the context variables to execute it, and then it will return its result
+ */
 @RestController
 public class CodeController {
 
@@ -23,6 +26,12 @@ public class CodeController {
     @Autowired
     private GroovyExecutorService groovyExecutorService;
 
+    /**
+     * Decode and executes the code inside {@param input} argument class
+     *
+     * @param input {@link CodeInput} class, contains the code and the context variables to execute it
+     * @return {@link ResultOutput} of the execution, contains logs, output and/or errors
+     */
     @PostMapping(value = "/groovy/execute", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResultOutput executeGroovy(@Valid @RequestBody CodeInput input) {
 

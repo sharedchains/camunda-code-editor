@@ -1,3 +1,8 @@
+/**
+ * A list of event types called on {@link eventBus}
+ * @type {string}
+ */
+
 let codePrefix = 'codeEditor';
 
 const LOADED_CODE_EDITOR = codePrefix + '.init';
@@ -17,6 +22,9 @@ export {
   GET_DATA_TYPES
 };
 
+/**
+ * Variable Data Types
+ */
 export const DATA_TYPES = [
   { value: '', name: '' },
   { value: 'BOOLEAN', name: 'Boolean' },

@@ -1,6 +1,6 @@
 import { escape } from 'lodash';
 
-export default function logger(container) {
+export default function editorConsole(container) {
 
   let empty = true;
   const add = something => {

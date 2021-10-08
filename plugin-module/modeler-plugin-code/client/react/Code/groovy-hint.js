@@ -1,3 +1,6 @@
+/**
+ * Codemirror hints implementation for Groovy language, based on documentation
+ */
 (function(mod) {
   if (typeof exports == 'object' && typeof module == 'object') // CommonJS
     mod(require('codemirror/lib/codemirror'), require('codemirror/mode/groovy/groovy'));

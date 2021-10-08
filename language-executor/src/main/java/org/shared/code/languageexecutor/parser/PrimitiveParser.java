@@ -4,6 +4,9 @@ import org.camunda.bpm.engine.variable.value.PrimitiveValue;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type Primitive parser.
+ */
 @Component
 public class PrimitiveParser implements VariableParser {
     @Override

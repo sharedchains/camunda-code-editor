@@ -16,6 +16,9 @@ const defaultState = {
   tabModeler: []
 };
 
+/**
+ * A React modal window for writing scripts inside Camunda Modeler
+ */
 export default class CodeFragment extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +29,9 @@ export default class CodeFragment extends Component {
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
   }
 
+  /**
+   * Lifecycle react component method for side-effect calls (async)
+   */
   componentDidMount() {
     const {
       subscribe,
@@ -105,6 +111,10 @@ export default class CodeFragment extends Component {
     });
   }
 
+  /**
+   * Rendering EditorModal fragment
+   * @returns {JSX.Element}
+   */
   render() {
     const { modalOpen, mode, data, cursor } = this.state;
 

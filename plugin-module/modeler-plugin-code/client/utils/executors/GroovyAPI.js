@@ -1,3 +1,6 @@
+/**
+ * Simple API class that calls our language executor, returning its result
+ */
 export default class GroovyAPI {
 
   constructor(restEndpoint) {

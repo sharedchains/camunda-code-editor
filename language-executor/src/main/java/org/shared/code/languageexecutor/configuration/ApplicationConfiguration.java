@@ -14,11 +14,16 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+/**
+ * The type Application configuration.
+ */
 @Configuration
 public class ApplicationConfiguration {
 
-    /*
-     * Main configuration ObjectMapper jackson
+    /**
+     * Main configuration Jackson ObjectMapper
+     *
+     * @return the object mapper
      */
     @Bean
     @Primary
@@ -29,11 +34,22 @@ public class ApplicationConfiguration {
         return objectMapper;
     }
 
+    /**
+     * Instantiate the implementation of HttpMessageConverter that can read and write JSON using Jackson 2.x's ObjectMapper.
+     *
+     * @return the new converter
+     */
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         return new MappingJackson2HttpMessageConverter(objectMapper());
     }
 
+    /**
+     * Instantiate the synchronous client to perform HTTP requests, using the mapping converter created above
+     *
+     * @param mappingJackson2HttpMessageConverter the implementation of HttpMessageConverter
+     * @return the rest template client
+     */
     @Bean
     public RestTemplate restTemplate(MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter) {
         var builder = new RestTemplateBuilder(restTemplate -> {
