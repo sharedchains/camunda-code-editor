@@ -40,6 +40,7 @@ import ContextTable from './ContextTable';
 import RunPanel from './RunPanel';
 import GroovyAPI from '../../utils/executors/GroovyAPI';
 
+
 window.JSHINT = JSHINT;
 window.jsonlint = jsonlint;
 
@@ -51,8 +52,8 @@ window.jsonlint = jsonlint;
  * @constructor
  */
 const CodeEditor = props => {
-
-  const [context, setContext] = useState([]);
+ 
+  const [context, setContext] = useState([...props['inputParameters']]);
   const [editor, setEditor] = useState(null);
   const [csl, setCsl] = useState(null);
 
@@ -110,6 +111,7 @@ const CodeEditor = props => {
     globalVars: mode.globalVars
   };
 
+  
   const addRow = () => {
     let newContext = context.concat({ name: '', type: '', value: '' });
     setContext(newContext);
@@ -162,6 +164,7 @@ const CodeEditor = props => {
   const stopClicked = () => {
     props.eventBus.fire(STOP_CODE_EDITOR);
   };
+
 
   return (<div className="ScriptEditor-container">
     <h4 className="contextTitle">Context variables</h4>

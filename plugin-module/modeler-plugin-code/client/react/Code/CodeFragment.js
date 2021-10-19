@@ -11,6 +11,7 @@ const defaultState = {
   node: null,
   type: 'javascript',
   data: null,
+  inputParameters: null,
   cursor: null,
   modeler: null,
   tabModeler: []
@@ -62,7 +63,12 @@ export default class CodeFragment extends Component {
         tabModeler: [...tabModeler, { tabId: tab.id, modeler: modeler }]
       });
 
+
       this._eventBus.on(OPEN_CODE_EDITOR, (event) => {
+
+        let inputParams = event['inputParameters'].map(item => {
+          return {name: item.name,type:'',value:''}
+        })
 
         // Received command to open the editorModal for documentation
         this.setState({
@@ -70,7 +76,8 @@ export default class CodeFragment extends Component {
           element: event.element,
           node: event.node,
           mode: event.mode,
-          data: event.data
+          data: event.data,
+          inputParameters: inputParams
         });
       });
     });
@@ -102,9 +109,9 @@ export default class CodeFragment extends Component {
 
   closeModal() {
     let currentState = { ...this.state };
-    const { element, node, data, modeler, tabModeler } = currentState;
+    const { element, node, data, modeler, tabModeler, inputParameters } = currentState;
     this._eventBus.fire(SAVE_CODE_EDITOR, {
-      element, node, data
+      element, node, data, inputParameters
     });
     this.setState({
       ...defaultState, modeler, tabModeler
@@ -116,13 +123,13 @@ export default class CodeFragment extends Component {
    * @returns {JSX.Element}
    */
   render() {
-    const { modalOpen, mode, data, cursor } = this.state;
+    const { modalOpen, mode, data, cursor, inputParameters } = this.state;
 
     return <Fragment>
       {modalOpen && (
         <EditorModal onEditorChange={this.onEditorStateChange}
           close={this.closeModal} mode={mode} value={data} cursor={cursor}
-          eventBus={this._eventBus}
+          eventBus={this._eventBus} inputParameters={inputParameters}
           title='Script Editor'/>
       )}
     </Fragment>;

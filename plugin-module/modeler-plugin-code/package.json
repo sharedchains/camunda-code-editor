@@ -4,7 +4,7 @@
   "description": "A Code Editor for Camunda Modeler",
   "main": "index.js",
   "scripts": {
-    "all": "run-s lint bundle",
+    "all": "run-s bundle",
     "bundle": "webpack",
     "dev": "webpack -w",
     "lint": "eslint .",
