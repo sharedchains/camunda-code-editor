@@ -3,6 +3,7 @@ const execa = require('execa');
 const path = require('path');
 
 const LANGUAGE_EXECUTOR_PATH = process.env.LANGUAGE_EXECUTOR || path.resolve(__dirname, '../assets/language-executor.jar');
+const LANGUAGE_EXECUTOR_PORT = process.env.LANGUAGE_EXECUTOR_PORT || '12421';
 let groovyProcess;
 
 module.exports = {
@@ -14,12 +15,11 @@ async function startGroovyExecutor() {
 
   try {
 
-    // TODO: server port should be externalized in a variable like language_executor_path
     const javaPath = await which('java');
     const args = [
       '-jar',
       LANGUAGE_EXECUTOR_PATH,
-      '--server.port=12421'
+      `--server.port=${LANGUAGE_EXECUTOR_PORT}`
     ];
 
     groovyProcess = execa(javaPath, args);

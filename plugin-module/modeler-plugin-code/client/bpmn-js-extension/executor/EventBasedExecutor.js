@@ -9,13 +9,14 @@ import { encode } from 'js-base64';
  */
 export default function EventBasedExecutor(eventBus) {
 
+  const LANGUAGE_EXECUTOR_PORT = process.env.LANGUAGE_EXECUTOR_PORT || '12421';
+
   /**
    * Receives data from the UI. Encodes the code script and calls the LanguageExecutor (groovy) to run it in safe mode
    */
   eventBus.on(RUN_CODE_EDITOR, (event, code, context) => {
 
-    // TODO: server port should be externalized in a variable like language_executor_path
-    const groovyExecutor = new GroovyAPI('http://localhost:12421');
+    const groovyExecutor = new GroovyAPI(`http://localhost:${LANGUAGE_EXECUTOR_PORT}`);
     const base64 = encode(code);
     return groovyExecutor.executeGroovy({ code: base64, context: context });
   });

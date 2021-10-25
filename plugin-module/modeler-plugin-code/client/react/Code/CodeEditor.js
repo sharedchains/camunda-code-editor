@@ -40,6 +40,8 @@ import ContextTable from './ContextTable';
 import RunPanel from './RunPanel';
 import GroovyAPI from '../../utils/executors/GroovyAPI';
 
+const LANGUAGE_EXECUTOR_PORT = process.env.LANGUAGE_EXECUTOR_PORT || '12421';
+
 window.JSHINT = JSHINT;
 window.jsonlint = jsonlint;
 
@@ -140,7 +142,7 @@ const CodeEditor = props => {
     } else {
 
       // groovy
-      const groovyExecutor = new GroovyAPI('http://localhost:12421');
+      const groovyExecutor = new GroovyAPI(`http://localhost:${LANGUAGE_EXECUTOR_PORT}`);
 
       const base64 = encode(editor.getValue());
       const results = await groovyExecutor.executeGroovy({ code: base64, context: context });
