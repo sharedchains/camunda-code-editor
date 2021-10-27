@@ -113,9 +113,6 @@ const CodeEditor = props => {
     globalVars: mode.globalVars
   };
 
-  props.isVectorsMode = inputMode;
-  props.vectorsVariablesNumber = vectorsVariablesNumber;
-
   const addRow = () => {
     let newContext = context.concat({ name: '', type: '', value: '' });
     setContext(newContext);
@@ -138,11 +135,11 @@ const CodeEditor = props => {
     csl.clearConsole('');
 
     if (props.mode === 'javascript') {
-      if (props.isVectorsMode) {
+      if (inputMode) {
         const obj = {};
         context.forEach((x,index) => {
           let values = x.value.split(',');
-          if (values.length == props.vectorsVariablesNumber) {
+          if (values.length == vectorsVariablesNumber) {
             values.forEach((el,i) => {
               let elementObj = { name: x.name,type:x.type,value:el };
               obj[i] = [].concat(obj[i] ? obj[i] : [] ,elementObj);
@@ -169,7 +166,7 @@ const CodeEditor = props => {
     }
     else {
 
-      if (props.isVectorsMode) {
+      if (inputMode) {
         const groovyExecutor = new GroovyAPI('http://localhost:12421');
 
         const base64 = encode(editor.getValue());
