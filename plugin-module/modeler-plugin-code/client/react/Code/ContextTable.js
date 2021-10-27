@@ -168,37 +168,6 @@ const ContextTable = (props) => {
   });
 
   return (
-    // <div>
-    //   {props.isVectorsMode ? 
-    //      <table className="context-table">
-    //      <thead>
-    //        <tr key="context-title">
-    //          {
-    //            Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
-    //          }
-    //          <th>
-    //            <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
-    //          </th>
-    //        </tr>
-    //      </thead>
-    //      <tbody>{rows}</tbody>
-    //     </table> :
-        
-
-    //     <table className="context-table">
-    //     <thead>
-    //       <tr key="context-title">
-    //         {
-    //           Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
-    //         }
-    //         <th>
-    //           <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
-    //         </th>
-    //       </tr>
-    //     </thead>
-    //     <tbody>{rows}</tbody>
-    // </table>}
-    // </div>  
     <table className="context-table">
       <thead>
         <tr key="context-title">
