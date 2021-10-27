@@ -10,9 +10,9 @@ import { OPEN_CODE_EDITOR, SAVE_CODE_EDITOR } from '../../../../utils/EventHelpe
 import { query as domQuery } from 'min-dom';
 
 import { escapeHTML, selectedType } from 'bpmn-js-properties-panel/lib/Utils';
-import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
+
 // import {ExtensionElementsHelper} from 'bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper'
-import InputOutputHelper from 'bpmn-js-properties-panel/lib/helper/InputOutputHelper'
+import InputOutputHelper from 'bpmn-js-properties-panel/lib/helper/InputOutputHelper';
 function getScriptType(node, idPrefix) {
 
   // if we have an idPrefix, work with specific selector
@@ -213,7 +213,7 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
           scriptType = getScriptType(scopeNode, idPrefix),
           scriptResourceValue = domQuery('input[name=scriptResourceValue]', scopeNode).value;
 
-          
+
       eventBus.fire(OPEN_CODE_EDITOR, {
         element: element,
         node: inputNode,

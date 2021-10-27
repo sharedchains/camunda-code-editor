@@ -67,8 +67,8 @@ export default class CodeFragment extends Component {
       this._eventBus.on(OPEN_CODE_EDITOR, (event) => {
 
         let inputParams = event['inputParameters'].map(item => {
-          return {name: item.name,type:'',value:''}
-        })
+          return { name: item.name,type:'',value:'' };
+        });
 
         // Received command to open the editorModal for documentation
         this.setState({

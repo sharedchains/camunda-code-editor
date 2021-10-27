@@ -52,12 +52,12 @@ window.jsonlint = jsonlint;
  * @constructor
  */
 const CodeEditor = props => {
- 
+
   const [context, setContext] = useState([...props['inputParameters']]);
   const [editor, setEditor] = useState(null);
   const [csl, setCsl] = useState(null);
-  const [inputMode,setInputMode] = useState(false)
-  const [vectorsVariablesNumber,setVectorsVariablesNumber] = useState(0)
+  const [inputMode,setInputMode] = useState(false);
+  const [vectorsVariablesNumber,setVectorsVariablesNumber] = useState(0);
 
   const consoleResultRef = useCallback((consoleRef) => {
     if (consoleRef) {
@@ -138,20 +138,20 @@ const CodeEditor = props => {
     csl.clearConsole('');
 
     if (props.mode === 'javascript') {
-      if(props.isVectorsMode) {    
+      if (props.isVectorsMode) {
         const obj = {};
         context.forEach((x,index) => {
           let values = x.value.split(',');
-          if(values.length == props.vectorsVariablesNumber){
+          if (values.length == props.vectorsVariablesNumber) {
             values.forEach((el,i) => {
-                let elementObj = {name: x.name,type:x.type,value:el}
-                obj[i] = [].concat(obj[i] ? obj[i] : [] ,elementObj)
+              let elementObj = { name: x.name,type:x.type,value:el };
+              obj[i] = [].concat(obj[i] ? obj[i] : [] ,elementObj);
             });
-          }         
-       })
+          }
+        });
 
-      let results = [];       
-       for(let o in obj){
+        let results = [];
+        for (let o in obj) {
           let jsExecutor = new JSExecutor(editor.getValue(), obj[o], {
             log: csl.addToConsole,
             clear: csl.clearConsole
@@ -159,7 +159,7 @@ const CodeEditor = props => {
           results.push(jsExecutor.execute());
         }
       }
-      else{  
+      else {
         let jsExecutor = new JSExecutor(editor.getValue(), context, {
           log: csl.addToConsole,
           clear: csl.clearConsole
@@ -167,9 +167,9 @@ const CodeEditor = props => {
         jsExecutor.execute();
       }
     }
-     else {
-     
-      if(props.isVectorsMode) {
+    else {
+
+      if (props.isVectorsMode) {
         const groovyExecutor = new GroovyAPI('http://localhost:12421');
 
         const base64 = encode(editor.getValue());
@@ -186,12 +186,13 @@ const CodeEditor = props => {
           if (res.error) {
             csl.addToConsole('ERROR:');
             csl.addToConsole(res.error);
-          }  
+          }
         });
-        
+
       }
 
-      else{
+      else {
+
         // groovy
         const groovyExecutor = new GroovyAPI('http://localhost:12421');
 
@@ -208,7 +209,7 @@ const CodeEditor = props => {
         if (results.error) {
           csl.addToConsole('ERROR:');
           csl.addToConsole(results.error);
-        }  
+        }
       }
 
 
@@ -220,7 +221,7 @@ const CodeEditor = props => {
     props.eventBus.fire(STOP_CODE_EDITOR);
   };
 
-  
+
   return (<div className="ScriptEditor-container">
     <tr>
       <td id="contextTitleRow">
@@ -228,18 +229,18 @@ const CodeEditor = props => {
       </td>
       <td>
         <div id="contextTitleDiv">
-          
+
           <input type="checkbox" name="inputMode" value={inputMode} onChange={() => setInputMode(!inputMode)}/>
-          <label for="vectors-mode">Vectors mode</label>
-          <span id="vectorsModeTooltip" class="tooltip bottom">?</span>
+          <label htmlFor="vectors-mode">Vectors mode</label>
+          <span id="vectorsModeTooltip" className="tooltip bottom">?</span>
 
 
-          {inputMode ? 
-          <span id="variablesNumberDiv">
-            <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber} onChange={({target}) => {setVectorsVariablesNumber(target.value)} }/>
-            <label for="vectorsVariablesNumber">Vectors variables number</label>
-            <span id="vectorModeVariablesNumber" class="tooltip bottom">?</span>
-          </span> : ''}
+          {inputMode ?
+            <span id="variablesNumberDiv">
+              <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber} onChange={({ target }) => {setVectorsVariablesNumber(target.value);} }/>
+              <label htmlFor="vectorsVariablesNumber">Vectors variables number</label>
+              <span id="vectorModeVariablesNumber" className="tooltip bottom">?</span>
+            </span> : ''}
 
 
         </div>
