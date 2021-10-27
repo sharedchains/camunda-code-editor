@@ -48,5 +48,12 @@ export const checkValidity = (value, rules) => {
     isValid = pattern.test(value) && isValid;
     errorMessage = !pattern.test(value) ? 'This field is not numeric' : null;
   }
+  
+  if(rules.vectorLength && isValid){
+    let isCorrectLength = rules.vectorLength == (value.split(',')).length;
+    isValid = isCorrectLength;
+    errorMessage =  !isCorrectLength ? 'The array length is incorrect' : null;
+  }
   return { valid: isValid, errorMessage: errorMessage };
 };
+

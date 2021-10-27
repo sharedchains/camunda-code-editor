@@ -41,7 +41,8 @@ const ContextTable = (props) => {
         rows: 1
       },
       validation: {
-        required: true
+        required: true,
+        vectorLength:props.vectorLength
       }
     }
   };
@@ -166,18 +167,51 @@ const ContextTable = (props) => {
     </tr>);
   });
 
-  return (<table className="context-table">
-    <thead>
-      <tr key="context-title">
-        {
-          Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
-        }
-        <th>
-          <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>{rows}</tbody>
-  </table>);
+  return (
+    // <div>
+    //   {props.isVectorsMode ? 
+    //      <table className="context-table">
+    //      <thead>
+    //        <tr key="context-title">
+    //          {
+    //            Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
+    //          }
+    //          <th>
+    //            <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
+    //          </th>
+    //        </tr>
+    //      </thead>
+    //      <tbody>{rows}</tbody>
+    //     </table> :
+        
+
+    //     <table className="context-table">
+    //     <thead>
+    //       <tr key="context-title">
+    //         {
+    //           Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
+    //         }
+    //         <th>
+    //           <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
+    //         </th>
+    //       </tr>
+    //     </thead>
+    //     <tbody>{rows}</tbody>
+    // </table>}
+    // </div>  
+    <table className="context-table">
+      <thead>
+        <tr key="context-title">
+          {
+            Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
+          }
+          <th>
+            <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  );
 };
 export default ContextTable;
