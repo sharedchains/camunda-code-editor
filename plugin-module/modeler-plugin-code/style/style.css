@@ -24,6 +24,75 @@
     height: 100%;
 }
 
+#contextTitleRow{
+    padding-right: 10px;
+}
+
+#vectorsVariablesNumber{
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.tooltip {
+    background-color: #bfbfbf;
+    padding: 1px 5px 1px 5px;
+    border-radius: 14px;
+    color: #ffffff;
+    font-weight: bold;
+    position: relative;
+	margin-left: 5px;
+	text-align: center;
+}
+
+.tooltip::after {
+	background-color: #333;
+	border-radius: 10px;
+	color: #ffffff;
+	display: none;
+	padding: 10px 15px;
+	position: absolute;
+	text-align: center;
+	z-index: 999;
+}
+
+.tooltip::before {
+	background-color: #333;
+	content: ' ';
+	display: none;
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	z-index: 999;
+}
+
+.tooltip:hover::after {
+	display: block;
+}
+
+.tooltip:hover::before {
+	display: block;
+}
+
+.tooltip.bottom::after {
+	bottom: 0;
+	left: 50%;
+	transform: translate(-50%, calc(100% + 10px));
+}
+
+.tooltip.bottom::before {
+	bottom: 0;
+	left: 50%;
+	transform: translate(-50%, calc(100% + 5px)) rotate(45deg);
+}
+
+#vectorsModeTooltip:after{
+    content: 'Vector mode explanation';
+}
+
+#vectorModeVariablesNumber:after{
+    content: 'Vector mode variables number explanation';
+}
+
 .contextTitle {
     margin-top: 0;
 }

@@ -40,6 +40,7 @@ import ContextTable from './ContextTable';
 import RunPanel from './RunPanel';
 import GroovyAPI from '../../utils/executors/GroovyAPI';
 
+
 window.JSHINT = JSHINT;
 window.jsonlint = jsonlint;
 
@@ -52,9 +53,11 @@ window.jsonlint = jsonlint;
  */
 const CodeEditor = props => {
 
-  const [context, setContext] = useState([]);
+  const [context, setContext] = useState([...props['inputParameters']]);
   const [editor, setEditor] = useState(null);
   const [csl, setCsl] = useState(null);
+  const [inputMode,setInputMode] = useState(false);
+  const [vectorsVariablesNumber,setVectorsVariablesNumber] = useState(0);
 
   const consoleResultRef = useCallback((consoleRef) => {
     if (consoleRef) {
@@ -128,34 +131,86 @@ const CodeEditor = props => {
   };
 
   const runClicked = async (event) => {
-
     event.preventDefault();
     csl.clearConsole('');
+
     if (props.mode === 'javascript') {
-      let jsExecutor = new JSExecutor(editor.getValue(), context, {
-        log: csl.addToConsole,
-        clear: csl.clearConsole
-      }, props.eventBus);
-      jsExecutor.execute();
-    } else {
+      if (inputMode) {
+        const obj = {};
+        context.forEach((x,index) => {
+          let values = x.value.split(',');
+          if (values.length == vectorsVariablesNumber) {
+            values.forEach((el,i) => {
+              let elementObj = { name: x.name,type:x.type,value:el };
+              obj[i] = [].concat(obj[i] ? obj[i] : [] ,elementObj);
+            });
+          }
+        });
 
-      // groovy
-      const groovyExecutor = new GroovyAPI('http://localhost:12421');
+        let results = [];
+        for (let o in obj) {
+          let jsExecutor = new JSExecutor(editor.getValue(), obj[o], {
+            log: csl.addToConsole,
+            clear: csl.clearConsole
+          }, props.eventBus);
+          results.push(jsExecutor.execute());
+        }
+      }
+      else {
+        let jsExecutor = new JSExecutor(editor.getValue(), context, {
+          log: csl.addToConsole,
+          clear: csl.clearConsole
+        }, props.eventBus);
+        jsExecutor.execute();
+      }
+    }
+    else {
 
-      const base64 = encode(editor.getValue());
-      const results = await groovyExecutor.executeGroovy({ code: base64, context: context });
-      if (results.logs) {
-        csl.addToConsole('LOGS:');
-        csl.addToConsole(JSON.stringify(results.logs, null, 2));
+      if (inputMode) {
+        const groovyExecutor = new GroovyAPI('http://localhost:12421');
+
+        const base64 = encode(editor.getValue());
+        const results = await groovyExecutor.executeGroovyVectors({ code: base64, context: context });
+        results.forEach(res => {
+          if (res.logs) {
+            csl.addToConsole('LOGS:');
+            csl.addToConsole(JSON.stringify(res.logs, null, 2));
+          }
+          if (res.output) {
+            csl.addToConsole('OUTPUT:');
+            csl.addToConsole(JSON.stringify(res.output, null, 2));
+          }
+          if (res.error) {
+            csl.addToConsole('ERROR:');
+            csl.addToConsole(res.error);
+          }
+        });
+
       }
-      if (results.output) {
-        csl.addToConsole('OUTPUT:');
-        csl.addToConsole(JSON.stringify(results.output, null, 2));
+
+      else {
+
+        // groovy
+        const groovyExecutor = new GroovyAPI('http://localhost:12421');
+
+        const base64 = encode(editor.getValue());
+        const results = await groovyExecutor.executeGroovy({ code: base64, context: context });
+        if (results.logs) {
+          csl.addToConsole('LOGS:');
+          csl.addToConsole(JSON.stringify(results.logs, null, 2));
+        }
+        if (results.output) {
+          csl.addToConsole('OUTPUT:');
+          csl.addToConsole(JSON.stringify(results.output, null, 2));
+        }
+        if (results.error) {
+          csl.addToConsole('ERROR:');
+          csl.addToConsole(results.error);
+        }
       }
-      if (results.error) {
-        csl.addToConsole('ERROR:');
-        csl.addToConsole(results.error);
-      }
+
+
+
     }
   };
 
@@ -163,13 +218,39 @@ const CodeEditor = props => {
     props.eventBus.fire(STOP_CODE_EDITOR);
   };
 
+
   return (<div className="ScriptEditor-container">
-    <h4 className="contextTitle">Context variables</h4>
+    <tr>
+      <td id="contextTitleRow">
+        <h4 className="contextTitle">Context variables</h4>
+      </td>
+      <td>
+        <div id="contextTitleDiv">
+
+          <input type="checkbox" name="inputMode" value={inputMode} onChange={() => setInputMode(!inputMode)}/>
+          <label htmlFor="vectors-mode">Vectors mode</label>
+          <span id="vectorsModeTooltip" className="tooltip bottom">?</span>
+
+
+          {inputMode ?
+            <span id="variablesNumberDiv">
+              <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber} onChange={({ target }) => {setVectorsVariablesNumber(target.value);} }/>
+              <label htmlFor="vectorsVariablesNumber">Vectors variables number</label>
+              <span id="vectorModeVariablesNumber" className="tooltip bottom">?</span>
+            </span> : ''}
+
+
+        </div>
+      </td>
+    </tr>
+
     <ContextTable
       context={context}
       addRowContext={addRow}
       updateRowContext={updateRow}
       removeRowContext={removeRow}
+      isVectorsMode={inputMode}
+      vectorLength={vectorsVariablesNumber}
     />
 
     <h4 className="codeTitle">Script</h4>
