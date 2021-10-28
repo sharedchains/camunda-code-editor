@@ -19,19 +19,23 @@ module.exports = executeOnce(main);
 
 async function main(app) {
 
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
 
     app.on('app:client-ready', async () => {
 
-      let javaPaths = await which('java', { all: true });
+      try {
+        let javaPaths = await which('java', { all: true });
+        app.emit('menu:action', 'emit-event', {
+          type: 'codeEditor.config',
+          payload: { java: javaPaths }
+        });
 
-      app.emit('menu:action', 'emit-event', {
-        type: 'codeEditor.config',
-        payload: { java: javaPaths }
-      });
+        let menus = buildMenu(javaPaths, null, app);
+        resolve({ javaPaths: javaPaths, ...menus });
+      } catch (error) {
+        reject(error);
+      }
 
-      let menus = buildMenu(javaPaths, null, app);
-      resolve({ javaPaths: javaPaths, ...menus });
     });
 
     app.on('quit', () => {
@@ -116,6 +120,13 @@ function executeOnce(fn) {
       javaPaths = result.javaPaths;
       returnValue = result.menus;
       workingJdk = result.startedJdk;
+    }).catch(error => {
+      let app = args[0];
+      app.emit('menu:action', 'show-dialog', {
+        message: 'Couldn\'t start Groovy executor: ' + error,
+        title: 'Camunda Code Editor Error',
+        type: 'error'
+      });
     });
 
     return returnValue;
