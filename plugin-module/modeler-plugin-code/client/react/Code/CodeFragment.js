@@ -36,8 +36,28 @@ export default class CodeFragment extends Component {
     const {
       subscribe,
       displayNotification,
-      triggerAction
+      triggerAction,
+      config,
+      log
     } = this.props;
+
+    subscribe('codeEditor.config', async payload => {
+
+      const { modeler } = this.state;
+      if (modeler) {
+        let editorActions = modeler.get('editorActions');
+
+        payload.java.forEach((path, index) => {
+
+          let action = {};
+          let key = 'toggleJDK_' + (index + 1);
+          action[key] = function() {
+            config.setForPlugin('codeEditor', 'java', path).catch(log.error);
+          };
+          editorActions.register(action);
+        });
+      }
+    });
 
     const saveTab = ({ activeTab }) => {
       if (activeTab.file && activeTab.file.path) {
@@ -123,7 +143,7 @@ export default class CodeFragment extends Component {
         <EditorModal onEditorChange={this.onEditorStateChange}
           close={this.closeModal} mode={mode} value={data} cursor={cursor}
           eventBus={this._eventBus}
-          title='Script Editor'/>
+          title="Script Editor"/>
       )}
     </Fragment>;
   }

@@ -1,4 +1,3 @@
-const which = require('which');
 const execa = require('execa');
 const path = require('path');
 
@@ -11,11 +10,9 @@ module.exports = {
   stopGroovyExecutor
 };
 
-async function startGroovyExecutor() {
+async function startGroovyExecutor(javaPath) {
 
   try {
-
-    const javaPath = await which('java');
     const args = [
       '-jar',
       LANGUAGE_EXECUTOR_PATH,
@@ -26,15 +23,13 @@ async function startGroovyExecutor() {
     console.log('Started java with PID: ' + groovyProcess.pid);
     groovyProcess.stdout.pipe(process.stdout);
     groovyProcess.stderr.pipe(process.stderr);
-
-    return javaPath;
   } catch (error) {
     console.log(error);
     throw new Error('Cannot find java executable');
   }
 }
 
-async function stopGroovyExecutor() {
+function stopGroovyExecutor() {
   if (!groovyProcess) {
     console.log('No process found. Exiting...');
     return;
