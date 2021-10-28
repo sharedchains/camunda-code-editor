@@ -20,9 +20,12 @@ module.exports = executeOnce(main);
 async function main(app) {
 
   return new Promise((resolve, reject) => {
+    app.on('quit', () => {
+      console.log('[groovy-executor] stopping Groovy executor');
+      return stopGroovyExecutor();
+    });
 
     app.on('app:client-ready', async () => {
-
       try {
         let javaPaths = await which('java', { all: true });
         app.emit('menu:action', 'emit-event', {
@@ -36,11 +39,6 @@ async function main(app) {
         reject(error);
       }
 
-    });
-
-    app.on('quit', () => {
-      console.log('[groovy-executor] stopping Groovy executor');
-      return stopGroovyExecutor();
     });
   });
 }
