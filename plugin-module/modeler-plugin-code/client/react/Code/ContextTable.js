@@ -40,7 +40,8 @@ const ContextTable = (props) => {
         rows: 1
       },
       validation: {
-        required: true
+        required: true,
+        vectorLength:props.vectorLength
       }
     }
   };
@@ -129,6 +130,15 @@ const ContextTable = (props) => {
     }
   };
 
+  props.context.forEach(prop => {
+    let varObj = {};
+    varObj.name = { value:prop.name,valid:true,errorMessage:null };
+    varObj.type = { value:prop.type,valid:false,errorMessage:'This field is required' };
+    varObj.value = { value:prop.value,valid:false,errorMessage:'This field is required' };
+    const isElementIn = validRows.some(o => o.name.value == prop.name);
+    if (!isElementIn) validRows.push(varObj);
+  });
+
   const rows = props.context.map((rowObject, index) => {
 
     const keys = Object.keys(contextColumns);
@@ -156,18 +166,20 @@ const ContextTable = (props) => {
     </tr>);
   });
 
-  return (<table className="context-table">
-    <thead>
-      <tr key="context-title">
-        {
-          Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
-        }
-        <th>
-          <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>{rows}</tbody>
-  </table>);
+  return (
+    <table className="context-table">
+      <thead>
+        <tr key="context-title">
+          {
+            Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
+          }
+          <th>
+            <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  );
 };
 export default ContextTable;
