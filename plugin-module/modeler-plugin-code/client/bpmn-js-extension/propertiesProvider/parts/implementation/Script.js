@@ -1,7 +1,16 @@
+/**
+ * @license
+ * Copyright 2015 camunda Services GmBH
+ * SPDX-License-Identifier: MIT
+ *
+ * @link https://github.com/bpmn-io/bpmn-js-properties-panel/blob/master/lib/provider/camunda/parts/implementation/Script.js
+ */
+
 import { OPEN_CODE_EDITOR, SAVE_CODE_EDITOR } from '../../../../utils/EventHelper';
 import { query as domQuery } from 'min-dom';
 
 import { escapeHTML, selectedType } from 'bpmn-js-properties-panel/lib/Utils';
+import InputOutputHelper from 'bpmn-js-properties-panel/lib/helper/InputOutputHelper';
 
 function getScriptType(node, idPrefix) {
 
@@ -55,7 +64,10 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
   let idPrefix = options && options.idPrefix || '';
 
   let scriptObject = {
-    callback: () => {},
+    callback: () => {
+
+      // This is intentional
+    },
     template:
       '<div class="bpp-row bpp-textfield code-editor-script-format">' +
       '<label for="' + idPrefix + 'cam-script-format">' + escapeHTML(translate('Script Format')) + '</label>' +
@@ -193,16 +205,20 @@ export default function(scriptLanguagePropName, scriptValuePropName, isFormatReq
     },
 
     openCodeEditor: function(element, inputNode, btnNode, scopeNode) {
+      let inputParams = InputOutputHelper.getInputParameters(element);
+
       let scriptFormat = domQuery('input[name=scriptFormat]', scopeNode).value.toLowerCase(),
           scriptValue = domQuery('textarea[name=scriptValue]', scopeNode).value,
           scriptType = getScriptType(scopeNode, idPrefix),
           scriptResourceValue = domQuery('input[name=scriptResourceValue]', scopeNode).value;
 
+
       eventBus.fire(OPEN_CODE_EDITOR, {
         element: element,
         node: inputNode,
         data: scriptValue,
-        mode: scriptFormat
+        mode: scriptFormat,
+        inputParameters: inputParams
       });
 
       eventBus.once(SAVE_CODE_EDITOR, 10000, event => {

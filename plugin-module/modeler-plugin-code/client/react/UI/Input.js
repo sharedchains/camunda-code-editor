@@ -1,5 +1,10 @@
 import React from 'camunda-modeler-plugin-helpers/react';
 
+/**
+ * Various field implementations as React functional components
+ * @param props
+ * @returns {JSX.Element}
+ */
 const input = (props) => {
   let inputElement;
   let validationError = null;

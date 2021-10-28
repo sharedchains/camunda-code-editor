@@ -24,9 +24,7 @@ Extract the [release zip file](https://github.com/sharedchains/camunda-code-edit
 Unlike other plugins, this project has been wrapped in a [Maven](https://maven.apache.org/) project to integrate other components inside it and generate a final bundle which contains:
 * The Camunda Modeler javascript plugin itself
 * Our Spring Boot groovy executor application which will get executed on Camunda Modeler startup
-* A standalone JDK which executes the mentioned application
-
-This solution was chosen to make it easier for a user to integrate the plugin to Camunda Modeler, avoiding to make him install JAVA on his own.
+* ~~A standalone JDK which executes the mentioned application~~
 
 To work on this plugin you will need to install:
 

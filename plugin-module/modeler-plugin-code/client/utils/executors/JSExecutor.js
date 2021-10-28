@@ -1,3 +1,6 @@
+/**
+ * Executor wrapper to run Javascript code using js-interpreter in a safe environment
+ */
 import Interpreter from '../../assets/js-interpreter';
 import { STOP_CODE_EDITOR } from '../EventHelper';
 

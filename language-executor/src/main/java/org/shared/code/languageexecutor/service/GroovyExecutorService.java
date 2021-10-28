@@ -26,17 +26,33 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * The type Groovy executor service.
+ */
 @Service
 public class GroovyExecutorService {
 
     private static final Logger log = LoggerFactory.getLogger(GroovyExecutorService.class);
 
+    /**
+     * The constant VAR_TYPES.
+     */
     public static final String VAR_TYPES = "variable.types";
+    /**
+     * The constant WHITELIST_METHODS.
+     */
     public static final String WHITELIST_METHODS = "whitelist.methods";
+    /**
+     * The constant SCRIPT_NAME.
+     */
     public static final String SCRIPT_NAME = "script.name";
 
+    // TODO: Should it be parameterized ?
     private static final long TIMEOUT_THREAD_IN_MILLIS = 15000;
 
+    /**
+     * The constant COMPILE_OPTIONS.
+     */
     public static final ThreadLocal<Map<String, Object>> COMPILE_OPTIONS = new ThreadLocal<>();
 
     @Autowired
@@ -46,6 +62,13 @@ public class GroovyExecutorService {
     @Autowired
     private ClassNodeParserService classNodeParserService;
 
+    /**
+     * Execute groovy script result output.
+     *
+     * @param code     the code to execute
+     * @param contexts the context variables to execute the code
+     * @return the result output of the execution
+     */
     public ResultOutput executeGroovyScript(String code, List<Context> contexts) {
         var resultOutput = new ResultOutput();
         try (var out = new StringWriter()) {
@@ -65,6 +88,7 @@ public class GroovyExecutorService {
                 }
                 compilationOptions.put(VAR_TYPES, compilationVariableTypes);
             }
+            /* Restrict groovy execution in a whitelist of allowed methods */
             List<String> patterns = new ArrayList<>();
             patterns.add("java\\.lang\\.Math#");
             patterns.add("org\\.camunda\\.spin\\.*");
@@ -102,8 +126,10 @@ public class GroovyExecutorService {
             configuration.addCompilationCustomizers(astCustomizer);
             configuration.addCompilationCustomizers(importCustomizer);
 
+            // Create a script object using the configuration above
             var script = createGroovyScript(code, resultOutput, sharedData, tmpFilename, configuration);
             if (script != null) {
+                // Executing script in a separated thread in safe mode, killing it using CountDownLatch after 15 seconds
                 executeScript(resultOutput, out, script);
             }
         } catch (IOException e) {

@@ -2,6 +2,8 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 
+const LANGUAGE_EXECUTOR_PORT = 12421;
+
 module.exports = [
   {
     mode: 'development',
@@ -39,6 +41,9 @@ module.exports = [
       }
     },
     plugins: [
+      new DefinePlugin({
+        'process.env.LANGUAGE_EXECUTOR_PORT': '' + LANGUAGE_EXECUTOR_PORT
+      }),
       new CopyPlugin({
         patterns: [
           {
@@ -92,7 +97,8 @@ module.exports = [
     },
     plugins: [
       new DefinePlugin({
-        'process.env.LANGUAGE_EXECUTOR': 'path.resolve(__dirname, \'../assets/language-executor.jar\')'
+        'process.env.LANGUAGE_EXECUTOR': 'path.resolve(__dirname, \'../assets/language-executor.jar\')',
+        'process.env.LANGUAGE_EXECUTOR_PORT': '' + LANGUAGE_EXECUTOR_PORT
       })
     ]
   }

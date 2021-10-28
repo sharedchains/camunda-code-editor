@@ -2,8 +2,12 @@ package org.shared.code.languageexecutor.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNot;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.matchers.Not;
 import org.shared.code.languageexecutor.dto.CodeInput;
 import org.shared.code.languageexecutor.dto.Context;
 import org.shared.code.languageexecutor.dto.ContextType;
@@ -23,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -31,6 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.List;
+import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
@@ -141,4 +147,72 @@ class CodeControllerTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.output", Is.is("7000")));
     }
+
+
+    @Test
+    void whenPostRequestWithContext_thenCorrectResponse() throws Exception {
+        Context ctx1 = new Context();
+        ctx1.setName("var1");
+        ctx1.setValue("1,2,3");
+        ctx1.setType(ContextType.INTEGER);
+
+        Context ctx2 = new Context();
+        ctx2.setName("var2");
+        ctx2.setValue("4,5,6");
+        ctx2.setType(ContextType.INTEGER);
+
+        List<Context> contexts = new ArrayList<Context>();
+        contexts.add(ctx1);
+        contexts.add(ctx2);
+
+        CodeInput input = new CodeInput();
+        input.setCode(Base64.getEncoder().encodeToString("return var1+var2;".getBytes(StandardCharsets.UTF_8)));
+        input.setContext(contexts);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String toSend = objectMapper.writerFor(CodeInput.class).writeValueAsString(input);
+
+        String expectedOutput = "[{\"output\":\"5\",\"logs\":\"\",\"error\":null},{\"output\":\"7\",\"logs\":\"\",\"error\":null},{\"output\":\"9\",\"logs\":\"\",\"error\":null}]";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/groovy/execute/vectors")
+                .content(toSend)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.content().string(expectedOutput));
+    }
+
+    @Test
+    void whenPostRequestWithContext_thenBadResponse() throws Exception {
+        Context ctx1 = new Context();
+        ctx1.setName("var1");
+        ctx1.setValue("1,2,3");
+        ctx1.setType(ContextType.INTEGER);
+
+        Context ctx2 = new Context();
+        ctx2.setName("var2");
+        ctx2.setValue("4,5");
+        ctx2.setType(ContextType.INTEGER);
+
+        List<Context> contexts = new ArrayList<Context>();
+        contexts.add(ctx1);
+        contexts.add(ctx2);
+
+        CodeInput input = new CodeInput();
+        input.setCode(Base64.getEncoder().encodeToString("return var1+var2;".getBytes(StandardCharsets.UTF_8)));
+        input.setContext(contexts);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String toSend = objectMapper.writerFor(CodeInput.class).writeValueAsString(input);
+        
+        mockMvc.perform(MockMvcRequestBuilders.post("/groovy/execute/vectors")
+                .content(toSend)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].error", IsNot.not("null")));
+    }
+
 }

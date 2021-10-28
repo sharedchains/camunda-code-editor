@@ -8,9 +8,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
+/**
+ * The Code controller exception handler.
+ */
 @RestControllerAdvice(basePackageClasses = {CodeController.class})
 public class CodeControllerExceptionHandler {
 
+    /**
+     * Manage generic exception result output.
+     *
+     * @param request the actual request made
+     * @param ex      the exception that has been thrown
+     * @return the result output that will be returned to the user
+     */
     @ExceptionHandler(Exception.class)
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json;charset=utf-8")
     public ResultOutput manageGenericException(HttpServletRequest request, Exception ex) {
@@ -20,6 +30,12 @@ public class CodeControllerExceptionHandler {
         return output;
     }
 
+    /**
+     * Manage argument not valid exception result output.
+     *
+     * @param ex the exception that has been thrown
+     * @return the result output that will be returned to the user
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResultOutput manageArgumentNotValidException(MethodArgumentNotValidException ex) {

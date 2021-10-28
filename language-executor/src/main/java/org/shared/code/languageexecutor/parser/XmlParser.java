@@ -6,6 +6,9 @@ import org.camunda.spin.plugin.variable.value.XmlValue;
 import org.camunda.spin.xml.SpinXmlElement;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type Xml parser.
+ */
 @Component
 public class XmlParser implements VariableParser {
 

@@ -19,11 +19,20 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
+/**
+ * The type Context value parser service.
+ */
 @Service
 public class ContextValueParserService {
 
     private static final Logger log = LoggerFactory.getLogger(ContextValueParserService.class);
 
+    /**
+     * Parse the Context variable
+     *
+     * @param context the context
+     * @return the typed value
+     */
     public TypedValue parse(Context context) {
         var object = context.getValue();
 
@@ -146,7 +155,7 @@ public class ContextValueParserService {
         if (dateTimeObject == null) {
             return Variables.dateValue(null);
         }
-        var dateString = String.valueOf(dateTimeObject);
+        var dateString = String.valueOf(dateTimeObject).replaceAll("[\n\r\t]", "_");
         var dtf = new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()
                 .append(DateTimeFormatter.ISO_LOCAL_DATE)
@@ -163,11 +172,11 @@ public class ContextValueParserService {
             LocalDateTime dt = (LocalDateTime) parsed;
             zonedDateTime = dt.atZone(ZoneId.of("UTC"));
         } else {
-            log.error("Unable to parse dateTime {}", dateString);
+            log.error("Unable to parse dateTime");
             throw new DateTimeException("Unable to parse datetime " + dateString);
         }
 
-        log.info("Converted dateString {} to ZonedDateTime", dateString);
+        log.info("Converted dateString to ZonedDateTime");
         var instant = zonedDateTime.toInstant();
         log.info("Got instant from zonedDateTime");
         var d = Date.from(instant);

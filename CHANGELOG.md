@@ -5,7 +5,7 @@ All notable changes to the [camunda-code-editor](https://github.com/sharedchains
 ## Unreleased
 
 ___Note:__ Yet to be released changes appear here._
-
+* `DOCS`: Documented the whole code source
 
 ## 0.4.0
 

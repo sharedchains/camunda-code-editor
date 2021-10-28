@@ -23,6 +23,11 @@ class GroovyExecutorServiceTest {
     @Autowired
     private GroovyExecutorService groovyExecutorService;
 
+    void executeGroovyAndReturnError(String code) {
+        ResultOutput output = groovyExecutorService.executeGroovyScript(code, null);
+        assertNotNull(output.getError());
+    }
+
     @Test
     void whenExecutingASimpleOperation_thenCorrectReturn() {
         ResultOutput output = groovyExecutorService.executeGroovyScript("return 12*2", null);
@@ -32,8 +37,7 @@ class GroovyExecutorServiceTest {
 
     @Test
     void whenExecutingASimpleOperation_thenErrorReturn() {
-        ResultOutput output = groovyExecutorService.executeGroovyScript("return nothing", null);
-        assertNotNull(output.getError());
+        executeGroovyAndReturnError("return nothing");
     }
 
     @Test
@@ -97,25 +101,25 @@ class GroovyExecutorServiceTest {
 
     @Test
     void whenExecutingSystem_thenErrorReturn() {
-        ResultOutput output = groovyExecutorService.executeGroovyScript("System.exit(-1)", null);
-        assertNotNull(output.getError());
+        executeGroovyAndReturnError("System.exit(-1)");
     }
 
     @Test
     void whenExecutingSystemAsVariable_thenErrorReturn() {
-        ResultOutput output = groovyExecutorService.executeGroovyScript("def c = System; c.exit(-1)", null);
-        assertNotNull(output.getError());
+        executeGroovyAndReturnError("def c = System; c.exit(-1)");
     }
 
     @Test
-    void whenExecutingMath_thenErrorReturn() {
+    void whenExecutingMath_thenCorrectReturn() {
         ResultOutput output = groovyExecutorService.executeGroovyScript("println(Math.PI);\r\nreturn Math.PI;", null);
         assertNotNull(output.getOutput());
+        assertEquals("3.141592653589793", output.getOutput());
+        assertNotNull(output.getLogs());
+        assertNull(output.getError());
     }
 
     @Test
     void whenExecutingInfiniteLoop_thenErrorReturn() {
-        ResultOutput output = groovyExecutorService.executeGroovyScript("int i = 0; while (true) { i++ }", null);
-        assertNotNull(output.getError());
+        executeGroovyAndReturnError("int i = 0; while (true) { i++ }");
     }
 }

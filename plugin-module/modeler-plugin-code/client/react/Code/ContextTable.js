@@ -7,6 +7,12 @@ import { DATA_TYPES } from '../../utils/EventHelper';
 const SPACE_KEY = 32;
 const BACKSPACE_KEY = 8;
 
+/**
+ * Functional component to create the context variables table, implementing validation
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const ContextTable = (props) => {
 
   const contextColumns = {
@@ -34,7 +40,8 @@ const ContextTable = (props) => {
         rows: 1
       },
       validation: {
-        required: true
+        required: true,
+        vectorLength:props.vectorLength
       }
     }
   };
@@ -87,6 +94,7 @@ const ContextTable = (props) => {
 
     props.addRowContext();
   };
+
   const removeRow = (index) => {
     let oldRows = [...validRows];
     oldRows.splice(index, 1);
@@ -122,6 +130,15 @@ const ContextTable = (props) => {
     }
   };
 
+  props.context.forEach(prop => {
+    let varObj = {};
+    varObj.name = { value:prop.name,valid:true,errorMessage:null };
+    varObj.type = { value:prop.type,valid:false,errorMessage:'This field is required' };
+    varObj.value = { value:prop.value,valid:false,errorMessage:'This field is required' };
+    const isElementIn = validRows.some(o => o.name.value == prop.name);
+    if (!isElementIn) validRows.push(varObj);
+  });
+
   const rows = props.context.map((rowObject, index) => {
 
     const keys = Object.keys(contextColumns);
@@ -133,7 +150,7 @@ const ContextTable = (props) => {
         value={rowObject[key]}
         invalid={!validRows[index][key].valid}
         errorMessage={validRows[index][key].errorMessage}
-        changed={event => inputChangeHandler(event, key, index, rowObject)}
+        changed={event => inputChangeHandler(event, key, index)}
         keyDown={event => handleKeyDown(event, contextColumns[key].elementType)}
       />
     </td>);
@@ -142,25 +159,27 @@ const ContextTable = (props) => {
       <td>
         <button
           type="button"
-          onClick={() => removeRow(index, rowObject)}
+          onClick={() => removeRow(index)}
           className="context-buttons context-removeRow">-
         </button>
       </td>
     </tr>);
   });
 
-  return (<table className="context-table">
-    <thead>
-      <tr key="context-title">
-        {
-          Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
-        }
-        <th>
-          <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>{rows}</tbody>
-  </table>);
+  return (
+    <table className="context-table">
+      <thead>
+        <tr key="context-title">
+          {
+            Object.keys(contextColumns).map(item => <th key={item} className="contextFieldTitle">{item}</th>)
+          }
+          <th>
+            <button type="button" onClick={() => addRow()} className="context-buttons context-addRow">+</button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  );
 };
 export default ContextTable;

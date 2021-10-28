@@ -8,6 +8,11 @@ const Title = Modal.Title || (({ children }) => <h2>{children}</h2>);
 const Body = Modal.Body || (({ children }) => <div>{children}</div>);
 const Footer = Modal.Footer || (({ children }) => <div>{children}</div>);
 
+/**
+ * Functional component to create a modal window for Code Editor
+ * @param props
+ * @returns {JSX.Element}
+ */
 const editorModal = (props) => {
 
   return <Modal onClose={props.close} className="editorModal">

@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.camunda.bpm</groupId>
             <artifactId>camunda-external-task-client</artifactId>
-            <version>${camunda.external.task.client.version}</version>
+            <version>${camunda.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -57,6 +57,7 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovy.version}</version>
+            <type>pom</type>
         </dependency>
 
         <dependency>
