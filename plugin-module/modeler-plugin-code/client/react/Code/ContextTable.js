@@ -141,16 +141,6 @@ const ContextTable = (props) => {
 
   const rows = props.context.map((rowObject, index) => {
 
-    // props.context.forEach(prop => {
-    //   let varObj = {};
-    //   varObj.name = { value:prop.name,valid:true,errorMessage:null };
-    //   varObj.type = { value:prop.type,valid:false,errorMessage:'This field is required' };
-    //   varObj.value = { value:prop.value,valid:false,errorMessage:'This field is required' };
-    //   const isElementIn = validRows.some(o => o.name.value == prop.name);
-    //   if (!isElementIn) validRows.push(varObj);
-    // });
-
-
     const keys = Object.keys(contextColumns);
     const columns = keys.map(key => <td key={key + '_col_' + index}>
       <Input
