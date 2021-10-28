@@ -1,5 +1,5 @@
 /**
- * Imported libraries and disabled modeling on opening Code Editor
+ * Disable modeling while opening Code Editor
  * @author luca.bonora@sharedchains.com (Luca Bonora)
  */
 
