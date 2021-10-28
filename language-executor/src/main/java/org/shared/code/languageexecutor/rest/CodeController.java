@@ -54,15 +54,14 @@ public class CodeController {
         byte[] codeByteArray = Base64.getDecoder().decode(input.getCode());
         // Replace pattern-breaking characters
         List<Context> oldContexts = input.getContext();
-        String sanitizedInput = input.toString();
-        List<List<Context>> contextsLists = new ArrayList<List<Context>>();
+        List<List<Context>> contextsLists = new ArrayList<>();
 
         for(Context oldContext : oldContexts){
-            List<Context> cList = new ArrayList<Context>();
+            List<Context> cList = new ArrayList<>();
 
             String values = oldContext.getValue();
             for(String val : values.split(",")){
-                Context c = new Context();
+                var c = new Context();
                 c.setName(oldContext.getName());
                 c.setType(oldContext.getType());
                 c.setValue(val);
@@ -80,10 +79,9 @@ public class CodeController {
             }
         }
 
-        List<ResultOutput> results = new ArrayList<ResultOutput>();
+        List<ResultOutput> results = new ArrayList<>();
 
         for (var entry : map.entrySet()) {
-            ResultOutput res  = groovyExecutorService.executeGroovyScript(new String(codeByteArray, StandardCharsets.UTF_8), entry.getValue());
             results.add(groovyExecutorService.executeGroovyScript(new String(codeByteArray, StandardCharsets.UTF_8), entry.getValue()));
         }
 
