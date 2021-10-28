@@ -168,7 +168,7 @@ const CodeEditor = props => {
     else {
 
       if (inputMode) {
-        const groovyExecutor = new GroovyAPI('http://localhost:12421');
+        const groovyExecutor = new GroovyAPI(`http://localhost:${LANGUAGE_EXECUTOR_PORT}`);
 
         const base64 = encode(editor.getValue());
         const results = await groovyExecutor.executeGroovyVectors({ code: base64, context: context });
@@ -192,7 +192,7 @@ const CodeEditor = props => {
       else {
 
         // groovy
-        const groovyExecutor = new GroovyAPI('http://localhost:12421');
+        const groovyExecutor = new GroovyAPI(`http://localhost:${LANGUAGE_EXECUTOR_PORT}`);
 
         const base64 = encode(editor.getValue());
         const results = await groovyExecutor.executeGroovy({ code: base64, context: context });
