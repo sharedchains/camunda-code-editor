@@ -79,7 +79,7 @@ public class CodeController {
             }
         }
 
-        List<ResultOutput> results = new ArrayList<ResultOutput>();
+        List<ResultOutput> results = new ArrayList<>();
 
         for (var entry : map.entrySet()) {
             results.add(groovyExecutorService.executeGroovyScript(new String(codeByteArray, StandardCharsets.UTF_8), entry.getValue()));
