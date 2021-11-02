@@ -145,6 +145,7 @@ const ContextTable = (props) => {
     const columns = keys.map(key => <td key={key + '_col_' + index}>
       <Input
         key={key + '_' + index}
+        placeholder={(key == 'value' && props.isVectorsMode) ? '1,2,..,' +((props.vectorLength < 2) ? +(props.vectorLength) + 2 : props.vectorLength) : ''}
         elementType={contextColumns[key].elementType}
         elementConfig={contextColumns[key].elementConfig}
         value={rowObject[key]}
@@ -154,6 +155,7 @@ const ContextTable = (props) => {
         keyDown={event => handleKeyDown(event, contextColumns[key].elementType)}
       />
     </td>);
+
     return (<tr key={index}>
       {columns}
       <td>
