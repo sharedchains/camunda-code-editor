@@ -23,12 +23,14 @@ const input = (props) => {
       value={props.value}
       onChange={props.changed}
       onKeyDown={props.keyDown}
+      placeholder={props.placeholder}
     />;
     break;
   case 'select':
     inputElement = <select className={inputClasses.join(' ')}
       value={props.value}
-      onChange={props.changed}>
+      onChange={props.changed}
+      placeholder={props.placeholder}>
       {props.elementConfig.options.map(option => (
         <option key={option.value} value={option.value}>{option.name}</option>
       ))}
@@ -42,6 +44,7 @@ const input = (props) => {
       value={props.value}
       onChange={props.changed}
       onKeyDown={props.keyDown}
+      placeholder={props.placeholder}
     />;
   }
   return (

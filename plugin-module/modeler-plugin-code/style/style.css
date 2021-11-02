@@ -86,11 +86,11 @@
 }
 
 #vectorsModeTooltip:after{
-    content: 'Vector mode explanation';
+    content: 'This mode enables Boundary Testing execution';
 }
 
 #vectorModeVariablesNumber:after{
-    content: 'Vector mode variables number explanation';
+    content: 'Defines the size of input vectors';
 }
 
 .contextTitle {

@@ -57,7 +57,7 @@ const CodeEditor = props => {
   const [editor, setEditor] = useState(null);
   const [csl, setCsl] = useState(null);
   const [inputMode,setInputMode] = useState(false);
-  const [vectorsVariablesNumber,setVectorsVariablesNumber] = useState(0);
+  const [vectorsVariablesNumber,setVectorsVariablesNumber] = useState(1);
 
   const consoleResultRef = useCallback((consoleRef) => {
     if (consoleRef) {
@@ -234,7 +234,7 @@ const CodeEditor = props => {
 
           {inputMode ?
             <span id="variablesNumberDiv">
-              <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber} onChange={({ target }) => {setVectorsVariablesNumber(target.value);} }/>
+              <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber} onChange={({ target }) => {if (target.value >= 1)setVectorsVariablesNumber(target.value);} }/>
               <label htmlFor="vectorsVariablesNumber">Vectors variables number</label>
               <span id="vectorModeVariablesNumber" className="tooltip bottom">?</span>
             </span> : ''}
