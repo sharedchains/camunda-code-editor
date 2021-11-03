@@ -230,14 +230,14 @@ const CodeEditor = props => {
 
           <input type="checkbox" name="inputMode" value={inputMode} onChange={() => setInputMode(!inputMode)}/>
           <label htmlFor="vectors-mode">Vectors mode</label>
-          <span id="vectorsModeTooltip" className="tooltip bottom">?</span>
+          <span id="vectorsModeTooltip" className="code-editor-tooltip bottom">?</span>
 
 
           {inputMode ?
             <span id="variablesNumberDiv">
               <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber} onChange={({ target }) => {if (target.value >= 1)setVectorsVariablesNumber(target.value);} }/>
               <label htmlFor="vectorsVariablesNumber">Vectors variables number</label>
-              <span id="vectorModeVariablesNumber" className="tooltip bottom">?</span>
+              <span id="vectorModeVariablesNumber" className="code-editor-tooltip bottom">?</span>
             </span> : ''}
 
 
