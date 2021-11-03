@@ -5,7 +5,17 @@ All notable changes to the [camunda-code-editor](https://github.com/sharedchains
 ## Unreleased
 
 ___Note:__ Yet to be released changes appear here._
+
+## 0.5.1
+
+* `FEAT`: Implemented boundary testing vector mode to run scripts
+
+## 0.5.0
+
 * `DOCS`: Documented the whole code source
+* `FEAT`: Externalized server port into a custom variable
+* `FEAT`: Detect the installed JVMs inside the operating system and let the user choose which one wants to use.
+* `FEAT`: Copy input parameters from BPMN to code editor context variables
 
 ## 0.4.0
 
