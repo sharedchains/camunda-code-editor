@@ -43,20 +43,21 @@ export default class CodeFragment extends Component {
     } = this.props;
 
     subscribe('codeEditor.config', async payload => {
-
       const { modeler } = this.state;
       if (modeler) {
         let editorActions = modeler.get('editorActions');
 
-        payload.java.forEach((path, index) => {
+        let action = {};
 
-          let action = {};
+        payload.java.forEach((path, index) => {
           let key = 'toggleJDK_' + (index + 1);
           action[key] = function() {
             config.setForPlugin('codeEditor', 'java', path).catch(log.error);
           };
-          editorActions.register(action);
         });
+
+        editorActions.register(action);
+
       }
     });
 

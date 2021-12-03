@@ -32,7 +32,6 @@ async function main(app) {
           type: 'codeEditor.config',
           payload: { java: javaPaths }
         });
-
         let menus = buildMenu(javaPaths, null, app);
         resolve({ javaPaths: javaPaths, ...menus });
       } catch (error) {
@@ -60,6 +59,7 @@ function buildMenu(javaPaths, startedJdk, app) {
 
   function startAction(javaPath, key) {
     handleStartExecutor(javaPath);
+    console.log('\n\n\n clicked \n\n\n');
     app.emit('menu:action', key);
   }
 
@@ -87,10 +87,12 @@ function buildMenu(javaPaths, startedJdk, app) {
         action: function() {
           stopGroovyExecutor();
           startAction(javaPath, key);
+          app.emit('menu:action',key);
         }
       });
     });
   }
+  console.log(startedJdk);
   return { startedJdk, menus };
 }
 
@@ -106,6 +108,8 @@ function executeOnce(fn) {
   let workingJdk;
 
   return function(...args) {
+    let app = args[0];
+
     if (executed) {
       let { menus, startedJdk } = buildMenu(javaPaths, workingJdk, ...args);
       returnValue = menus;
@@ -119,7 +123,8 @@ function executeOnce(fn) {
       returnValue = result.menus;
       workingJdk = result.startedJdk;
     }).catch(error => {
-      let app = args[0];
+
+      // let app = args[0];
       app.emit('menu:action', 'show-dialog', {
         message: 'Couldn\'t start Groovy executor: ' + error,
         title: 'Camunda Code Editor Error',
