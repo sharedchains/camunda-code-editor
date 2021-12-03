@@ -59,7 +59,6 @@ function buildMenu(javaPaths, startedJdk, app) {
 
   function startAction(javaPath, key) {
     handleStartExecutor(javaPath);
-    console.log('\n\n\n clicked \n\n\n');
     app.emit('menu:action', key);
   }
 
@@ -87,12 +86,10 @@ function buildMenu(javaPaths, startedJdk, app) {
         action: function() {
           stopGroovyExecutor();
           startAction(javaPath, key);
-          app.emit('menu:action',key);
         }
       });
     });
   }
-  console.log(startedJdk);
   return { startedJdk, menus };
 }
 
