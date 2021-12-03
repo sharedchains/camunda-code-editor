@@ -53,6 +53,7 @@ export default class CodeFragment extends Component {
           let key = 'toggleJDK_' + (index + 1);
           action[key] = function() {
             config.setForPlugin('codeEditor', 'java', path).catch(log.error);
+            triggerAction('update-menu');
           };
         });
 

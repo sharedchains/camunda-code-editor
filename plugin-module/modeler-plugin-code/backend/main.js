@@ -32,7 +32,7 @@ async function main(app) {
           type: 'codeEditor.config',
           payload: { java: javaPaths }
         });
-        let menus = buildMenu(javaPaths, null, app);
+        let menus = buildMenu(javaPaths, null, (_jdk) => {}, app);
         resolve({ javaPaths: javaPaths, ...menus });
       } catch (error) {
         reject(error);
@@ -42,7 +42,7 @@ async function main(app) {
   });
 }
 
-function buildMenu(javaPaths, startedJdk, app) {
+function buildMenu(javaPaths, workingJdk, updateJdk, app) {
   async function handleStartExecutor(javaPath) {
     try {
       await startGroovyExecutor(javaPath);
@@ -58,39 +58,41 @@ function buildMenu(javaPaths, startedJdk, app) {
   }
 
   function startAction(javaPath, key) {
-    handleStartExecutor(javaPath);
-    app.emit('menu:action', key);
+    handleStartExecutor(javaPath).then(() => {
+      app.emit('menu:action', key);
+    });
   }
 
   let menus = [];
   if (javaPaths) {
     javaPaths.forEach((javaPath, index) => {
       let key = 'toggleJDK_' + (index + 1);
-      if (!startedJdk) {
+      if (!workingJdk) {
         if (JAVA_HOME) {
           if (javaPath.startsWith(JAVA_HOME)) {
             startAction(javaPath, key);
-            startedJdk = key;
+            workingJdk = key;
           }
         } else if (index === 0) {
           startAction(javaPath, key);
-          startedJdk = key;
+          workingJdk = key;
         }
       }
 
       menus.push({
         label: 'Toggle JDK: ' + javaPath,
         enabled: function() {
-          return startedJdk !== key;
+          return workingJdk !== key;
         },
         action: function() {
           stopGroovyExecutor();
+          updateJdk(key);
           startAction(javaPath, key);
         }
       });
     });
   }
-  return { startedJdk, menus };
+  return { startedJdk: workingJdk, menus };
 }
 
 /**
@@ -104,13 +106,17 @@ function executeOnce(fn) {
   let javaPaths;
   let workingJdk;
 
+  const updateWorkingJdk = (newJdk) => {
+    workingJdk = newJdk;
+  };
+
   return function(...args) {
+    console.log('ENTERED executeOnce(main)');
     let app = args[0];
 
     if (executed) {
-      let { menus, startedJdk } = buildMenu(javaPaths, workingJdk, ...args);
+      let { menus } = buildMenu(javaPaths, workingJdk, updateWorkingJdk, ...args);
       returnValue = menus;
-      workingJdk = startedJdk;
       return returnValue;
     }
 
@@ -121,7 +127,6 @@ function executeOnce(fn) {
       workingJdk = result.startedJdk;
     }).catch(error => {
 
-      // let app = args[0];
       app.emit('menu:action', 'show-dialog', {
         message: 'Couldn\'t start Groovy executor: ' + error,
         title: 'Camunda Code Editor Error',
