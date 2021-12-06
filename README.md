@@ -16,6 +16,7 @@ Extract the [release zip file](https://github.com/sharedchains/camunda-code-edit
 
 ## Limitations
 **Up to now, only if Script Format is 'groovy' or 'javascript'** 
+* **JAVA instances must be present in the system PATH variable, otherwise the plugin will not be able to detect them correctly.**
 * On javascript, only for 'simple' scripts which do not involve JSON/XML manipulation.
 * On groovy everything should work.
 
