@@ -90,10 +90,15 @@ const CodeEditor = props => {
     lineNumbers: true,
     keyMap: 'sublime',
     extraKeys: {
-      'Ctrl-Space': 'autocomplete',
       'Space': function(cm) {
         cm.replaceSelection(' ');
-      }
+      },
+      'Ctrl-Space': 'autocomplete',
+      'Cmd-Space': 'autocomplete',
+      'Ctrl-V': 'copy',
+      'Cmd-V': 'copy',
+      'Ctrl-C': 'paste',
+      'Cmd-C': 'paste'
     },
     autoCloseTags: true,
     matchBrackets: true,
