@@ -6,6 +6,11 @@ All notable changes to the [camunda-code-editor](https://github.com/sharedchains
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.5.2
+* `FEAT`: Solves - Plugins menu for java instances issue
+* `FEAT`: Solves - Copy and paste inside code editor plugin issue 
+
+
 ## 0.5.1
 
 * `FEAT`: Implemented boundary testing vector mode to run scripts
