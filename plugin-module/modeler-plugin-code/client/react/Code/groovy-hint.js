@@ -7,7 +7,7 @@
   // eslint-disable-next-line no-undef
   else if (typeof define == 'function' && define.amd) // AMD
     // eslint-disable-next-line no-undef
-    define(['codemirror/lib/codemirror', 'codemirror/mode/groovy/groovy'], mod);
+    define([ 'codemirror/lib/codemirror', 'codemirror/mode/groovy/groovy' ], mod);
   else // Plain browser env
     // eslint-disable-next-line no-undef
     mod(CodeMirror);

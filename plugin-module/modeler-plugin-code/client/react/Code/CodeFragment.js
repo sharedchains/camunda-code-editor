@@ -82,7 +82,7 @@ export default class CodeFragment extends Component {
         = this.state;
       this.setState({
         modeler: modeler,
-        tabModeler: [...tabModeler, { tabId: tab.id, modeler: modeler }]
+        tabModeler: [ ...tabModeler, { tabId: tab.id, modeler: modeler } ]
       });
 
 
