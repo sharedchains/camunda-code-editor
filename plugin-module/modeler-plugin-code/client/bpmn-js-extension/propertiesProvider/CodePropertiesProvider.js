@@ -1,9 +1,17 @@
-import { find } from 'lodash';
-import { DATA_TYPES, LOADED_CODE_EDITOR, OPEN_CODE_EDITOR, SAVE_CODE_EDITOR } from '../../utils/EventHelper';
-import { getBusinessObject, is } from 'bpmn-js/lib/util/ModelUtil';
-import { TextFieldEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
-import { useService } from 'bpmn-js-properties-panel';
-import { jsxs } from '@bpmn-io/properties-panel/preact/jsx-runtime';
+import { find, includes } from 'lodash';
+import { DATA_TYPES, LOADED_CODE_EDITOR } from '../../utils/EventHelper';
+import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
+import { isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
+
+import { Script, getScriptType, getScriptFormat } from './props/ScriptProps';
+
+import {
+  ConditionalScript,
+  getScriptLanguage,
+  getScriptType as getConditionalScriptType
+} from './props/ConditionalProps';
+
+const SUPPORTED_LANGUAGES = [ 'groovy', 'javascript' ];
 
 /**
  * Our custom PropertiesProvider, replacing default camunda fields like scriptTaskProps with our custom properties.
@@ -30,135 +38,68 @@ export default class CodePropertiesProvider {
   getGroups(element) {
     return groups => {
 
-      let scriptGroup = find(groups, entry => entry.id === 'CamundaPlatform__Script');
       const businessObject = getBusinessObject(element);
-      if (getScriptType(element) === 'script' && (getScriptFormat(businessObject) === 'groovy' || getScriptFormat(businessObject) === 'javascript')) {
+      let scriptGroup = find(groups, entry => entry.id === 'CamundaPlatform__Script');
+      if (scriptGroup && getScriptType(element) === 'script' && includes(SUPPORTED_LANGUAGES, getScriptFormat(businessObject))) {
         let script = find(scriptGroup.entries, entry => entry.id === 'scriptValue');
 
         script.component = Script;
         script.isEdited = isTextFieldEntryEdited;
       }
 
+      let conditionGroup = find(groups, entry => entry.id === 'CamundaPlatform__Condition');
+      if (conditionGroup && getConditionalScriptType(element) === 'script' && includes(SUPPORTED_LANGUAGES, getScriptLanguage(businessObject))) {
+        let script = find(conditionGroup.entries, entry => entry.id === 'conditionScriptValue');
+
+        script.component = ConditionalScript;
+        script.isEdited = isTextFieldEntryEdited;
+      }
+
+      // Listeners
+      let taskListenerGroup = find(groups, entry => entry.id === 'CamundaPlatform__TaskListener');
+      if (taskListenerGroup) {
+        decorateGroup(taskListenerGroup);
+      }
+      let execListenerGroup = find(groups, entry => entry.id === 'CamundaPlatform__ExecutionListener');
+      if (execListenerGroup) {
+        decorateGroup(execListenerGroup);
+      }
+
+      // I/O Params
+      let inputGroup = find(groups, entry => entry.id === 'CamundaPlatform__Input');
+      if (inputGroup) {
+        decorateGroup(inputGroup);
+      }
+      let outputGroup = find(groups, entry => entry.id === 'CamundaPlatform__Output');
+      if (outputGroup) {
+        decorateGroup(outputGroup);
+      }
+
+      // Zeebee???
+
       return groups;
     };
   }
 
-  // const array = camundaGetTabs(element);
-  // let generalTab = find(array, { id: 'general' });
-  // let detailsGroup = find(generalTab.groups, { id: 'details' });
-  // if (detailsGroup) {
-  //   scriptTaskProps(detailsGroup, element, translate, eventBus, commandStack);
-  //   conditionalProps(detailsGroup, element, translate, eventBus, commandStack);
-  // }
-  //
-  // let listenersTab = find(array, { id: 'listeners' });
-  // if (listenersTab) {
-  //   let listenerDetailsGroup = find(listenersTab.groups, { id: 'listener-details' });
-  //   if (listenerDetailsGroup) {
-  //     listenerDetailProps(listenerDetailsGroup, element, translate, eventBus, commandStack);
-  //   }
-  // }
-  // let inputOutputTab = find(array, { id: 'input-output' });
-  // if (inputOutputTab) {
-  //   inputOutputTab.groups.forEach(group => {
-  //     inputOutputProps(group, element, translate, eventBus, commandStack);
-  //   });
-  // }
-  //
-  // return array;
+}
+
+function decorateGroup(group) {
+  group.items.map(item => {
+    let scriptValue = find(item.entries, entry => entry.id.endsWith('scriptValue'));
+
+    if (scriptValue) {
+      let scriptObject = scriptValue.script;
+      let scriptFormat = scriptObject.get('scriptFormat');
+
+      if (includes(SUPPORTED_LANGUAGES, scriptFormat)) {
+        scriptValue.component = Script;
+        scriptValue.isEdited = isTextFieldEntryEdited;
+      }
+    }
+  });
 }
 
 CodePropertiesProvider.$inject = [ 'propertiesPanel', 'injector' ];
 
-// Components
-function Script(props) {
-  const {
-    element,
-    idPrefix,
-    script
-  } = props;
 
-  const eventBus = useService('eventBus');
-  const commandStack = useService('commandStack');
-  const translate = useService('translate');
-  const debounce = useService('debounceInput');
-  const businessObject = script || getBusinessObject(element);
-  const scriptProperty = getScriptProperty(businessObject);
 
-  const getValue = () => {
-    return getScriptValue(businessObject);
-  };
-
-  const setValue = value => {
-    commandStack.execute('element.updateModdleProperties', {
-      element,
-      moddleElement: businessObject,
-      properties: {
-        [scriptProperty]: value || ''
-      }
-    });
-  };
-
-  return jsxs('div', {
-    onClick: () => {
-
-      eventBus.once(SAVE_CODE_EDITOR, 10000, event => {
-        const { data } = event;
-        setValue(data);
-      });
-
-      eventBus.fire(OPEN_CODE_EDITOR, {
-        element: element,
-        data: getScriptValue(businessObject),
-        mode: getScriptFormat(businessObject),
-        inputParameters: []
-      });
-
-    },
-    children: [
-      TextFieldEntry({
-        element,
-        id: idPrefix + 'scriptValue',
-        label: translate('Script'),
-        disabled: true,
-        getValue,
-        setValue,
-        debounce,
-        description: translate('Click to edit documentation')
-      })
-    ]
-  });
-
-}
-
-// helper utils
-function getScriptType(element) {
-  const businessObject = getBusinessObject(element);
-  const scriptValue = getScriptValue(businessObject);
-
-  if (typeof scriptValue !== 'undefined') {
-    return 'script';
-  }
-
-  const resource = businessObject.get('camunda:resource');
-
-  if (typeof resource !== 'undefined') {
-    return 'resource';
-  }
-}
-
-function getScriptFormat(businessObject) {
-  return businessObject.get('scriptFormat');
-}
-
-function getScriptValue(businessObject) {
-  return businessObject.get(getScriptProperty(businessObject));
-}
-
-function getScriptProperty(businessObject) {
-  return isScript(businessObject) ? 'value' : 'script';
-}
-
-function isScript(element) {
-  return is(element, 'camunda:Script');
-}
