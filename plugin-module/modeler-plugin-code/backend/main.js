@@ -10,7 +10,8 @@
 const which = require('which');
 const {
   startGroovyExecutor,
-  stopGroovyExecutor
+  stopGroovyExecutor,
+  isProcessActive
 } = require('./groovy');
 
 const JAVA_HOME = process.env.JAVA_HOME;
@@ -65,16 +66,19 @@ function buildMenu(javaPaths, jdk, app) {
   }
 
   let menus = [];
+  let startJdk = undefined;
   if (javaPaths) {
     javaPaths.forEach((javaPath, index) => {
       let key = 'toggleJDK_' + (index + 1);
       if (!jdk || !jdk.jdk) {
         if (JAVA_HOME) {
           if (javaPath.startsWith(JAVA_HOME)) {
-            startAction(javaPath, key);
+            console.log('>>>>>>>>> JAVA_HOME Present');
+            startJdk = () => startAction(javaPath, key);
           }
         } else if (index === 0) {
-          startAction(javaPath, key);
+          console.log('>>>>>>>>> JDK found');
+          startJdk = () => startAction(javaPath, key);
         }
       }
 
@@ -90,7 +94,7 @@ function buildMenu(javaPaths, jdk, app) {
       });
     });
   }
-  return { menus };
+  return { menus, startJdk };
 }
 
 /**
@@ -113,8 +117,11 @@ function executeOnce(fn) {
     let app = args[0];
 
     if (executed) {
-      let { menus } = buildMenu(javaPaths, jdk, ...args);
+      let { menus, startJdk } = buildMenu(javaPaths, jdk, ...args);
       returnValue = menus;
+      if (!isProcessActive() && startJdk) {
+        startJdk();
+      }
       return returnValue;
     }
 

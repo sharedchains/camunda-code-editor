@@ -45,19 +45,32 @@ export default class CodeFragment extends Component {
     subscribe('codeEditor.config', async payload => {
       const { modeler } = this.state;
       if (modeler) {
-        let editorActions = modeler.get('editorActions');
 
-        let action = {};
+        // DMN: get injector using getActiveViewer
+        let editorActions;
+        if (modeler.get) {
 
-        payload.java.forEach((path, index) => {
-          let key = 'toggleJDK_' + (index + 1);
-          action[key] = function() {
-            config.setForPlugin('codeEditor', 'java', path).catch(log.error);
-            triggerAction('update-menu');
-          };
-        });
+          // BPMNModeler instance
+          editorActions = modeler.get('editorActions');
+        } else if (modeler.getActiveViewer && modeler.getActiveViewer().get) {
 
-        editorActions.register(action);
+          // DMNModeler instance
+          editorActions = modeler.getActiveViewer().get('editorActions');
+        }
+
+        if (editorActions) {
+          let action = {};
+
+          payload.java.forEach((path, index) => {
+            let key = 'toggleJDK_' + (index + 1);
+            action[key] = function() {
+              config.setForPlugin('codeEditor', 'java', path).catch(log.error);
+              triggerAction('update-menu');
+            };
+          });
+
+          editorActions.register(action);
+        }
 
       }
     });
@@ -75,21 +88,17 @@ export default class CodeFragment extends Component {
       }
     };
 
-    subscribe('bpmn.modeler.created', ({ modeler, tab }) => {
-      this._eventBus = modeler.get('eventBus');
-
-      const { tabModeler }
-        = this.state;
+    const initModeler = ({ modeler, tab }) => {
+      const { tabModeler } = this.state;
       this.setState({
         modeler: modeler,
         tabModeler: [ ...tabModeler, { tabId: tab.id, modeler: modeler } ]
       });
 
-
       this._eventBus.on(OPEN_CODE_EDITOR, (event) => {
 
         let inputParams = event['inputParameters'].map(item => {
-          return { name: item.name,type:'',value:'' };
+          return { name: item.name, type: '', value: '' };
         });
 
         // Received command to open the editorModal for documentation
@@ -102,6 +111,18 @@ export default class CodeFragment extends Component {
           inputParameters: inputParams
         });
       });
+    };
+
+    subscribe('bpmn.modeler.created', ({ modeler, tab }) => {
+      this._eventBus = modeler.get('eventBus');
+
+      initModeler({ modeler, tab });
+    });
+
+    subscribe('dmn.modeler.created', ({ modeler, tab }) => {
+      this._eventBus = modeler._eventBus;
+
+      initModeler({ modeler, tab });
     });
 
     subscribe('app.activeTabChanged', tab => {
@@ -112,7 +133,13 @@ export default class CodeFragment extends Component {
 
       const activeModeler = find(tabModeler, { tabId: activeTabId });
       if (activeModeler) {
-        this._eventBus = activeModeler.modeler.get('eventBus');
+
+        if (activeModeler.modeler?.get) {
+          this._eventBus = activeModeler.modeler.get('eventBus');
+        } else if (activeModeler.modeler?._eventBus) {
+          this._eventBus = activeModeler.modeler._eventBus;
+        }
+
         this.setState({ modeler: activeModeler.modeler });
       }
 
@@ -152,7 +179,7 @@ export default class CodeFragment extends Component {
         <EditorModal onEditorChange={this.onEditorStateChange}
           close={this.closeModal} mode={mode} value={data} cursor={cursor}
           eventBus={this._eventBus} inputParameters={inputParameters}
-          title='Script Editor'/>
+          title="Script Editor"/>
       )}
     </Fragment>;
   }

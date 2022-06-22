@@ -7,7 +7,8 @@ let groovyProcess;
 
 module.exports = {
   startGroovyExecutor,
-  stopGroovyExecutor
+  stopGroovyExecutor,
+  isProcessActive
 };
 
 async function startGroovyExecutor(javaPath) {
@@ -36,4 +37,8 @@ function stopGroovyExecutor() {
   }
 
   groovyProcess.kill();
+}
+
+function isProcessActive() {
+  return !!groovyProcess;
 }
