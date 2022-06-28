@@ -143,7 +143,8 @@ export default class CodeFragment extends Component {
         this.setState({ modeler: activeModeler.modeler });
       }
 
-      saveTab(tab);
+      // Seems to have a problem with DMN, need some checks. Will temporarily be commented
+      // saveTab(tab);
     });
 
     subscribe('close-all-tabs', saveTab);
