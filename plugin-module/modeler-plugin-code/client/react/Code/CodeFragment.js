@@ -43,36 +43,39 @@ export default class CodeFragment extends Component {
     } = this.props;
 
     subscribe('codeEditor.config', async payload => {
-      const { modeler } = this.state;
-      if (modeler) {
 
-        // DMN: get injector using getActiveViewer
-        let editorActions;
-        if (modeler.get) {
+      config.setForPlugin('codeEditor', 'java', payload.java).catch(log.error);
 
-          // BPMNModeler instance
-          editorActions = modeler.get('editorActions');
-        } else if (modeler.getActiveViewer && modeler.getActiveViewer().get) {
-
-          // DMNModeler instance
-          editorActions = modeler.getActiveViewer().get('editorActions');
-        }
-
-        if (editorActions) {
-          let action = {};
-
-          payload.java.forEach((path, index) => {
-            let key = 'toggleJDK_' + (index + 1);
-            action[key] = function() {
-              config.setForPlugin('codeEditor', 'java', path).catch(log.error);
-              triggerAction('update-menu');
-            };
-          });
-
-          editorActions.register(action);
-        }
-
-      }
+      //
+      // const { modeler } = this.state;
+      // if (modeler) {
+      //
+      //   // DMN: get injector using getActiveViewer
+      //   let editorActions;
+      //   if (modeler.get) {
+      //
+      //     // BPMNModeler instance
+      //     editorActions = modeler.get('editorActions');
+      //   } else if (modeler.getActiveViewer && modeler.getActiveViewer().get) {
+      //
+      //     // DMNModeler instance
+      //     editorActions = modeler.getActiveViewer().get('editorActions');
+      //   }
+      //
+      //   if (editorActions) {
+      //     let action = {};
+      //
+      //     payload.java.forEach((path, index) => {
+      //       let key = 'toggleJDK_' + (index + 1);
+      //       action[key] = function() {
+      //         triggerAction('update-menu');
+      //       };
+      //     });
+      //
+      //     editorActions.register(action);
+      //   }
+      //
+      // }
     });
 
     const saveTab = ({ activeTab }) => {
@@ -93,6 +96,34 @@ export default class CodeFragment extends Component {
       this.setState({
         modeler: modeler,
         tabModeler: [ ...tabModeler, { tabId: tab.id, modeler: modeler } ]
+      });
+
+      config.getForPlugin('codeEditor', 'java').then(config => {
+
+        let editorActions;
+        if (modeler.get) {
+
+          // BPMNModeler instance
+          editorActions = modeler.get('editorActions');
+        } else if (modeler.getActiveViewer && modeler.getActiveViewer().get) {
+
+          // DMNModeler instance
+          editorActions = modeler.getActiveViewer().get('editorActions');
+        }
+
+        let action = {};
+        config.forEach((path, index) => {
+          let key = 'toggleJDK_' + (index + 1);
+
+          if (editorActions && !editorActions.isRegistered(key)) {
+            action[key] = function() {
+              triggerAction('update-menu');
+            };
+          }
+        });
+        if (editorActions) {
+          editorActions.register(action);
+        }
       });
 
       this._eventBus.on(OPEN_CODE_EDITOR, (event) => {
