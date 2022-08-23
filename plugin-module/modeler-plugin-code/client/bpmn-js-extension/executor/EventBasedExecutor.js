@@ -31,4 +31,4 @@ export default function EventBasedExecutor(eventBus) {
   });
 }
 
-EventBasedExecutor.$inject = ['eventBus'];
+EventBasedExecutor.$inject = [ 'eventBus' ];

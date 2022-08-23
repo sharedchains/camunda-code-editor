@@ -7,8 +7,8 @@ import EventBasedExecutor from './executor/EventBasedExecutor';
  *
  */
 export default {
-  __init__: ['codePropertiesProvider', 'disableModelingCode', 'eventBasedExecutor'],
-  codePropertiesProvider: ['type', CodePropertiesProvider],
-  disableModelingCode: ['type', DisableModelingCode],
-  eventBasedExecutor: ['type', EventBasedExecutor]
+  __init__: [ 'codePropertiesProvider', 'disableModelingCode', 'eventBasedExecutor' ],
+  codePropertiesProvider: [ 'type', CodePropertiesProvider ],
+  disableModelingCode: [ 'type', DisableModelingCode ],
+  eventBasedExecutor: [ 'type', EventBasedExecutor ]
 };

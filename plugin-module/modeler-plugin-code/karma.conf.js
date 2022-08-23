@@ -23,7 +23,6 @@ var browsers =
 
 var suite = 'test/suite.js';
 
-
 module.exports = function(karma) {
   karma.set({
 
@@ -57,7 +56,7 @@ module.exports = function(karma) {
             use: {
               loader: 'babel-loader',
               options: {
-                presets: ['@babel/preset-react']
+                presets: [ '@babel/preset-react' ]
               }
             }
           },

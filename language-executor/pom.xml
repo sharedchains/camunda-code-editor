@@ -5,8 +5,7 @@
     <parent>
         <groupId>org.shared.code</groupId>
         <artifactId>camunda-code-editor-plugin</artifactId>
-        <version>${code-editor.version}</version>
-        <relativePath>../</relativePath>
+        <version>0.5.2</version>
     </parent>
     <artifactId>language-executor</artifactId>
     <name>Language executor</name>

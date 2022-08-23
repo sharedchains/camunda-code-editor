@@ -8,7 +8,7 @@ import React from 'camunda-modeler-plugin-helpers/react';
 const input = (props) => {
   let inputElement;
   let validationError = null;
-  let inputClasses = ['contextInput'];
+  let inputClasses = [ 'contextInput' ];
 
   if (props.invalid) {
     inputClasses.push('invalid'); // Da controllare

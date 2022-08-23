@@ -54,11 +54,11 @@ window.jsonlint = jsonlint;
  */
 const CodeEditor = props => {
 
-  const [context, setContext] = useState([...props['inputParameters']]);
-  const [editor, setEditor] = useState(null);
-  const [csl, setCsl] = useState(null);
-  const [inputMode,setInputMode] = useState(false);
-  const [vectorsVariablesNumber,setVectorsVariablesNumber] = useState(1);
+  const [ context, setContext ] = useState([ ...props['inputParameters'] ]);
+  const [ editor, setEditor ] = useState(null);
+  const [ csl, setCsl ] = useState(null);
+  const [ inputMode, setInputMode ] = useState(false);
+  const [ vectorsVariablesNumber, setVectorsVariablesNumber ] = useState(1);
 
   const consoleResultRef = useCallback((consoleRef) => {
     if (consoleRef) {
@@ -108,7 +108,7 @@ const CodeEditor = props => {
     highlightSelectionMatches: { minChars: 2, showToken: true },
     lineWrapping: true,
     lint: true,
-    gutters: ['CodeMirror-lint-markers']
+    gutters: [ 'CodeMirror-lint-markers' ]
   };
 
   let contextOption = {};
@@ -125,13 +125,13 @@ const CodeEditor = props => {
   };
 
   const removeRow = (index) => {
-    let copy = [...context];
+    let copy = [ ...context ];
     copy.splice(index, 1);
     setContext(copy);
   };
 
   const updateRow = (column, value, index) => {
-    let copy = [...context];
+    let copy = [ ...context ];
     copy[index][column] = value;
     setContext(copy);
   };
@@ -143,12 +143,12 @@ const CodeEditor = props => {
     if (props.mode === 'javascript') {
       if (inputMode) {
         const obj = {};
-        context.forEach((x,index) => {
+        context.forEach((x, index) => {
           let values = x.value.split(',');
           if (values.length == vectorsVariablesNumber) {
-            values.forEach((el,i) => {
-              let elementObj = { name: x.name,type:x.type,value:el };
-              obj[i] = [].concat(obj[i] ? obj[i] : [] ,elementObj);
+            values.forEach((el, i) => {
+              let elementObj = { name: x.name, type: x.type, value: el };
+              obj[i] = [].concat(obj[i] ? obj[i] : [], elementObj);
             });
           }
         });
@@ -161,16 +161,14 @@ const CodeEditor = props => {
           }, props.eventBus);
           results.push(jsExecutor.execute());
         }
-      }
-      else {
+      } else {
         let jsExecutor = new JSExecutor(editor.getValue(), context, {
           log: csl.addToConsole,
           clear: csl.clearConsole
         }, props.eventBus);
         jsExecutor.execute();
       }
-    }
-    else {
+    } else {
 
       if (inputMode) {
         const groovyExecutor = new GroovyAPI(`http://localhost:${LANGUAGE_EXECUTOR_PORT}`);
@@ -192,9 +190,7 @@ const CodeEditor = props => {
           }
         });
 
-      }
-
-      else {
+      } else {
 
         // groovy
         const groovyExecutor = new GroovyAPI(`http://localhost:${LANGUAGE_EXECUTOR_PORT}`);
@@ -215,15 +211,12 @@ const CodeEditor = props => {
         }
       }
 
-
-
     }
   };
 
   const stopClicked = () => {
     props.eventBus.fire(STOP_CODE_EDITOR);
   };
-
 
   return (<div className="ScriptEditor-container">
     <tr>
@@ -240,7 +233,8 @@ const CodeEditor = props => {
 
           {inputMode ?
             <span id="variablesNumberDiv">
-              <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber} onChange={({ target }) => {if (target.value >= 1)setVectorsVariablesNumber(target.value);} }/>
+              <input type="number" id="vectorsVariablesNumber" value={vectorsVariablesNumber}
+                onChange={({ target }) => {if (target.value >= 1) setVectorsVariablesNumber(target.value);}}/>
               <label htmlFor="vectorsVariablesNumber">Vectors variables number</label>
               <span id="vectorModeVariablesNumber" className="code-editor-tooltip bottom">?</span>
             </span> : ''}
@@ -275,7 +269,8 @@ const CodeEditor = props => {
           />
         </ReflexElement>
         <ReflexSplitter/>
-        <ReflexElement className="right-pane" minSize="100" propagateDimensions="true" resizeHeight="false" resizeWidth="true" flex={0.2}>
+        <ReflexElement className="right-pane" minSize="100" propagateDimensions="true" resizeHeight="false"
+          resizeWidth="true" flex={0.2}>
           <div className="RunningResult Box">
             <RunPanel runClicked={runClicked} stopClicked={stopClicked}/>
             <div className="Result-box" ref={consoleResultRef}/>
