@@ -6,7 +6,7 @@
 
     <groupId>org.shared.code</groupId>
     <artifactId>camunda-code-editor-plugin</artifactId>
-    <version>0.5.2</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>Camunda Modeler Code Editor Plugin</name>

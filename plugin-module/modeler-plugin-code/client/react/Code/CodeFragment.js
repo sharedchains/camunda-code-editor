@@ -45,37 +45,6 @@ export default class CodeFragment extends Component {
     subscribe('codeEditor.config', async payload => {
 
       config.setForPlugin('codeEditor', 'java', payload.java).catch(log.error);
-
-      //
-      // const { modeler } = this.state;
-      // if (modeler) {
-      //
-      //   // DMN: get injector using getActiveViewer
-      //   let editorActions;
-      //   if (modeler.get) {
-      //
-      //     // BPMNModeler instance
-      //     editorActions = modeler.get('editorActions');
-      //   } else if (modeler.getActiveViewer && modeler.getActiveViewer().get) {
-      //
-      //     // DMNModeler instance
-      //     editorActions = modeler.getActiveViewer().get('editorActions');
-      //   }
-      //
-      //   if (editorActions) {
-      //     let action = {};
-      //
-      //     payload.java.forEach((path, index) => {
-      //       let key = 'toggleJDK_' + (index + 1);
-      //       action[key] = function() {
-      //         triggerAction('update-menu');
-      //       };
-      //     });
-      //
-      //     editorActions.register(action);
-      //   }
-      //
-      // }
     });
 
     const saveTab = ({ activeTab }) => {
@@ -98,7 +67,7 @@ export default class CodeFragment extends Component {
         tabModeler: [ ...tabModeler, { tabId: tab.id, modeler: modeler } ]
       });
 
-      config.getForPlugin('codeEditor', 'java').then(config => {
+      config.getForPlugin('codeEditor', 'java').then(cfg => {
 
         let editorActions;
         if (modeler.get) {
@@ -112,7 +81,7 @@ export default class CodeFragment extends Component {
         }
 
         let action = {};
-        config.forEach((path, index) => {
+        cfg.forEach((path, index) => {
           let key = 'toggleJDK_' + (index + 1);
 
           if (editorActions && !editorActions.isRegistered(key)) {
@@ -121,7 +90,7 @@ export default class CodeFragment extends Component {
             };
           }
         });
-        if (editorActions) {
+        if (editorActions && cfg.length > 0) {
           editorActions.register(action);
         }
       });

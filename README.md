@@ -1,6 +1,6 @@
 # Code editor for Camunda Modeler
 
-[![Compatible with Camunda Modeler version 3.4](https://img.shields.io/badge/Camunda%20Modeler-3.4+-blue.svg)](https://github.com/camunda/camunda-modeler)
+[![Compatible with Camunda Modeler version 5](https://img.shields.io/badge/Camunda%20Modeler-5.0+-blue.svg)](https://github.com/camunda/camunda-modeler)
 
 A [Camunda Modeler](https://github.com/camunda/camunda-modeler) plug-in based on the [plug-in example](https://github.com/camunda/camunda-modeler-plugin-example).
 
@@ -36,6 +36,17 @@ To work on this plugin you will need to install:
 ## Building the Plug-in
 
 Just run ```mvn clean install```. you will find the zip bundle in the target directory of the [build module](./build-module). 
+
+## Compatibility Notice
+
+This plugin is currently compatible with the following Camunda Modeler versions.
+
+| Camunda Modeler | Code Editor Plugin |
+|-----------------|--------------------|
+| 3.4 - 4.12      | 0.5.2              |
+| 5.x             | 1.0 or newer       |
+
+
 
 ## Additional Resources
 
