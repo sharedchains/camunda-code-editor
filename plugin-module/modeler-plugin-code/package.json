@@ -1,6 +1,6 @@
 {
   "name": "camunda-modeler-code-editor-plugin",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "description": "A Code Editor for Camunda Modeler",
   "main": "index.js",
   "scripts": {
