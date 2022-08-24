@@ -5,8 +5,7 @@
     <parent>
         <groupId>org.shared.code</groupId>
         <artifactId>camunda-code-editor-plugin</artifactId>
-        <version>${code-editor.version}</version>
-        <relativePath>../</relativePath>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -55,7 +54,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nodeVersion>v14.17.0</nodeVersion>
+                    <nodeVersion>v16.15.1</nodeVersion>
 
                     <installDirectory>${project.basedir}</installDirectory>
                 </configuration>

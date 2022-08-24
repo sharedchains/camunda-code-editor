@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const { DefinePlugin } = require('webpack');
+const CamundaModelerWebpackPlugin = require('camunda-modeler-webpack-plugin');
 
 const LANGUAGE_EXECUTOR_PORT = 12421;
 
@@ -15,24 +16,15 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-react']
-            }
-          }
-        }, {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader']
+          use: [ 'style-loader', 'css-loader' ]
         },
-        { test: /\.(png|svg|jpe?g|gif|woff2?|ttf|eot)$/, use: ['file-loader'] }
+        { test: /\.(png|svg|jpe?g|gif|woff2?|ttf|eot)$/, use: [ 'file-loader' ] }
       ]
     },
     resolve: {
       alias: {
-        react: 'camunda-modeler-plugin-helpers/react'
+        'react/jsx-runtime': '@bpmn-io/properties-panel/preact/jsx-runtime'
       },
       fallback: {
         'util': false,
@@ -44,6 +36,7 @@ module.exports = [
       new DefinePlugin({
         'process.env.LANGUAGE_EXECUTOR_PORT': '' + LANGUAGE_EXECUTOR_PORT
       }),
+      new CamundaModelerWebpackPlugin(),
       new CopyPlugin({
         patterns: [
           {

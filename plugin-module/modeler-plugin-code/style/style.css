@@ -113,16 +113,15 @@
     display: flex;
 }
 
-.CodeEditor {
-    /*width: 80%;*/
-}
-
 .reflex-container.vertical > .reflex-splitter {
     height: unset !important;
 }
 
+.reflex-container.vertical > .right-pane {
+    overflow: inherit;
+}
+
 .RunningResult {
-    /*width: 20%;*/
     height: 500px;
 }
 

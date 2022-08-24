@@ -46,14 +46,14 @@ const ContextTable = (props) => {
     }
   };
 
-  const [validRows, setValidRows] = useState([]);
+  const [ validRows, setValidRows ] = useState([]);
 
-  const [, setTableIsValid] = useState(false);
+  const [ , setTableIsValid ] = useState(false);
 
   const inputChangeHandler = (event, inputIdentifier, index) => {
     let input = event.target;
 
-    const updatedRows = [...validRows];
+    const updatedRows = [ ...validRows ];
     const oldRow = validRows[index];
     const oldObject = oldRow[inputIdentifier];
 
@@ -80,7 +80,7 @@ const ContextTable = (props) => {
   };
 
   const addRow = () => {
-    let newRow = [...validRows];
+    let newRow = [ ...validRows ];
     let newObj = {};
 
     Object.keys(contextColumns).map(key => {
@@ -96,7 +96,7 @@ const ContextTable = (props) => {
   };
 
   const removeRow = (index) => {
-    let oldRows = [...validRows];
+    let oldRows = [ ...validRows ];
     oldRows.splice(index, 1);
     setValidRows(oldRows);
     props.removeRowContext(index);
@@ -145,7 +145,7 @@ const ContextTable = (props) => {
     const columns = keys.map(key => <td key={key + '_col_' + index}>
       <Input
         key={key + '_' + index}
-        placeholder={(key == 'value' && props.isVectorsMode) ? '1,2,..,' +((props.vectorLength < 2) ? +(props.vectorLength) + 2 : props.vectorLength) : ''}
+        placeholder={(key == 'value' && props.isVectorsMode) ? '1,2,..,' + ((props.vectorLength < 2) ? +(props.vectorLength) + 2 : props.vectorLength) : ''}
         elementType={contextColumns[key].elementType}
         elementConfig={contextColumns[key].elementConfig}
         value={rowObject[key]}

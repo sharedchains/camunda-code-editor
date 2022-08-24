@@ -6,6 +6,11 @@ All notable changes to the [camunda-code-editor](https://github.com/sharedchains
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.0.0
+* `FEAT`: Support Camunda Modeler 5.x
+* `FIX`: Fixed editor for DMN modeler
+* `FIX`: Fixed editorActions error on startup
+
 ## 0.5.2
 * `FEAT`: Solves - Plugins menu for java instances issue
 * `FEAT`: Solves - Copy and paste inside code editor plugin issue 
